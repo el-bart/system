@@ -1,0 +1,79 @@
+#!/bin/bash
+
+THIS_SCRIPT="$0"
+BN="`basename $0`"
+if [ $# -lt 3 ]
+then
+  echo "$BN <out_gen_path> <deps_path> <component>" >&2
+  echo "(note: $BN must be run from project root)"  >&2
+  exit 1
+fi
+
+# remember output dir
+OUTPUT_DIR="$1"
+shift
+DEPS_PATH="$1"
+shift
+
+# finder <component>
+function finder
+{
+  test -f "$1/$DEPS_PATH" || exit 0
+  THIS_DEPS="$(cat "$1/$DEPS_PATH")"
+  echo -n "$1/$DEPS_PATH "
+  for dep in $THIS_DEPS
+  do
+    finder $dep
+  done
+}
+
+# short name for component - it will be used many times
+C="$1"
+
+# find dependencies and build dependencies file
+out="$OUTPUT_DIR/$C.mk"
+DEPS_FILES="`finder $C | xargs echo`"
+test -z "$DEPS_FILES" || DEPS="`cat $DEPS_FILES | xargs echo`"
+
+# now compute dynamic deps
+for f in $DEPS_FILES
+do
+  dynamic="${f}_dynamic"
+  if test -x "$dynamic"
+  then
+    DEPS_FILES="$DEPS_FILES $dynamic"
+    DEPS="$DEPS $($dynamic)"
+  fi
+done
+
+# convert deps to libs
+test -z "$DEPS" || \
+  LINK_LIBS="`sed -e 's:^ *:-l:' -e 's: \+: -l:g'<<<"$DEPS"`"
+
+# check which libs are local
+LOCAL_LIBS=""
+for el in $DEPS
+do
+  test -f $el/$DEPS_PATH && LOCAL_LIBS="$LOCAL_LIBS $el"
+done
+
+# write to file
+cat<<EOF > "$out"
+.PHONY: $C
+$C:: LINK_LIBS:=$LINK_LIBS
+ifeq (,\$(WITHOUT_DEPS))
+$C::$LOCAL_LIBS
+else
+$C::
+endif
+	@\$(build-this-component)
+
+# update this script if needed
+$out:: $DEPS_FILES
+	@echo "warrning: dep. file \$(@F) needs to be updated" >&2
+	@echo "warrning: run make again" >&2
+	@$THIS_SCRIPT "$OUTPUT_DIR" "$DEPS_PATH" "$C"
+EOF
+
+exit 0
+

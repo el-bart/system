@@ -1,0 +1,152 @@
+/*
+ * AutoDescriptor.t.cpp
+ *
+ * test set for AutoDescriptor.
+ *
+ */
+#include <tut.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+#include "System/AutoDescriptor.hpp"
+
+namespace System
+{
+
+struct AutoDescriptorTestData
+{
+  AutoDescriptorTestData(void):
+    _adW( open("/dev/null",    O_WRONLY) ),
+    _adR( open("/dev/urandom", O_RDONLY) ),
+    _size( sizeof(_buf) )
+  {
+  }
+
+  AutoDescriptor _adW;
+  AutoDescriptor _adR;
+  char           _buf[1024];
+  const int      _size;
+};
+
+} // namespace System
+
+
+namespace tut
+{
+typedef System::AutoDescriptorTestData TestClass;
+typedef test_group<TestClass> factory;
+typedef factory::object testObj;
+} // namespace tut
+
+
+namespace
+{
+tut::factory tf("System/AutoDescriptor");
+}
+
+using namespace System;
+
+namespace tut
+{
+
+// test if both descriptors are file.
+template<>
+template<>
+void testObj::test<1>(void)
+{
+  ensure( read ( _adR, _buf, _size)==_size );   // read is ok.
+  ensure( write( _adW, _buf, _size)==_size );   // write is ok.
+}
+
+
+// check get() and operator()
+template<>
+template<>
+void testObj::test<2>(void)
+{
+  ensure( _adR==_adR.get() );
+}
+
+// isInitialized() test
+template<>
+template<>
+void testObj::test<3>(void)
+{
+  ensure( _adR.isInitialized() );
+  ensure( _adW.isInitialized() );
+  _adR.reset(-1);
+  _adW.reset(-1);
+  ensure( !_adR.isInitialized() );
+  ensure( !_adW.isInitialized() );
+}
+
+// comparison
+template<>
+template<>
+void testObj::test<4>(void)
+{
+  ensure( _adR!=_adW );
+
+  // special case - comparison of 2 uninitialized elements.
+  AutoDescriptor a(-1);
+  AutoDescriptor b(-1);
+  ensure( a!=b );
+
+  // compare of 2 the same descriptors
+  AutoDescriptor c( _adR.get() );   // this must be released
+  ensure( _adR==c );
+  c.release();      // this wasn't "new" descriptor, so it's ok.
+}
+
+// ownership passing
+template<>
+template<>
+void testObj::test<5>(void)
+{
+  AutoDescriptor a;
+  int tmp=_adR;
+  a      =_adR;     // ownership passing
+  ensure( _adR.get()<0 && a==tmp );
+}
+
+// reseting and releasing
+template<>
+template<>
+void testObj::test<6>(void)
+{
+  AutoDescriptor a;
+  int tmp=_adR;
+  a.reset( _adR.release() );
+  ensure( _adR<0 && a==tmp );
+}
+
+// check for resource leaking - this MUST work!
+template<>
+template<>
+void testObj::test<7>(void)
+{
+  const int maxDescs=64*1024;   // assumption... :(
+  for(int i=0; i<maxDescs; ++i)
+  {
+    int tmp=open("/dev/null", O_WRONLY);    // should always work
+    if(tmp<0)
+      fail("error while opening /dev/null - we may have descriptor leak");
+    AutoDescriptor a(tmp);      // passing the ownership
+    // 'a' should be released here
+  }
+}
+
+// test copy-constructor
+template<>
+template<>
+void testObj::test<8>(void)
+{
+  AutoDescriptor a( _adR );
+  ensure(     a.isInitialized() );
+  ensure( !_adR.isInitialized() );
+}
+
+} // namespace tut
+
