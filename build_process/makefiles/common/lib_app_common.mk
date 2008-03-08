@@ -7,7 +7,7 @@ mtest:: copy_testdata
 mtest:: $(CXXBIN_MTEST) $(CBIN_MTEST) \
 		$(CXXOBJS_MTEST) $(COBJS_MTEST)
 
-%.mt: %.mt.o $(CXXOBJS_NOMAIN) $(COBJS_NOMAIN)
+%.mt: %.mt.o
 	@echo "LD    $@"
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(TEST_LINK_LIBS) \
 		-l$(COMPONENT_NAME) $(LINK_LIBS)
