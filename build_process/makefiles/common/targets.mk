@@ -15,13 +15,12 @@ define run-in-gen
 	mkdir -p "$(GEN_LIBS_DIR)"
 	+$(MAKE) $(MFLAGS) -C "$(GEN_BASE_DIR)/$@/`basename $(CURDIR)`" \
 		-f "$(CURDIR)/Makefile" TARGET=$@ $(TARGET) \
-		STRIP_BINARY=$(STRIP_BINARY) || \
-		{ echo "ERROR: maby component name is incorrect?" >&2 ; false ; }
+		STRIP_BINARY=$(STRIP_BINARY)
 endef
 
 # inside lib/app we can include any header (not only public ones)
 CXXFLAGS+=-I$(CURDIR)
-CFLAGS+=-I$(CURDIR)
+CFLAGS  +=-I$(CURDIR)
 
 
 # this should NEVER happen!
@@ -34,39 +33,56 @@ all:
 	@echo
 	@exit 1
 
+# compiler flags
+PRF_FLAGS:=-pg -DNDEBUG -g3 -O3
+DBG_FLAGS:=-g3
+OPT_FLAGS:=-O3 -DNDEBUG -Werror
+
+# linker flags
+PRF_LDFLAGS:=-pg
+DBG_LDFLAGS:=
+OPT_LDFLAGS:=
+
+
 .PHONY: debug
-debug: CXXFLAGS+=-g3 -DDEBUG -pg
-debug: CFLAGS+=-g3 -DDEBUG -pg
+debug: CXXFLAGS+=$(DBG_FLAGS)
+debug: CFLAGS  +=$(DBG_FLAGS)
+debug: LDFLAGS +=$(DBG_LDFLAGS)
 debug: TARGET=all
 debug:
 	$(run-in-gen)
 
 .PHONY: release
-release: CXXFLAGS+=-O3 -DNDEBUG -Werror
-release: CFLAGS+=-O3 -DNDEBUG -Werror
+release: CXXFLAGS+=$(OPT_FLAGS)
+release: CFLAGS  +=$(OPT_FLAGS)
+release: LDFLAGS +=$(OPT_LDFLAGS)
 release: TARGET=all
 release: STRIP_BINARY=1
 release:
 	$(run-in-gen)
 
 .PHONY: profile
-profile: CXXFLAGS+=-pg -DNDEBUG
-profile: CFLAGS+=-pg -DNDEBUG
-profile: LDFLAGS+=-pg
+profile: CXXFLAGS+=$(PRF_FLAGS)
+profile: CFLAGS  +=$(PRF_FLAGS)
+profile: LDFLAGS +=$(PRF_LDFLAGS)
 profile: TARGET=all
 profile:
 	$(run-in-gen)
 
 .PHONY: test
-test: CXXFLAGS+=-g3 -DDEBUG -pg
-test: CFLAGS+=-g3 -DDEBUG -pg
+test: debug
+test: CXXFLAGS+=$(DBG_FLAGS)
+test: CFLAGS  +=$(DBG_FLAGS)
+test: LDFLAGS +=$(DBG_LDFLAGS)
 test: TARGET=test
 test:
 	$(run-in-gen)
 
 .PHONY: mtest
-mtest: CXXFLAGS+=-g3 -DDEBUG -pg
-mtest: CFLAGS+=-g3 -DDEBUG -pg
+mtest: debug
+mtest: CXXFLAGS+=$(DBG_FLAGS)
+mtest: CFLAGS  +=$(DBG_FLAGS)
+mtest: LDFLAGS +=$(DBG_LDFLAGS)
 mtest: TARGET=mtest
 mtest:
 	$(run-in-gen)

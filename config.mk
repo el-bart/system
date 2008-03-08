@@ -5,8 +5,6 @@
 
 # set default mode
 export MODE=default
-
 # set default profile
 export PROFILE=test
-export TEST_COMPONENT=system
 

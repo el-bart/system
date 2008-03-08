@@ -9,6 +9,7 @@ MAKEFILES_COMMON_BASE_DIR:=$(MAKEFILES_BASE_DIR)/common
 SCRIPTS_BASE_DIR:=$(BUILD_PROCESS_BASE_DIR)/scripts
 export BUILD_PROCESS_BASE_DIR \
        MAKEFILES_BASE_DIR \
+	   MAKEFILES_COMMON_BASE_DIR \
        SCRIPTS_BASE_DIR
 
 # if gendir was not set by upper call of make, set it now

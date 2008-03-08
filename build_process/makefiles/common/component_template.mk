@@ -1,18 +1,16 @@
 ifeq (,$(filter $(GEN_BASE_DIR)/%,$(basename $(CURDIR))))
 # part invoked in source dir
 
-# this will be library
+# this will be application
 COMPONENT_NAME=$(shell basename $(CURDIR))
-LIBRARY_NAME=lib$(COMPONENT_NAME).a
-TEST_PROGRAM_NAME=lib$(COMPONENT_NAME).t
+TEST_PROGRAM_NAME=$(COMPONENT_NAME).t
 export COMPONENT_NAME \
-       LIBRARY_NAME \
        TEST_PROGRAM_NAME
 
 # look for sources in this lib
-include $(MAKEFILES_BASE_DIR)/common/source_finder.mk
+include $(MAKEFILES_COMMON_BASE_DIR)/source_finder.mk
 
-include $(MAKEFILES_BASE_DIR)/common/targets.mk
+include $(MAKEFILES_COMMON_BASE_DIR)/targets.mk
 
 else
 # part invoked in gen dir
@@ -20,13 +18,13 @@ else
 # include user_pre makefile, if it exists
 -include $(THIS_SRC_BASE_DIR)/user_pre.mk
 
-include $(MAKEFILES_BASE_DIR)/common/library.mk
+include $(MAKEFILES_COMMON_BASE_DIR)/$(COMPONENT_TYPE).mk
 
 # add ourselfs to VPATH
 VPATH+=$(THIS_SRC_BASE_DIR)
 
-include $(MAKEFILES_BASE_DIR)/common/rules.mk
-include $(MAKEFILES_BASE_DIR)/common/deps.mk
+include $(MAKEFILES_COMMON_BASE_DIR)/rules.mk
+include $(MAKEFILES_COMMON_BASE_DIR)/deps.mk
 
 # include user_post makefile, if it exists
 -include $(THIS_SRC_BASE_DIR)/user_post.mk
