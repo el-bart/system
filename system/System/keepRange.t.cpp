@@ -64,5 +64,80 @@ void testObj::test<3>(void)
   ensure( keepRange(21, 10,20)==20 );
 }
 
+// try if keepRange() will throw on error
+template<>
+template<>
+void testObj::test<4>(void)
+{
+  try
+  {
+    keepRange(30, 30,29);       // should throw
+    fail("keepRange() didn't throw, given incorrect range");
+  }
+  catch(const System::Exception &ex)
+  {
+    // this is expected
+  }
+}
+
+// test converting values to matching range
+template<>
+template<>
+void testObj::test<5>(void)
+{
+  const double in =10;
+  const char   out=keepRange<char>(in);
+  ensure(out==10);
+}
+
+// test converting when value does NOT fit
+template<>
+template<>
+void testObj::test<6>(void)
+{
+  // test upper bound
+  {
+    const double in =321;
+    const char   out=keepRange<char>(in);
+    ensure(out==127);
+  }
+  // test lower bound
+  {
+    const double in =-321;
+    const char   out=keepRange<char>(in);
+    ensure(out==-128);
+  }
+}
+
+// try converting from type with less precision
+template<>
+template<>
+void testObj::test<7>(void)
+{
+  const char   in =66;
+  const double out=keepRange<double>(in);
+  ensure(out==66);
+}
+
+// test converting real floating point
+template<>
+template<>
+void testObj::test<9>(void)
+{
+  const double in =13.8;
+  const int    out=keepRange<int>(in);
+  ensure(out==13);
+}
+
+// test real, negative FP
+template<>
+template<>
+void testObj::test<10>(void)
+{
+  const double in =-13.8;
+  const int    out=keepRange<int>(in);
+  ensure(out==-13);
+}
+
 } // namespace tut
 
