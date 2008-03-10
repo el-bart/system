@@ -1,0 +1,2 @@
+2
+1  auto_c_ptr<> - malloc/free wrapper to be used for C code; usefull for foregin code;
