@@ -2,9 +2,9 @@
 
 THIS_DIR="`dirname $0`"
 BN="`basename $0`"
-if [ $# -lt 3 ]
+if [ $# -lt 4 ]
 then
-  echo "$BN <out_gen_path> <deps_path> <c1> <c2> ..." >&2
+  echo "$BN <out_gen_path> <deps_path> <gen_libs_path> <c1> <c2> ..." >&2
   echo "(note: $BN must be run from project root)"    >&2
   exit 1
 fi
@@ -14,13 +14,15 @@ OUTPUT_DIR="$1"
 shift
 DEPS_PATH="$1"
 shift
+GEN_LIBS_PATH="$1"
+shift
 
 # go throught all files
 for c in $*
 do
   out="$OUTPUT_DIR/$c.mk"
   test -f "$out" && continue # skip if already exists
-  "$THIS_DIR/getdeps" "$OUTPUT_DIR" "$DEPS_PATH" "$c"
+  "$THIS_DIR/getdeps" "$OUTPUT_DIR" "$DEPS_PATH" "$GEN_LIBS_PATH" "$c"
 done
 
 # make default target

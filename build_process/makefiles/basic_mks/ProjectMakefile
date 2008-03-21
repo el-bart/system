@@ -23,7 +23,9 @@ TMP:=$(shell mkdir -p "$(GEN_COMPONENTS_DEPS_DIR)" && \
              $(MAKE_COMPONENTDEPS_SCRIPT) \
                "$(GEN_COMPONENTS_DEPS_DIR)" \
                "$(COMPONENT_DEPS_REL_PATH)" \
+               "$(GEN_LIBS_DIR)" \
                `cat $(COMPONENTS_LIST)` )
+TMP:=
 
 # by default make everything
 include $(GEN_COMPONENTS_DEPS_DIR)/_default_target_.mk

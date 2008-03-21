@@ -15,13 +15,15 @@ define run-in-gen
 	mkdir -p "$(GEN_LIBS_DIR)"
 	+$(MAKE) $(MFLAGS) -C "$(GEN_BASE_DIR)/$@/`basename $(CURDIR)`" \
 		-f "$(CURDIR)/Makefile" TARGET=$@ $(TARGET) \
-		STRIP_BINARY=$(STRIP_BINARY)
+		STRIP_BINARY=$(STRIP_BINARY) \
+		DEP_LIBS_WC="$(DEP_LIBS_WC)"
 endef
 
 # inside lib/app we can include any header (not only public ones)
 CXXFLAGS+=-I$(CURDIR)
 CFLAGS  +=-I$(CURDIR)
 
+# external variables passed by upper make
 
 # this should NEVER happen!
 .PHONY: all
@@ -85,6 +87,11 @@ mtest: CFLAGS  +=$(DBG_FLAGS)
 mtest: LDFLAGS +=$(DBG_LDFLAGS)
 mtest: TARGET=mtest
 mtest:
+	$(run-in-gen)
+
+.PHONY: doc
+doc: TARGET=doc
+doc:
 	$(run-in-gen)
 
 .PHONY: clean

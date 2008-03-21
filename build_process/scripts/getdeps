@@ -2,9 +2,9 @@
 
 THIS_SCRIPT="$0"
 BN="`basename $0`"
-if [ $# -lt 3 ]
+if [ $# -lt 4 ]
 then
-  echo "$BN <out_gen_path> <deps_path> <component>" >&2
+  echo "$BN <out_gen_path> <deps_path> <gen_libs_path> <component>" >&2
   echo "(note: $BN must be run from project root)"  >&2
   exit 1
 fi
@@ -13,6 +13,8 @@ fi
 OUTPUT_DIR="$1"
 shift
 DEPS_PATH="$1"
+shift
+GEN_LIBS_PATH="$1"
 shift
 
 # finder <component>
@@ -46,10 +48,6 @@ do
   fi
 done
 
-# convert deps to libs
-test -z "$DEPS" || \
-  LINK_LIBS="`sed -e 's:^ *:-l:' -e 's: \+: -l:g'<<<"$DEPS"`"
-
 # check which libs are local
 LOCAL_LIBS=""
 for el in $DEPS
@@ -57,10 +55,21 @@ do
   test -f $el/$DEPS_PATH && LOCAL_LIBS="$LOCAL_LIBS $el"
 done
 
+# convert deps to libs and libs_deps (libraries
+# this component depends on)
+if [ "$DEPS" ]
+then
+  LINK_LIBS="`sed -e 's:^ *:-l:' -e 's: \+: -l:g'<<<"$DEPS"`"
+  DEP_LIBS_WC="`sed -e "s:^ *: :" \
+                    -e "s: *$: :" \
+                    -e "s: \+\([^ ]\+\): $GEN_LIBS_PATH/lib\1*:g" <<<"$LOCAL_LIBS"`"
+fi
+
 # write to file
 cat<<EOF > "$out"
 .PHONY: $C
 $C:: LINK_LIBS:=$LINK_LIBS
+$C:: DEP_LIBS_WC:=$DEP_LIBS_WC
 ifeq (,\$(WITHOUT_DEPS))
 $C::$LOCAL_LIBS
 else

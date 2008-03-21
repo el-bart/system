@@ -5,7 +5,8 @@ define build-this-component
 
 	# build given component
 	+$(MAKE) $(MFLAGS) -C "$@" $(MAKEFLAGS) \
-		LINK_LIBS="$(LINK_LIBS)" $(PROFILE)
+		LINK_LIBS="$(LINK_LIBS)" DEP_LIBS_WC="$(DEP_LIBS_WC)" \
+		$(PROFILE)
 
 endef
 

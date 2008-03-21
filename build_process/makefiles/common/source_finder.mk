@@ -12,6 +12,7 @@ include $(MAKEFILES_BASE_DIR)/common/dirs_features.mk
 # find all sources selected by MODE
 MODE_EXPRESSION :=$(shell cat $(THIS_SRC_FEATURES_MODES_DIR)/$(MODE))
 ALL_MODE_SOURCES:=$(wildcard $(MODE_EXPRESSION))
+export ALL_MODE_SOURCES
 
 ALL_SOURCES_C   :=$(filter %.c,   $(ALL_MODE_SOURCES))
 ALL_SOURCES_CXX :=$(filter %.cpp, $(ALL_MODE_SOURCES))

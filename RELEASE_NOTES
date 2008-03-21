@@ -1,4 +1,4 @@
-* uses new build_process v0.5.1.
+* uses new build_process v0.5.2.
 * keepRange<>() has second implementation allowing to convert between
   types, with range limitation if needed.
 * added mtest for DiskFile to test if it is poiisble to write file > 2GB.
