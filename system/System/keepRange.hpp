@@ -18,7 +18,12 @@
 namespace System
 {
 
-// returns value that fits in given range.
+/** \brief returns value that fits in given range.
+ *  \param in  input value to be test against given range.
+ *  \param min minumum value to be returned.
+ *  \param max maximum value ot be returned.
+ *  \return value that fits [min;max] range.
+ */
 template<typename T>
 inline T keepRange(const T in, const T min, const T max)
 {
@@ -28,8 +33,11 @@ inline T keepRange(const T in, const T min, const T max)
   return std::min( max, std::max(min, in) );
 }
 
-// returns converted value, that fits in
-// destination's type value range.
+/** \brief returns converted value, that fits in
+ *         destination's type value range.
+ *  \param v input value
+ *  \return value 'v' truncated to fit in output range.
+ */
 template<typename Tout, typename Tin>
 inline Tout keepRange(const Tin v)
 {

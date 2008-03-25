@@ -29,7 +29,9 @@ Doxyfile:
 		-e "s:^\(GENERATE_LATEX \+=\).*:\1 NO:" \
 		"$@.def" > "$@" || ( rm -f "$@" ; false )
 
-%.mt: %.mt.o
+LIBS_GEN_DEPS:=$(wildcard $(DEP_LIBS_WC)) $(GEN_LIBS_DIR)/$(LIBRARY_NAME)
+
+%.mt: %.mt.o $(LIBS_GEN_DEPS)
 	@echo "LD    $@"
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(TEST_LINK_LIBS) \
 		-l$(COMPONENT_NAME) $(LINK_LIBS)
@@ -49,14 +51,12 @@ testdata:
 	  cp -pur "$(THIS_SRC_BASE_DIR)/features/testdata" . ; \
 	fi
 
-
-$(TEST_PROGRAM_NAME):: $(CXXOBJS_TEST) $(COBJS_TEST)
+$(TEST_PROGRAM_NAME):: $(CXXOBJS_TEST) $(COBJS_TEST) $(LIBS_GEN_DEPS)
 	@echo "LD    $@"
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(TEST_LINK_LIBS) \
 		-l$(COMPONENT_NAME) $(LINK_LIBS)
 
 LIBRARY_OBJ_DEPS:=$(CXXOBJS_NOMAIN) $(COBJS_NOMAIN)
-LIBS_GEN_DEPS   :=$(wildcard $(DEP_LIBS_WC))
 LIBRARY_DEPS    :=$(LIBRARY_OBJ_DEPS) $(GEN_LIBS_DIR)/$(LIBRARY_NAME) $(LIBS_GEN_DEPS)
 ifeq (static,$(LIBRARY_TYPE))
 $(LIBRARY_NAME):: $(LIBRARY_DEPS)

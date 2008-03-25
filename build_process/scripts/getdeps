@@ -62,7 +62,8 @@ then
   LINK_LIBS="`sed -e 's:^ *:-l:' -e 's: \+: -l:g'<<<"$DEPS"`"
   DEP_LIBS_WC="`sed -e "s:^ *: :" \
                     -e "s: *$: :" \
-                    -e "s: \+\([^ ]\+\): $GEN_LIBS_PATH/lib\1*:g" <<<"$LOCAL_LIBS"`"
+                    -e "s: \+\([^ ]\+\): $GEN_LIBS_PATH/lib\1*:g" \
+						<<<"$LOCAL_LIBS"`"
 fi
 
 # write to file
