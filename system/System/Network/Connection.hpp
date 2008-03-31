@@ -33,7 +33,7 @@ public:
   // sock - socket of a connection to hold. after creating
   //        object of this class it **owns** sock socket!
   //
-  Connection(const System::Network::Socket &sock);
+  Connection(System::Network::Socket &sock);
 
   // returns pointer to proper transmition stream
   // (do NOT close these streams manualy!):
@@ -52,16 +52,16 @@ public:
   }
 
   // it is sometimes required to flush buffers
-  void flush(void)
+  inline void flush(void)
   {
     flushRX();
     flushTX();
   }
-  void flushRX(void)
+  inline void flushRX(void)
   {
     fflush( _rx.get() );
   }
-  void flushTX(void)
+  inline void flushTX(void)
   {
     fflush( _tx.get() );
   }

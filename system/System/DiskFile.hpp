@@ -43,7 +43,7 @@ public:
   inline int get(void)
   {
     assert( _fd.isInitialized() );
-    return _fd;
+    return _fd.get();
   }
 
   // removes file from fielsystem, but file is accessible

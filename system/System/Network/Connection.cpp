@@ -11,7 +11,7 @@ namespace System
 namespace Network
 {
 
-Connection::Connection(const Socket &sock):
+Connection::Connection(Socket &sock):
     _sock( sock )
 {
   const int &fd=_sock.get();      // just a helper

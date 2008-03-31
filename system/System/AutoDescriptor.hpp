@@ -13,38 +13,74 @@
 #include <unistd.h>
 #include <boost/operators.hpp>
 
+#include "System/AutoVariable.hpp"
 
 namespace System
 {
 
-class AutoDescriptor: public boost::equality_comparable<AutoDescriptor>
+/** \brief helper class for internal usage in AutoDescriptor.
+ */
+class DescriptorHolder
 {
 public:
-  explicit AutoDescriptor(const int fd=-1);
-  AutoDescriptor(const AutoDescriptor &ad);
-  ~AutoDescriptor(void);
-
-  bool isInitialized(void) const;
-
-  inline int get(void)
+  typedef int TValue;
+  /** \brief constructor setting start descriptor
+   *         to be held.
+   *  \param v descriptor to be held.
+   */
+  explicit DescriptorHolder(TValue v):
+    _v(v)
   {
-    return _fd;
   }
-  inline operator int(void)
+  /** \brief default constructor. lives object undefined.
+   */
+  DescriptorHolder(void):
+    _v(-1)
   {
-    return get();
   }
-  bool operator==(const AutoDescriptor& ad) const;
-
-  void reset(int fd=-1);
-  int release(void);
-  const AutoDescriptor &operator=(const AutoDescriptor& ad);
+  /** \brief returns value of descriptor.
+   *  \return descriptor being held.
+   */
+  inline TValue get(void) const
+  {
+    return _v;
+  }
+  /** \brief closes descriptor held inside.
+   */
+  void dealocate(void)
+  {
+    if(_v!=-1)
+    {
+      close(_v);
+      _v=-1;
+    }
+  }
 
 private:
-  void passOwnership(const AutoDescriptor& ad);
-  void close(void);
+  TValue _v;
+}; // class DescriptorHolder
 
-  mutable int _fd;
+class AutoDescriptor: public boost::equality_comparable<AutoDescriptor>,
+                      public AutoVariable<DescriptorHolder>
+{
+public:
+  /** \brief constructor creating object to hold descriptor.
+   *  \param fd file descriptor to hold inside.
+   */
+  explicit AutoDescriptor(const int fd=-1):
+    AutoVariable<DescriptorHolder>(fd)
+  {
+  }
+  /** \brief compares two AutoDescriptors.
+   *         this is usualy used only to test for IN-equality.
+   *  \return true is both objects are initialized
+   *          and their descriptors are equal.
+   */
+  bool operator==(const AutoDescriptor& ad) const
+  {
+    // compare makes sense only if both fd's are initialized.
+    return isInitialized() && get()==ad.get();
+  }
 }; // class AutoDescriptor
 
 } // namespace System

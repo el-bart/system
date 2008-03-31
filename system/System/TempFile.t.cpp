@@ -60,14 +60,14 @@ void testObj::test<2>(void)
 
   // write data
   int len=strlen(str);
-  ensure( write(fd, str, len)==len );
+  ensure("write error", write(fd, str, len)==len );
   // zero output buffer, as needed
   memset(buf, 0, sizeof(buf) );
   // read data
-  ensure( lseek(fd, 0, SEEK_SET)==0 );   // go to the begin of file
-  ensure( read(fd, buf, len)==len   );   // perform read operation
+  ensure("seek error", lseek(fd, 0, SEEK_SET)==0 ); // go to the begin of file
+  ensure("read error", read(fd, buf, len)==len   ); // perform read operation
   // check result
-  ensure( strcmp(buf, str)==0 );
+  ensure("strings does not match", strcmp(buf, str)==0 );
 }
 
 // test for resource leaks; this test is partialy manula as well:

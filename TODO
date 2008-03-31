@@ -1,3 +1,5 @@
-3  AutoVariable generic class.
-2  add doxygen comments.
-1  auto_c_ptr<> - malloc/free wrapper to be used for C code; usefull for foregin code;
+6
+5 Ferwork Auto* to use AutoVariable.
+4 rework System/Network/ part.
+2 add doxygen comments.
+1 auto_c_ptr<> - malloc/free wrapper to be used for C code; usefull for foregin code;

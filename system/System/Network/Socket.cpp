@@ -16,7 +16,7 @@ Socket::Socket(int sock):
 }
 
 
-Socket::Socket(const AutoDescriptor sock):
+Socket::Socket(AutoDescriptor sock):
   _sock(sock)
 {
   if( !isActive() )
@@ -26,7 +26,7 @@ Socket::Socket(const AutoDescriptor sock):
 
 void Socket::close(void)
 {
-  _sock.reset();
+  _sock.reset(-1);
 }
 
 } // namespace Network

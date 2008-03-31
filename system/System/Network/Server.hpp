@@ -52,12 +52,13 @@ protected:
   void setSock(int sock)
   {
     assert( !_sock.isActive() );        // this should be done only once!
-    _sock=System::Network::Socket(sock);
+    System::Network::Socket sTmp(sock);
+    _sock=sTmp;
   }
 
   // this is needed for spawning new connections
-  System::Network::Connection connectionFromSock(
-                                    const System::AutoDescriptor ad);
+  System::Network::Connection
+        connectionFromSock(System::AutoDescriptor ad);
 
   // these are intentionaly protected - derived clas needs to
   // change them anytime eitherway...

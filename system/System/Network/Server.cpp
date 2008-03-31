@@ -68,9 +68,11 @@ bool Server::waitForConnection(unsigned int ms)
 }
 
 
-Connection Server::connectionFromSock(const AutoDescriptor ad)
+Connection Server::connectionFromSock(AutoDescriptor ad)
 {
-  return Connection( Socket(ad) );
+  Socket     sock(ad);
+  Connection conn(sock);
+  return conn;
 }
 
 } // namespace Network

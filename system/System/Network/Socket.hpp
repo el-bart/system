@@ -43,7 +43,7 @@ public:
 
 private:
   explicit Socket(int sock=-1);
-  explicit Socket(const System::AutoDescriptor sock);
+  explicit Socket(System::AutoDescriptor sock);
 
   // this will be needed, so that only these classes could
   // estabilish connection:

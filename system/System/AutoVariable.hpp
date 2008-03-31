@@ -30,12 +30,14 @@ namespace System
  *   {
  *   public:
  *     typedef MyT TValue;
+ *
  *     explicit SomeAutoHolder(TValue v);
- *     SomeAutoHolder(void);
+ *     SomeAutoHolder(void);    // create uninitialized object.
  *
- *     TValue get(void) const;  // return current value
- *     void dealocate(void);    // dealocate resource being held
- *
+ *     TValue get(void) const;  // return current value.
+ *     void dealocate(void);    // dealocate resource being held.
+ *                              // this method must be resistant to
+ *                              // call on uninitialized value _v!
  *   private:
  *     TValue _v;
  *   };
@@ -77,7 +79,7 @@ public:
   AutoVariable(AutoVariable &av):
     _t(av._t)
   {
-    av._t.dealocate();      // ownership has been already passed
+    av._t=T();      // ownership has been already passed
   }
   /** \brief destructor.
    */

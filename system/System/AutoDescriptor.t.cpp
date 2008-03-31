@@ -56,23 +56,14 @@ template<>
 template<>
 void testObj::test<1>(void)
 {
-  ensure( read ( _adR, _buf, _size)==_size );   // read is ok.
-  ensure( write( _adW, _buf, _size)==_size );   // write is ok.
-}
-
-
-// check get() and operator()
-template<>
-template<>
-void testObj::test<2>(void)
-{
-  ensure( _adR==_adR.get() );
+  ensure( read ( _adR.get(), _buf, _size)==_size );   // read is ok.
+  ensure( write( _adW.get(), _buf, _size)==_size );   // write is ok.
 }
 
 // isInitialized() test
 template<>
 template<>
-void testObj::test<3>(void)
+void testObj::test<2>(void)
 {
   ensure( _adR.isInitialized() );
   ensure( _adW.isInitialized() );
@@ -85,7 +76,7 @@ void testObj::test<3>(void)
 // comparison
 template<>
 template<>
-void testObj::test<4>(void)
+void testObj::test<3>(void)
 {
   ensure( _adR!=_adW );
 
@@ -103,29 +94,30 @@ void testObj::test<4>(void)
 // ownership passing
 template<>
 template<>
-void testObj::test<5>(void)
+void testObj::test<4>(void)
 {
   AutoDescriptor a;
-  int tmp=_adR;
+  int tmp=_adR.get();
   a      =_adR;     // ownership passing
-  ensure( _adR.get()<0 && a==tmp );
+  ensure( _adR.get()<0 && a.get()==tmp );
 }
 
 // reseting and releasing
 template<>
 template<>
-void testObj::test<6>(void)
+void testObj::test<5>(void)
 {
   AutoDescriptor a;
-  int tmp=_adR;
+  int tmp=_adR.get();
   a.reset( _adR.release() );
-  ensure( _adR<0 && a==tmp );
+  ensure( !_adR.isInitialized() );
+  ensure( a.get()==tmp );
 }
 
 // check for resource leaking - this MUST work!
 template<>
 template<>
-void testObj::test<7>(void)
+void testObj::test<6>(void)
 {
   const int maxDescs=64*1024;   // assumption... :(
   for(int i=0; i<maxDescs; ++i)
@@ -141,7 +133,7 @@ void testObj::test<7>(void)
 // test copy-constructor
 template<>
 template<>
-void testObj::test<8>(void)
+void testObj::test<7>(void)
 {
   AutoDescriptor a( _adR );
   ensure(     a.isInitialized() );
