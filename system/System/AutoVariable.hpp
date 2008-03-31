@@ -79,8 +79,9 @@ public:
   AutoVariable(AutoVariable &av):
     _t(av._t)
   {
-    av._t=T();      // ownership has been already passed
+    av.invalidate();    // ownership has been already passed
   }
+
   /** \brief destructor.
    */
   ~AutoVariable(void)
@@ -105,7 +106,7 @@ public:
   TValue release(void)
   {
     TValue v=_t.get();
-    _t=T();
+    invalidate();
     return v;
   }
 
@@ -115,7 +116,7 @@ public:
   operator T(void)
   {
     T t=_t;
-    _t.dealocate();
+    invalidate();
     return t;
   }
 
@@ -126,7 +127,7 @@ public:
   AutoVariable& operator=(AutoVariable &av)
   {
     _t=av._t;
-    av._t.dealocate();
+    av.invalidate();
     return *this;
   }
 
@@ -140,6 +141,11 @@ public:
   }
 
 private:
+  void invalidate(void)
+  {
+    _t=T();
+  }
+
   T _t;
 }; // class AutoVariable
 

@@ -78,17 +78,12 @@ template<>
 template<>
 void testObj::test<3>(void)
 {
-  ensure( _adR!=_adW );
-
-  // special case - comparison of 2 uninitialized elements.
-  AutoDescriptor a(-1);
-  AutoDescriptor b(-1);
-  ensure( a!=b );
+  ensure( _adR.get()!=_adW.get() );
 
   // compare of 2 the same descriptors
-  AutoDescriptor c( _adR.get() );   // this must be released
-  ensure( _adR==c );
-  c.release();      // this wasn't "new" descriptor, so it's ok.
+  int tmp=_adR.get();
+  AutoDescriptor c( _adR.release() );
+  ensure( c.get()==tmp );
 }
 
 // ownership passing

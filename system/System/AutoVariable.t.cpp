@@ -3,6 +3,7 @@
  *
  */
 #include <tut.h>
+#include <string>
 
 #include "System/AutoVariable.hpp"
 
@@ -28,9 +29,22 @@ struct AutoVariableTestData
     }
     void dealocate(void)
     {
+      if(_v==-1)
+        return;
+
+      if(_check)
+        throw std::string("dealocate(): "
+                          "dealocating when not requested");
       _v=-1;
     }
-    int _v;     // -1 means: no-ownership
+
+    static void setCheck(bool check)
+    {
+      _check=check;
+    }
+
+    int         _v;     // -1 means: no-ownership
+    static bool _check; // if true then class throws on dealocate()
   }; // struct TestDataHolder
 
   typedef AutoVariable<TestDataHolder> TestAV;
@@ -39,6 +53,13 @@ struct AutoVariableTestData
     _av1(1),
     _av2(2)
   {
+    TestDataHolder::setCheck(false);    // do not check by default
+  }
+
+  TestAV mkTestAV(void) const
+  {
+    TestAV t(123);
+    return t;
   }
 
   TestAV _av1;
@@ -46,6 +67,9 @@ struct AutoVariableTestData
 }; // struct AutoVariableTestData
 
 } // namespace System
+
+// static member of TestDataHolder declaration
+bool System::AutoVariableTestData::TestDataHolder::_check;
 
 
 namespace tut
@@ -61,6 +85,7 @@ namespace
 tut::factory tf("System/AutoVariable");
 }
 
+using namespace std;
 using namespace System;
 
 namespace tut
@@ -159,6 +184,84 @@ void testObj::test<8>(void)
 
   t.reset(-1);
   ensure( !t.isInitialized() );
+}
+
+// test if dealocate() is called ONLY when it is needed
+// in case of passing ownership via assignment.
+template<>
+template<>
+void testObj::test<9>(void)
+{
+  try
+  {
+    TestDataHolder::setCheck(true);
+    TestAV b;
+    b=_av1;
+    TestDataHolder::setCheck(false);
+  }
+  catch(const string &ex)
+  {
+    TestDataHolder::setCheck(false);
+    fail( ex.c_str() );
+  }
+}
+
+// test if dealocate() is called ONLY when it is needed
+// when passing ownership via copy-construction, via
+// temporary object.
+template<>
+template<>
+void testObj::test<10>(void)
+{
+  try
+  {
+    TestDataHolder::setCheck(true);
+    TestAV b( mkTestAV() );
+    TestDataHolder::setCheck(false);
+  }
+  catch(const string &ex)
+  {
+    TestDataHolder::setCheck(false);
+    fail( ex.c_str() );
+  }
+}
+
+// test if dealocate() is called ONLY when it is needed
+// when passing ownership via release().
+template<>
+template<>
+void testObj::test<12>(void)
+{
+  try
+  {
+    TestDataHolder::setCheck(true);
+    TestAV b( _av1.release() );
+    TestDataHolder::setCheck(false);
+  }
+  catch(const string &ex)
+  {
+    TestDataHolder::setCheck(false);
+    fail( ex.c_str() );
+  }
+}
+
+// test if dealocate() is called ONLY when it is needed
+// when passing ownership via copy-construction.
+template<>
+template<>
+void testObj::test<11>(void)
+{
+  try
+  {
+    TestDataHolder::setCheck(true);
+    TestAV b(_av1);
+    TestDataHolder::setCheck(false);
+  }
+  catch(const string &ex)
+  {
+    TestDataHolder::setCheck(false);
+    fail( ex.c_str() );
+  }
 }
 
 } // namespace tut

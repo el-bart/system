@@ -10,44 +10,63 @@
 
 /* public header */
 
+#include <stdio.h>
 #include <unistd.h>
 #include <boost/operators.hpp>
 
+#include "System/AutoVariable.hpp"
 
 namespace System
 {
 
-class AutoFILE: public boost::equality_comparable<AutoFILE>
+/** \brief helper class for internal usage in AutoFILE.
+ */
+class FILEHolder
 {
 public:
-  explicit AutoFILE(FILE *fs=NULL);
-  AutoFILE(const AutoFILE &af);
-  ~AutoFILE(void);
-
-  inline bool isInitialized(void) const
+  typedef FILE* TValue;
+  /** \brief constructor setting start FILE pointer
+   *         to be held.
+   *  \param v FILE to be held.
+   */
+  explicit FILEHolder(TValue v=NULL):
+    _v(v)
   {
-    return _fs!=NULL;
   }
-
-  inline FILE *get(void)
+  /** \brief returns value of descriptor.
+   *  \return descriptor being held.
+   */
+  inline TValue get(void) const
   {
-    return _fs;
+    return _v;
   }
-  inline operator FILE*(void)
+  /** \brief closes descriptor held inside.
+   */
+  void dealocate(void)
   {
-    return get();
+    if(_v!=NULL)
+    {
+      fclose(_v);
+      _v=NULL;
+    }
   }
-  bool operator==(const AutoFILE &af) const;
-
-  void reset(FILE *fs=NULL);
-  FILE *release(void);
-  const AutoFILE &operator=(const AutoFILE& af);
 
 private:
-  void passOwnership(const AutoFILE& af);
-  void close(void);
+  TValue _v;
+}; // class FILEHolder
 
-  mutable FILE *_fs;
+
+class AutoFILE: public boost::equality_comparable<AutoFILE>,
+                public System::AutoVariable<FILEHolder>
+{
+public:
+  /** \brief create FILE* holder.
+   *  \param fs FILE pointer to be held.
+   */
+  explicit AutoFILE(FILE *fs=NULL):
+    System::AutoVariable<FILEHolder>(fs)
+  {
+  }
 }; // class AutoFILE
 
 } // namespace System

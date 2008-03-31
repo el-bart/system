@@ -28,14 +28,8 @@ public:
    *         to be held.
    *  \param v descriptor to be held.
    */
-  explicit DescriptorHolder(TValue v):
+  explicit DescriptorHolder(TValue v=-1):
     _v(v)
-  {
-  }
-  /** \brief default constructor. lives object undefined.
-   */
-  DescriptorHolder(void):
-    _v(-1)
   {
   }
   /** \brief returns value of descriptor.
@@ -70,16 +64,6 @@ public:
   explicit AutoDescriptor(const int fd=-1):
     AutoVariable<DescriptorHolder>(fd)
   {
-  }
-  /** \brief compares two AutoDescriptors.
-   *         this is usualy used only to test for IN-equality.
-   *  \return true is both objects are initialized
-   *          and their descriptors are equal.
-   */
-  bool operator==(const AutoDescriptor& ad) const
-  {
-    // compare makes sense only if both fd's are initialized.
-    return isInitialized() && get()==ad.get();
   }
 }; // class AutoDescriptor
 

@@ -54,17 +54,18 @@ template<>
 template<>
 void testObj::test<1>(void)
 {
-  ensure( fread (_buf, _size, 1, _adR)==1 );   // read is ok.
-  ensure( fwrite(_buf, _size, 1, _adW)==1 );   // write is ok.
+  ensure( fread (_buf, _size, 1, _adR.get() )==1 );   // read is ok.
+  ensure( fwrite(_buf, _size, 1, _adW.get() )==1 );   // write is ok.
 }
 
-
-// check get() and operator()
+// test copy-constructor
 template<>
 template<>
 void testObj::test<2>(void)
 {
-  ensure( _adR==_adR.get() );
+  AutoFILE a( _adR );
+  ensure(     a.isInitialized() );
+  ensure( !_adR.isInitialized() );
 }
 
 // isInitialized() test
@@ -80,50 +81,32 @@ void testObj::test<3>(void)
   ensure( !_adW.isInitialized() );
 }
 
-// comparison
+// ownership passing
 template<>
 template<>
 void testObj::test<4>(void)
 {
-  ensure( _adR!=_adW );
-
-  // special case - comparison of 2 uninitialized elements.
-  AutoFILE a(NULL);
-  AutoFILE b(NULL);
-  ensure( a!=b );
-
-  // compare of 2 the same descriptors
-  AutoFILE c( _adR.get() );   // this must be released
-  ensure( _adR==c );
-  c.release();      // this wasn't "new" descriptor, so it's ok.
-}
-
-// ownership passing
-template<>
-template<>
-void testObj::test<5>(void)
-{
   AutoFILE a;
-  FILE *tmp=_adR;
+  FILE *tmp=_adR.get();
   a        =_adR;     // ownership passing
-  ensure( _adR.get()==NULL && a==tmp );
+  ensure( _adR.get()==NULL && a.get()==tmp );
 }
 
 // reseting and releasing
 template<>
 template<>
-void testObj::test<6>(void)
+void testObj::test<5>(void)
 {
   AutoFILE a;
-  FILE *tmp=_adR;
+  FILE *tmp=_adR.get();
   a.reset( _adR.release() );
-  ensure( _adR==NULL && a==tmp );
+  ensure( _adR.get()==NULL && a.get()==tmp );
 }
 
 // check for resource leaking - this MUST work!
 template<>
 template<>
-void testObj::test<7>(void)
+void testObj::test<6>(void)
 {
   const int maxDescs=64*1024;   // assumption... :(
   for(int i=0; i<maxDescs; ++i)
@@ -134,16 +117,6 @@ void testObj::test<7>(void)
     AutoFILE a(tmp);            // passing the ownership
     // 'a' should be released here
   }
-}
-
-// test copy-constructor
-template<>
-template<>
-void testObj::test<8>(void)
-{
-  AutoFILE a( _adR );
-  ensure(     a.isInitialized() );
-  ensure( !_adR.isInitialized() );
 }
 
 } // namespace tut
