@@ -135,7 +135,7 @@ public:
    */
   bool isInitialized(void) const
   {
-    static const T invalid;
+    const T invalid;
     return _t.get()!=invalid.get();
   }
 

@@ -21,32 +21,37 @@
 namespace System
 {
 
-template<TElem>
+template<T>
 class AutoVector: private boost::noncopyable
 {
 public:
-  typedef std::vector<TElem>::iterator       iterator;
-  typedef std::vector<TElem>::const_iterator const_iterator;
+  typedef std::vector<T>::iterator       iterator;
+  typedef std::vector<T>::const_iterator const_iterator;
 
   ~AutoVector(void)
   {
     clear();
-  };
+  }
 
   void clear(void)
   {
-    for(iterator it=_elems.begin(); it!=_elems.end(); ++it)
+    for( iterator it=_elems.begin(); it!=_elems.end(); it=_elems.begin() )
       erase(it);
-  };
+  }
 
   inline void erase(iterator it)
   {
     delete *it;
     _elems.erase(it);
-  };
+  }
+
+  inline void push_back(T *elem)
+  {
+    _elems.push_back(T);
+  }
 
 private:
-  std::vector<TElem*> _elems;
+  std::vector<T*> _elems;
 }; // class AutoVector
 
 };
