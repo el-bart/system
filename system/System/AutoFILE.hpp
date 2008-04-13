@@ -24,6 +24,8 @@ namespace System
 class FILEHolder
 {
 public:
+  /** \brief typedef for value type being held.
+   */
   typedef FILE* TValue;
   /** \brief constructor setting start FILE pointer
    *         to be held.
@@ -56,6 +58,8 @@ private:
 }; // class FILEHolder
 
 
+/** \brief auto_ptr<>-like class for holding FILE* stream pointers.
+ */
 class AutoFILE: public boost::equality_comparable<AutoFILE>,
                 public System::AutoVariable<FILEHolder>
 {

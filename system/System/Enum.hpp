@@ -8,37 +8,37 @@
 /* public header */
 
 #include <iostream>
-#include <assert.h>
+#include <cassert>
 #include <boost/operators.hpp>
 
 namespace System
 {
 
-/*
- * Enum<>
+/** \brief Class wrapping around user-specified enum.
  *
- * Class wrapping around user-specified enum.
+ *  reference usage:
  *
- * usage:
+ *  \code
  *
- *
- * struct MyEnumToWrap
- * {
- *   typedef enum
+ *   struct MyEnumToWrap
  *   {
- *     A,
- *     B,
- *     C
- *   } Type;
- * };
+ *     typedef enum
+ *     {
+ *       A,
+ *       B,
+ *       C
+ *     } Type;
+ *   };
  *
- * // [...]
+ *   // [...]
  *
- * typedef System::Enum<MyEnumToWrap> Enum1;
+ *   typedef System::Enum<MyEnumToWrap> Enum1;
  *
- * // [...]
+ *   // [...]
  *
- * Enum1 e;
+ *   Enum1 e;
+ *
+ *  \endcode
  *
  */
 template<typename E>
@@ -46,36 +46,53 @@ class Enum: public E,
             public boost::equality_comparable< Enum<E> >
 {
 public:
-  // some useful typedefs.
-  typedef Enum<E>          TType;   // ThisType
-  typedef typename E::Type EType;   // EnumType
+  /** \brief ThisType typedef.
+   */
+  typedef Enum<E>          TType;
+  /** \brief EnumType typedef.
+   */
+  typedef typename E::Type EType;
 
-  // construction
+  /** \brief construction from enum.
+   *  \param e enum to be constructed from.
+   */
   inline Enum(const EType& e):      // 'explicit' is not welcomed here
     _e(e)
   {
   }
 
-  // assignment
+  /** \brief assignment from pure enum.
+   *  \param e enum value to assign.
+   *  \return this refference.
+   */
   inline const TType& operator=(const EType& e)
   {
     _e=e;
     return *this;
   }
 
-  // comparison
+  /** \brief comparison of two classes.
+   *  \param t enum to comapre with.
+   *  \return true if enums are equal.
+   */
   inline bool operator==(const TType& t) const
   {
     return _e==t._e;
   }
+  /** \brief compare enum class with enum value.
+   *  \param e enum value to campare with.
+   *  \return true is values are the same.
+   */
   inline bool operator==(const EType& e) const
   {
     return _e==e;
   }
 
-  // explicit convertion is prefered since implicit
-  // one might cause compiler confusions when comparing
-  // with raw int values.
+  /** \brief explicit convertion is prefered since implicit
+   *         might cause compiler confusions when comparing
+   *         with raw int values.
+   *  \return enum value as integer.
+   */
   inline int toInt(void) const
   {
     return static_cast<int>(_e);

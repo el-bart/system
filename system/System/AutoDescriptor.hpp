@@ -23,6 +23,8 @@ namespace System
 class DescriptorHolder
 {
 public:
+  /** \brief typedef for value used as type being held.
+   */
   typedef int TValue;
   /** \brief constructor setting start descriptor
    *         to be held.
@@ -54,6 +56,8 @@ private:
   TValue _v;
 }; // class DescriptorHolder
 
+/** \brief auto_ptr<>-like class for holding file/socket descriptors.
+ */
 class AutoDescriptor: public boost::equality_comparable<AutoDescriptor>,
                       public AutoVariable<DescriptorHolder>
 {

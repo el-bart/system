@@ -12,7 +12,7 @@
 
 /* public header */
 
-#include <assert.h>
+#include <cassert>
 
 #include "System/DiskFile.hpp"
 #include "System/Exception.hpp"
@@ -21,9 +21,13 @@
 namespace System
 {
 
+/** \brief class represenintg temporary file.
+ */
 class TempFile: public DiskFile
 {
 public:
+  /** \brief creates temporary file.
+   */
   TempFile(void);
 }; // class TempFile
 

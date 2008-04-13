@@ -42,12 +42,15 @@ namespace System
  *     TValue _v;
  *   };
  *
+ *  \endcode
+ *
  */
 template<typename T>
 class AutoVariable
 {
 public:
-  // this makes life easier:
+  /** \brief declaration to make file easier. :)
+   */
   typedef typename T::TValue TValue;
 
   /** \brief constructs class from user data-holder.
@@ -97,12 +100,18 @@ public:
     return _t.get();
   }
 
+  /** \brief dealocates resource held and stores new one.
+   *  \param v new value to be stored.
+   */
   void reset(TValue v)
   {
     _t.dealocate();
     _t=T(v);
   }
 
+  /** \brief gives back ownership of resource without deallocating it.
+   *  \return resource that has been released.
+   */
   TValue release(void)
   {
     TValue v=_t.get();

@@ -11,17 +11,27 @@
 
 #include <boost/noncopyable.hpp>
 #include <boost/scoped_ptr.hpp>
-#include <assert.h>
+#include <cassert>
 
 
 namespace System
 {
 
+/** \brief Mayer's singleton implementation on template.
+ */
 template<typename T>
 class Singleton: private boost::noncopyable
 {
 public:
-  // get pointer to singleton internal type
+  /** \brief get pointer to singleton internal type
+   *
+   *  singleton object is created on heap for increased
+   *  generality (in case T would be huge object).
+   *
+   *  \return object instance pointer. pointer is returned
+   *          instead of reference since it is harder to
+   *          accidently make obj-copy this way.
+   */
   inline static T *get(void)
   {
     static boost::scoped_ptr<T> s( new T );

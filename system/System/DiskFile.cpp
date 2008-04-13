@@ -14,7 +14,7 @@ using namespace boost;
 namespace System
 {
 
-DiskFile::DiskFile(const string &fileName, int flags, mode_t mode):
+DiskFile::DiskFile(const std::string &fileName, int flags, mode_t mode):
   _fileName(fileName),
   _fd( open( _fileName.c_str(), flags, mode ) )
 {
@@ -22,7 +22,7 @@ DiskFile::DiskFile(const string &fileName, int flags, mode_t mode):
     throwFileErrorException("DiskFile::DiskFile()", "open");
 }
 
-DiskFile::DiskFile( pair<string, shared_ptr<AutoDescriptor> > p ):
+DiskFile::DiskFile( std::pair<std::string, boost::shared_ptr<AutoDescriptor> > p ):
   _fileName(p.first),
   _fd( *p.second.get() )    // pass the ownership
 {
