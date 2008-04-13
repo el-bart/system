@@ -1,4 +1,5 @@
+* System::Network has been removed - use boost::asio instead.
+* System::Threads he been removed - use boost::thread instead.
 * uses new build_process v0.5.3.
-* keepRange<>() has second implementation allowing to convert between
-  types, with range limitation if needed.
+* keepRange<>() has second implementation allowing to convert between types, with range limitation if needed.
 * added mtest for DiskFile to test if it is poiisble to write file > 2GB.
