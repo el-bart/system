@@ -18,7 +18,7 @@ int main(int argc, char **argv)
 {
   if(argc!=2)
   {
-    cerr<<argv[0]<<" <file_to_store_2GB_of_trash>"<<endl;
+    cerr<<argv[0]<<" <file_to_store_over_2GB_of_trash>"<<endl;
     return 1;
   }
 
