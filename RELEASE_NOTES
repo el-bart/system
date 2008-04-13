@@ -1,3 +1,6 @@
+* added AutoCptr for mananging C-style pointers (malloc()/free()).
+* removed unfinished code of AutoVector.
+* added doxygen comments.
 * System::Network has been removed - use boost::asio instead.
 * System::Threads he been removed - use boost::thread instead.
 * uses new build_process v0.5.3.
