@@ -24,8 +24,12 @@ namespace System
 
 /** \brief base class for all states.
  *
- *  this object MUST BE STATELES in order to work
- *  properly after reset!
+ *  object holds representation of single state for
+ *  state machine. to bypass limitations of 'classical'
+ *  state machines it has been decided to allow each
+ *  object to have its internal state. this is very useful
+ *  in case of states that would normaly represent just
+ *  counting input signals, etc...
  */
 template<typename TEnum>
 struct StateBase
@@ -41,6 +45,17 @@ public:
    *  \return next state enum after call.
    */
   virtual TEnum doStep(void) = 0;
+
+  /** \brief resetes internal state of object.
+   *
+   *  since 'classical' states should not contain
+   *  state by itself, default implementation should be
+   *  used as often as it is possible. before you'll
+   *  add state-object's internal state think twice.
+   */
+  virtual void reset(void)
+  {
+  }
 }; // struct StateBase
 
 
@@ -87,7 +102,16 @@ public:
    */
   inline void reset(void)
   {
+    // set start state.
     _currentState=_resetState;
+    // reset internal states of each object.
+    for(typename StateCollection::iterator it=_states.begin();
+        it!=_states.end();
+        ++it)
+    {
+      assert((*it)!=NULL);
+      (*it)->reset();
+    }
   }
 
   /** \brief returns state in which machine is in.

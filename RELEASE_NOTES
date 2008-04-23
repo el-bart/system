@@ -1,3 +1,4 @@
+* StateMachine internal states can now handle their states as well (this simplifies life in case of operations like counting, etc...).
 * added AutoCptr for mananging C-style pointers (malloc()/free()).
 * removed unfinished code of AutoVector.
 * added doxygen comments.

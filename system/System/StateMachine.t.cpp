@@ -34,10 +34,22 @@ struct StateMachineTestData
   };
   struct StateB: public System::StateBase<StateEnum>
   {
+    StateB(void):
+      cnt_(0)
+    {
+    }
     virtual StateEnum doStep(void)
     {
+      ++cnt_;
       return StateEnum::STATE_C;
     }
+
+    virtual void reset(void)
+    {
+      cnt_=0;
+    }
+
+    int cnt_;
   };
   struct StateC: public System::StateBase<StateEnum>
   {
@@ -57,6 +69,12 @@ struct StateMachineTestData
       addState(StateEnum::STATE_B, &b);
       addState(StateEnum::STATE_C, &c);
     }
+
+    int getStateBcnt(void) const
+    {
+      return b.cnt_;
+    }
+
   private:
     StateA a;
     StateB b;
@@ -121,6 +139,26 @@ void testObj::test<3>(void)
   ensure( _vsm->step()==StateEnum::STATE_B );
   _vsm->reset();
   ensure( _vsm->step()==StateEnum::STATE_B );
+}
+
+// check if reseting state-objects works
+template<>
+template<>
+void testObj::test<4>(void)
+{
+  ensure( _sm.getStateBcnt()==0 );
+
+  ensure( _vsm->step()==StateEnum::STATE_B );
+  ensure( _sm.getStateBcnt()==0 );
+
+  ensure( _vsm->step()==StateEnum::STATE_C );
+  ensure( _sm.getStateBcnt()==1 );
+
+  ensure( _vsm->step()==StateEnum::STATE_C );
+  ensure( _sm.getStateBcnt()==1 );
+
+  _vsm->reset();
+  ensure( _sm.getStateBcnt()==0 );
 }
 
 } // namespace tut

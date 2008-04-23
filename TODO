@@ -1,2 +1,1 @@
 8
-7 rework state machine so that states will allow holding of internal state (to make machine more compact for common cases like counting).
