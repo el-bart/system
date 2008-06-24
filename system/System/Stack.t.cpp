@@ -83,5 +83,38 @@ void testObj::test<3>(void)
   }
 }
 
+// test if get from empty queue throws
+template<>
+template<>
+void testObj::test<4>(void)
+{
+  Stack<string> ss;
+  try
+  {
+    ss.get();       // should throw
+    fail("get() did not throw on empty queue");
+  }
+  catch(const Exception &ex)
+  {
+    // this is expected
+  }
+}
+
+// test if get() does not remove element from stack
+template<>
+template<>
+void testObj::test<5>(void)
+{
+  Stack<string> ss;
+  ss.push("test1");
+  ss.push("test2");
+
+  ensure("get() returns invalid element (1)", ss.get()=="test2");
+  ensure("get() changes stack (1)",           ss.get()=="test2");
+  ss.pop();
+  ensure("get() returns invalid element (2)", ss.get()=="test1");
+  ensure("get() changes stack (2)",           ss.get()=="test1");
+}
+
 } // namespace tut
 

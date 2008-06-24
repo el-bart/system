@@ -1,3 +1,4 @@
+* added get() to Stack<>, which returns element but does not remove it from stack.
 * added generic Stack<> template (based on deque).
 * StateMachine internal states can now handle their states as well (this simplifies life in case of operations like counting, etc...).
 * added AutoCptr for mananging C-style pointers (malloc()/free()).

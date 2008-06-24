@@ -40,11 +40,21 @@ public:
    */
   T pop(void)
   {
-    if( empty() )
-      throw Exception("System::Stack::pop(): stack is empty");
-    const T t=elems_[elems_.size()-1];  // get element
+    const T t=get();                    // get element
     elems_.pop_back();                  // remove it from the queue
     return t;                           // return its value
+  }
+
+  /**
+   * returns element from the top, without destroing it.
+   * throws if stack is empty.
+   * \return copy of element from the top.
+   */
+  T get(void)
+  {
+    if( empty() )
+      throw Exception("System::Stack::get(): stack is empty");
+    return elems_[elems_.size()-1];  // get element
   }
 
   /**
