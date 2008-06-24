@@ -1,1 +1,2 @@
-9
+10
+9  add get() method to Stack<> allowing to read without removal + add tests.
