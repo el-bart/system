@@ -10,6 +10,7 @@
 #include <tut_reporter.h>
 #include <iostream>
 #include <string>
+#include <stdlib.h>
 #include <cassert>
 
 
