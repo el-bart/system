@@ -93,9 +93,9 @@ public:
    *         with raw int values.
    *  \return enum value as integer.
    */
-  inline int toInt(void) const
+  inline long toInt(void) const
   {
-    return static_cast<int>(_e);
+    return _e;
   }
 
 private:
