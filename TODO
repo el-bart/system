@@ -1,1 +1,2 @@
-10
+11
+10 add System::IterableEnum<>, deriving from System::Enum<>, allowing to use Enum type as iterable.
