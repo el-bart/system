@@ -1,3 +1,4 @@
+* added 2nd license: revised BSD
 * added missing headers.
 * removed extra dependency on pthreads.
 * StateMachine internal states can now handle their states as well (this simplifies life in case of operations like counting, etc...).
