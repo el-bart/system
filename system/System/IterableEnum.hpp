@@ -65,44 +65,44 @@ public:
   {
   public:
     const_iterator(void):
-      _e( static_cast<EType>( static_cast<long>(E::Min) ) )
+      e_( static_cast<EType>( static_cast<long>(E::Min) ) )
     {
-      check(_e);
+      check(e_);
     }
     explicit const_iterator(const EType e):
-      _e(e)
+      e_(e)
     {
-      check(_e);
+      check(e_);
     }
 
     EType operator*(void) const
     {
-      check(_e);
-      return _e;
+      check(e_);
+      return e_;
     }
 
     bool operator==(const const_iterator &it) const
     {
-      check(_e);
-      check(it._e);
-      return _e==it._e;
+      check(e_);
+      check(it.e_);
+      return e_==it.e_;
     }
 
     // pre-incrementation
     const const_iterator &operator++(void)
     {
-      check(_e);
-      _e=static_cast<EType>(_e+1);
-      check(_e);
+      check(e_);
+      e_=static_cast<EType>(e_+1);
+      check(e_);
       return *this;
     }
     // post-incrementation
     const_iterator operator++(int)
     {
-      check(_e);
+      check(e_);
       const const_iterator tmp=*this;
-      _e=static_cast<EType>(_e+1);
-      check(_e);
+      e_=static_cast<EType>(e_+1);
+      check(e_);
       return tmp;
     }
 
@@ -114,7 +114,7 @@ public:
       // iterator as well!
       assert( static_cast<long>(e)<=E::Max+1             );
     }
-    EType _e;
+    EType e_;
   }; // class const_iterator
 
   /** \brief gives size of container.  */

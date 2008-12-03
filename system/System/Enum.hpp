@@ -55,7 +55,7 @@ public:
    *  \param e enum to be constructed from.
    */
   inline Enum(const EType e):   // 'explicit' is not welcomed here
-    _e(e)
+    e_(e)
   {
   }
 
@@ -65,7 +65,7 @@ public:
    */
   inline const TType& operator=(const EType e)
   {
-    _e=e;
+    e_=e;
     return *this;
   }
 
@@ -75,7 +75,7 @@ public:
    */
   inline bool operator==(const TType t) const
   {
-    return _e==t._e;
+    return e_==t.e_;
   }
   /** \brief compare enum class with enum value.
    *  \param e enum value to campare with.
@@ -83,7 +83,7 @@ public:
    */
   inline bool operator==(const EType e) const
   {
-    return _e==e;
+    return e_==e;
   }
 
   /** \brief explicit convertion is prefered since implicit
@@ -93,11 +93,11 @@ public:
    */
   inline long toLong(void) const
   {
-    return _e;
+    return e_;
   }
 
 private:
-  EType _e;
+  EType e_;
 }; // class Enum
 
 } // namespace System
