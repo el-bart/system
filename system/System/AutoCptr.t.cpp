@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <string.h>
+#include <cassert>
 
 #include "System/AutoCptr.hpp"
 
@@ -82,12 +83,17 @@ template<>
 template<>
 void testObj::test<3>(void)
 {
-  const size_t size=100*1024*1024;   // 100MB
+  const size_t oneMB=1024*1024;
+  const size_t size =300*oneMB;     // 300MB
+  const size_t off  =size-oneMB;    // next to last MB
+  assert(size>oneMB);
   for(size_t i=0; i<10; ++i)
   {
     ACP p( malloc(size) );          // allocate and catch.
     ensure( p.get()!=NULL );        // test if it passed.
-    memset( p.get(), 0, size );     // write something to memory.
+    // write something to the memory
+    char *ptr=static_cast<char*>( p.get() );
+    memset( ptr+off, 0, oneMB );
     // here goes release.
   }
 }
