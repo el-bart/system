@@ -128,8 +128,8 @@ public:
   inline TEnum step(void)
   {
     // get current state from map:
-    assert( _currentState.toInt()>=0 );
-    const unsigned int curSt=_currentState.toInt();
+    assert( _currentState.toLong()>=0 );
+    const unsigned long curSt=_currentState.toLong();
     assert( /* 0<=curSt && */ curSt<_states.size() );
     StateType *se=_states[curSt];
     assert( se!=NULL );
@@ -152,8 +152,8 @@ protected:
    */
   inline void addState(const TEnum state, StateType *handler)
   {
-    assert( state.toInt()>=0 );
-    const unsigned int stateInt=state.toInt();
+    assert( state.toLong()>=0 );
+    const unsigned long stateInt=state.toLong();
     assert( /* 0<=stateInt && */ stateInt<_states.size() ||
             !"index out of bounds - possibly number of enries is too small" );
     assert( _states[stateInt]==NULL ||

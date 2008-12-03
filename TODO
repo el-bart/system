@@ -1,3 +1,2 @@
 12 update System::Singleton to use System::AtExit to provide proper construction/destruction order.
 11 add System::AtExit.
-10 add System::IterableEnum<>, deriving from System::Enum<>, allowing to use Enum type as iterable.

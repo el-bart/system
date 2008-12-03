@@ -95,21 +95,29 @@ void testObj::test<3>(void)
           other1==other2 );
 }
 
-// convertion to int
+// convertion to long
 template<>
 template<>
 void testObj::test<4>(void)
 {
   int x;
 
-  x=_te.toInt();
+  x=_te.toLong();
   ensure(x==1);
 
   _te=TestEnum::C;
-  x=_te.toInt();
+  x=_te.toLong();
   ensure(x==100);
 }
 
+// comparison to self
+template<>
+template<>
+void testObj::test<5>(void)
+{
+  ensure(   _te==_te  );
+  ensure( !(_te!=_te) );
+}
 
 } // namespace tut
 

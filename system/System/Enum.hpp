@@ -7,8 +7,6 @@
 
 /* public header */
 
-#include <iostream>
-#include <cassert>
 #include <boost/operators.hpp>
 
 namespace System
@@ -56,7 +54,7 @@ public:
   /** \brief construction from enum.
    *  \param e enum to be constructed from.
    */
-  inline Enum(const EType& e):      // 'explicit' is not welcomed here
+  inline Enum(const EType e):   // 'explicit' is not welcomed here
     _e(e)
   {
   }
@@ -65,7 +63,7 @@ public:
    *  \param e enum value to assign.
    *  \return this refference.
    */
-  inline const TType& operator=(const EType& e)
+  inline const TType& operator=(const EType e)
   {
     _e=e;
     return *this;
@@ -75,7 +73,7 @@ public:
    *  \param t enum to comapre with.
    *  \return true if enums are equal.
    */
-  inline bool operator==(const TType& t) const
+  inline bool operator==(const TType t) const
   {
     return _e==t._e;
   }
@@ -83,7 +81,7 @@ public:
    *  \param e enum value to campare with.
    *  \return true is values are the same.
    */
-  inline bool operator==(const EType& e) const
+  inline bool operator==(const EType e) const
   {
     return _e==e;
   }
@@ -93,13 +91,13 @@ public:
    *         with raw int values.
    *  \return enum value as integer.
    */
-  inline long toInt(void) const
+  inline long toLong(void) const
   {
     return _e;
   }
 
 private:
-  typename E::Type _e;
+  EType _e;
 }; // class Enum
 
 } // namespace System
