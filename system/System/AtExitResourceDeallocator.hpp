@@ -9,6 +9,7 @@
 
 #include <memory>
 #include <boost/noncopyable.hpp>
+#include <cassert>
 
 
 namespace System
@@ -36,6 +37,30 @@ struct AtExitResourceDeallocator: private boost::noncopyable
    */
   virtual void deallocate(void)=0;
 }; // struct AtExitResourceDeallocator
+
+
+/** \brief template for dealocating pointers to classes.
+ */
+template<typename T>
+class AtExitMemoryDeallocator: public AtExitResourceDeallocator
+{
+public:
+  /** \brief creates dealocator from pointer.
+   *  \param t pointer to object to be deleted.
+   */
+  explicit AtExitMemoryDeallocator(T *t):
+    t_(t)
+  {
+  }
+  /** \brief deletes object.
+   */
+  virtual void deallocate(void)
+  {
+    t_.reset();
+  }
+private:
+  std::auto_ptr<T> t_;
+}; // class AtExitMemoryDeallocator
 
 } // namespace System
 

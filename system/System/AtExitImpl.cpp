@@ -23,6 +23,8 @@ AtExitImpl::~AtExitImpl(void)
 {
   assert(deallocationDone_ && "deallocateAll() has not been called. "
                               "this suggest resource leak.");
+  assert(deallocators_.size()==0 && "something registered after "
+                                    "deallocateAll()");
 }
 
 void AtExitImpl::deallocateAll(void)
