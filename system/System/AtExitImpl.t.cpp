@@ -43,21 +43,21 @@ namespace
 {
 
 template<int N>
-struct TestDealocator: public AtExitResourceDealocator
+struct TestDeallocator: public AtExitResourceDeallocator
 {
-  explicit TestDealocator(vector<int> *out):
+  explicit TestDeallocator(vector<int> *out):
     out_(out)
   {
     assert(out_!=NULL);
   }
 
-  virtual void dealocate(void)
+  virtual void deallocate(void)
   {
     out_->push_back(N);
   }
 
   vector<int> *out_;
-}; // struct TestDealocator
+}; // struct TestDeallocator
 
 } // unnamed namespace
 
@@ -70,7 +70,7 @@ template<>
 void testObj::test<1>(void)
 {
   AtExitImpl impl;
-  impl.dealocateAll();
+  impl.deallocateAll();
 }
 
 // test dealocation of some elements
@@ -80,15 +80,15 @@ void testObj::test<2>(void)
 {
   AtExitImpl   impl;
   // create
-  AtExit::Tptr res1( new TestDealocator<1>(&out_) );
-  AtExit::Tptr res2( new TestDealocator<2>(&out_) );
-  AtExit::Tptr res3( new TestDealocator<3>(&out_) );
+  AtExit::TDeallocPtr res1( new TestDeallocator<1>(&out_) );
+  AtExit::TDeallocPtr res2( new TestDeallocator<2>(&out_) );
+  AtExit::TDeallocPtr res3( new TestDeallocator<3>(&out_) );
   // register
-  impl.registerDealocator(res1);
-  impl.registerDealocator(res2);
-  impl.registerDealocator(res3);
+  impl.registerDeallocator(res1);
+  impl.registerDeallocator(res2);
+  impl.registerDeallocator(res3);
   // dealocate
-  impl.dealocateAll();
+  impl.deallocateAll();
 
   // check output
   ensure_equals("invlid size of output container", out_.size(), 3);
@@ -103,10 +103,10 @@ template<>
 void testObj::test<3>(void)
 {
   AtExitImpl   impl;
-  AtExit::Tptr res( new TestDealocator<12>(&out_) );
-  impl.registerDealocator(res);
+  AtExit::TDeallocPtr res( new TestDeallocator<12>(&out_) );
+  impl.registerDeallocator(res);
   ensure("problem passing ownership to AtExitImpl", res.get()==NULL);
-  impl.dealocateAll();
+  impl.deallocateAll();
   // check output
   ensure_equals("invlid size of output container", out_.size(), 1);
   ensure_equals("unknown unregistration", out_[0], 12);

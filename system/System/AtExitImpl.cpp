@@ -15,50 +15,50 @@ namespace System
 {
 
 AtExitImpl::AtExitImpl(void):
-  dealocationDone_(false)
+  deallocationDone_(false)
 {
 }
 
 AtExitImpl::~AtExitImpl(void)
 {
-  assert(dealocationDone_ && "dealocateAll() has not been called. "
-                             "this suggest resource leak.");
+  assert(deallocationDone_ && "deallocateAll() has not been called. "
+                              "this suggest resource leak.");
 }
 
-void AtExitImpl::dealocateAll(void)
+void AtExitImpl::deallocateAll(void)
 {
-  assert(!dealocationDone_ && "dealocateAll() called more than once");
-  dealocationDone_=true;
+  assert(!deallocationDone_ && "deallocateAll() called more than once");
+  deallocationDone_=true;
 
   // loop throught elements
-  for(TList::reverse_iterator it=dealocators_.rbegin();
-      it!=dealocators_.rend();
+  for(TList::reverse_iterator it=deallocators_.rbegin();
+      it!=deallocators_.rend();
       ++it)
   {
     try
     {
       // free one more resource :)
-      (*it)->dealocate();
+      (*it)->deallocate();
     }
     catch(...)
     {
       assert(!"fatal error - exception from "
-              "AtExitResourceDealocator::dealocate() has been thrown");
+              "AtExitResourceDeallocator::deallocate() has been thrown");
       cerr<<"fatal error - exception from "
-            "AtExitResourceDealocator::dealocate() has been thrown\n";
+            "AtExitResourceDeallocator::deallocate() has been thrown\n";
       abort();
     }
   }
   // ensure each dealocation will take place just once
-  dealocators_.clear();
+  deallocators_.clear();
 }
 
-void AtExitImpl::registerDealocator(AtExit::Tptr ptr)
+void AtExitImpl::registerDeallocator(AtExit::TDeallocPtr ptr)
 {
-  assert(!dealocationDone_ && "dealocateAll() already called");
+  assert(!deallocationDone_ && "deallocateAll() already called");
 
-  TElem elem( ptr.release() );  // convert to container-safe ptr type
-  dealocators_.push_back(elem); // add to container
+  TElem elem( ptr.release() );      // convert to container-safe ptr type
+  deallocators_.push_back(elem);    // add to container
 }
 
 } // namespace System

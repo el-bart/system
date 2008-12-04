@@ -10,15 +10,12 @@
 #include <memory>
 #include <boost/noncopyable.hpp>
 
-#include "System/AtExitResourceDealocator.hpp"
+#include "System/AtExitResourceDeallocator.hpp"
 #include "System/Exception.hpp"
 
 
 namespace System
 {
-
-// forward declaration for PIMPL
-class AtExitImpl;
 
 /**
  * \brief object-oriented atexit() system call wrapper.
@@ -47,23 +44,18 @@ class AtExit: private boost::noncopyable
 public:
   /** \brief pointer to be passed to register call.
    */
-  typedef std::auto_ptr<AtExitResourceDealocator> Tptr;
+  typedef std::auto_ptr<AtExitResourceDeallocator> TDeallocPtr;
   /** \brief registers next handler.
    * registers inside internal structures object that will
    * dealocate resource during application's exit. it takes
    * ownership of dealocator.
    * \param p smart pointer to dealocator to be registered.
    */
-  static void registerDealocator(Tptr p);
+  static void registerDeallocator(TDeallocPtr p);
 
 private:
   AtExit(void);
-
-  static void registerInternal(Tptr p);
-
-  // this is raw pointer on purpose. the idea
-  // is that it will be free as the last one in queue.
-  AtExitImpl *impl_;
+  void registerInternal(TDeallocPtr p);
 }; // class AtExit
 
 } // namespace System

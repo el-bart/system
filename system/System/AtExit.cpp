@@ -13,26 +13,32 @@ using namespace std;
 
 namespace
 {
+//
 // pointer to implementation class of AtExit. it is static, raw
 // pointer since it will be freed by AtExit() uppon application
 // termination.
 // by default this pointer will be NULL when application starts.
 // destination object will be assigned uppon first AtExit class
 // usage (it registeres this pointer).
+//
 System::AtExitImpl *atExitImpl;
 } // unnamed namespace
 
 
-// helper that will dealocate objects inside queue.
+// helper that will deallocate objects inside queue.
 extern "C"
 {
 static void cStyleCallForAtExit(void)
 {
   if(atExitImpl!=NULL)
   {
-    atExitImpl->dealocateAll();
-    atExitImpl=NULL;    // dealocation already took place in AtExitImpl
+    // run dealocation of registered elements
+    atExitImpl->deallocateAll();
+    // free resource
+    delete atExitImpl;
+    atExitImpl=NULL;
   }
+  assert(atExitImpl==NULL);
 } // cStyleCallForAtExit()
 } // extern "C"
 
@@ -40,31 +46,7 @@ static void cStyleCallForAtExit(void)
 namespace System
 {
 
-// helper namespace for self-dealocator
-namespace
-{
-class AtExitImplDealocator: public AtExitResourceDealocator
-{
-public:
-  AtExitImplDealocator(auto_ptr<AtExitImpl> pimpl):
-    pimpl_(pimpl)
-  {
-    assert( pimpl_.get()!=NULL );
-  }
-
-  virtual void dealocate(void)
-  {
-    pimpl_.reset(NULL);
-  }
-
-private:
-  auto_ptr<AtExitImpl> pimpl_;
-}; // class AtExitImplDealocator
-} // unnamed namespace
-
-
-
-void AtExit::registerDealocator(Tptr p)
+void AtExit::registerDeallocator(TDeallocPtr p)
 {
   static AtExit instance;
   instance.registerInternal(p);
@@ -78,37 +60,20 @@ AtExit::AtExit(void)
     throw Exception("AtExit::AtExit(): "
                     "unable to register handler in atexit() syscall");
 
-  try
-  {
-    // create implementation
-    auto_ptr<AtExitImpl>  ptr( new AtExitImpl );
-    AtExitImpl           *tmp=ptr.get();
-    Tptr                  pimplDealoc( new AtExitImplDealocator(ptr) );
-
-    // init global pointer
-    atExitImpl=tmp;
-    // add self clean-up
-    assert(atExitImpl!=NULL);
-    registerInternal(pimplDealoc);
-  }
-  catch(...)
-  {
-    // this looks a bit creepy, but it's a safety precautions
-    // in case when self-registration would fail.
-    atExitImpl=NULL;
-    throw;
-  }
+  // init global pointer
+  atExitImpl=new AtExitImpl;
+  // sanity check
   assert(atExitImpl!=NULL);
 }
 
-void AtExit::registerInternal(Tptr p)
+void AtExit::registerInternal(TDeallocPtr p)
 {
   assert(atExitImpl!=NULL);
   if( p.get()==NULL )
     throw Exception("AtExit::registerInternal(): "
                     "NULL pointer recieved for registration");
 
-  atExitImpl->registerDealocator(p);
+  atExitImpl->registerDeallocator(p);
 }
 
 } // namespace System
