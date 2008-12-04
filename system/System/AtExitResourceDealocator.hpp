@@ -14,19 +14,19 @@
 namespace System
 {
 
-/** \brief resource's dealocator interface.
+/** \brief resource's deallocator interface.
  *
- * base class for all dealocators that are to be
+ * base class for all deallocators that are to be
  * registered with AtExit class.
  */
-struct AtExitResourceDealocator: private boost::noncopyable
+struct AtExitResourceDeallocator: private boost::noncopyable
 {
   /** \brief virtual destructor for polimorphic collections.
    */
-  virtual ~AtExitResourceDealocator(void)
+  virtual ~AtExitResourceDeallocator(void)
   {
   }
-  /** \brief resource dealocating method.
+  /** \brief resource deallocating method.
    *
    * method that is called by AtExit when program quits.
    * treat it the same way as destructors - it should NOT
@@ -34,8 +34,8 @@ struct AtExitResourceDealocator: private boost::noncopyable
    * it is guaranteed that AtExit will call this method
    * exactly once for each object, when quiting.
    */
-  virtual void dealocate(void)=0;
-}; // struct AtExitResourceDealocator
+  virtual void deallocate(void)=0;
+}; // struct AtExitResourceDeallocator
 
 } // namespace System
 
