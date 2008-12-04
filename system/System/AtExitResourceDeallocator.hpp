@@ -48,8 +48,9 @@ public:
   /** \brief creates dealocator from pointer.
    *  \param t pointer to object to be deleted.
    */
-  explicit AtExitMemoryDeallocator(T *t):
-    t_(t)
+  template<typename E>
+  explicit AtExitMemoryDeallocator(E *e):
+    t_(e)
   {
   }
   /** \brief deletes object.

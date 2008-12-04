@@ -13,11 +13,17 @@
 #include <boost/scoped_ptr.hpp>
 #include <cassert>
 
+#include "System/AtExit.hpp"
+
 
 namespace System
 {
 
 /** \brief Mayer's singleton implementation on template.
+ *
+ * implementation is enhanced to allow secure usage, allowing
+ * creating objects in proper order destroying in reverse order.
+ *
  */
 template<typename T>
 class Singleton: private boost::noncopyable
@@ -34,12 +40,21 @@ public:
    */
   inline static T *get(void)
   {
-    static boost::scoped_ptr<T> s( new T );
-    assert( s.get()!=NULL );
-    return s.get();
+    static T *t=init();
+    assert(t!=NULL);
+    return t;
   }
 
 private:
+  static T *init(void)
+  {
+    std::auto_ptr<T> ap(new T);
+    assert( ap.get()!=NULL );
+    T *t=ap.get();
+    // TODO
+    return t;
+  }
+
   Singleton(void);  // no instances allowed
 }; // class Singleton
 

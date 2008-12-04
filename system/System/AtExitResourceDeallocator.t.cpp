@@ -67,11 +67,27 @@ void testObj::test<1>(void)
   size_t counter=0;
 
   TDealloc dealloc( new SomeTestObject(&counter) );
-  ensure_equals("couner changed in constructor", counter, 0);
+  ensure_equals("counter changed in constructor", counter, 0);
 
   AtExitResourceDeallocator &base=dealloc;
   base.deallocate();
-  ensure_equals("couner not changed - resource leaked", counter, 1);
+  ensure_equals("counter not changed - resource leaked", counter, 1);
+}
+
+// test creation of memory deallocator from auto_ptr.
+template<>
+template<>
+void testObj::test<2>(void)
+{
+  typedef AtExitMemoryDeallocator<SomeTestObject> TDealloc;
+  size_t counter=0;
+
+  {
+    auto_ptr<SomeTestObject> ptr( new SomeTestObject(&counter) );
+    TDealloc                 dealloc(ptr);
+    ensure_equals("counter changed in constructor", counter, 0);
+    TODO
+  }
 }
 
 } // namespace tut
