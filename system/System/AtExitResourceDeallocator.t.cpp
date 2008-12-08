@@ -30,6 +30,7 @@ namespace
 tut::factory tf("System/AtExitResourceDeallocator");
 }
 
+using namespace std;
 using namespace System;
 
 // unnamed namespace for object deallocator testing
@@ -82,12 +83,14 @@ void testObj::test<2>(void)
   typedef AtExitMemoryDeallocator<SomeTestObject> TDealloc;
   size_t counter=0;
 
-  {
-    auto_ptr<SomeTestObject> ptr( new SomeTestObject(&counter) );
-    TDealloc                 dealloc(ptr);
-    ensure_equals("counter changed in constructor", counter, 0);
-    TODO
-  }
+  auto_ptr<SomeTestObject>   ptr( new SomeTestObject(&counter) );
+  TDealloc                   dealloc(ptr);
+  AtExitResourceDeallocator &base=dealloc;
+  ensure_equals("counter changed in constructor", counter, 0);
+  // now dealicaotion should take place
+  base.deallocate();
+  ensure_equals("counter didn't changed. object has not been freed",
+                counter, 1);
 }
 
 } // namespace tut
