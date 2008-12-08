@@ -1,4 +1,3 @@
-15 add manual test for AtExit class.
+15 add manual test for AtExit class (?).
 14 add mutexing to AtExit to make it thread-safe (update class description).
 13 update StateMachine to use IterableEnum instead of Enum.
-12 update System::Singleton to use System::AtExit to provide proper construction/destruction order.
