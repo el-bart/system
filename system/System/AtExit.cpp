@@ -32,11 +32,14 @@ static void cStyleCallForAtExit(void)
 {
   if(atExitImpl!=NULL)
   {
-    // run dealocation of registered elements
-    atExitImpl->deallocateAll();
-    // free resource
-    delete atExitImpl;
+    // do a safe-pass to remove pointer
+    System::AtExitImpl *tmpPtr=atExitImpl;
     atExitImpl=NULL;
+
+    // run dealocation of registered elements
+    tmpPtr->deallocateAll();
+    // free resource
+    delete tmpPtr;
   }
   assert(atExitImpl==NULL);
 } // cStyleCallForAtExit()
@@ -48,31 +51,39 @@ namespace System
 
 void AtExit::registerDeallocator(TDeallocPtr p)
 {
-  static AtExit instance;
-  instance.registerInternal(p);
+  static bool init=AtExit::init();  // initialize all globals
+  assert(init==true);               // check just in case...
+  AtExit::registerInternal(p);      // forward call to implementation
 }
 
-AtExit::AtExit(void)
+bool AtExit::init(void)
 {
   assert(atExitImpl==NULL);
 
+  // this call, if there is a problem, can be registered/called
+  // multiple times...
   if( atexit(cStyleCallForAtExit)!=0 )
     throw Exception("AtExit::AtExit(): "
                     "unable to register handler in atexit() syscall");
 
+  // sanity check
+  assert(atExitImpl==NULL);
+
   // init global pointer
   atExitImpl=new AtExitImpl;
+
   // sanity check
   assert(atExitImpl!=NULL);
+  return true;
 }
 
 void AtExit::registerInternal(TDeallocPtr p)
 {
-  assert(atExitImpl!=NULL);
   if( p.get()==NULL )
     throw Exception("AtExit::registerInternal(): "
                     "NULL pointer recieved for registration");
 
+  assert(atExitImpl!=NULL);
   atExitImpl->registerDeallocator(p);
 }
 

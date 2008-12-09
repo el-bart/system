@@ -8,6 +8,7 @@
 #include <list>
 #include <boost/shared_ptr.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/thread/recursive_mutex.hpp>
 
 #include "System/AtExitResourceDeallocator.hpp"
 #include "System/AtExit.hpp"
@@ -28,8 +29,9 @@ private:
   typedef boost::shared_ptr<AtExitResourceDeallocator> TElem;
   typedef std::list<TElem>                             TList;
 
-  TList deallocators_;
-  bool  deallocationDone_;
+  boost::recursive_mutex mutex_;
+  TList                  deallocators_;
+  bool                   deallocationDone_;
 }; // class AtExitImpl
 
 } // namespace System

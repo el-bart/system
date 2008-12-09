@@ -55,7 +55,9 @@ public:
 
 private:
   AtExit(void);
-  void registerInternal(TDeallocPtr p);
+
+  static bool init(void);
+  static void registerInternal(TDeallocPtr p);
 }; // class AtExit
 
 } // namespace System

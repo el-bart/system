@@ -5,10 +5,14 @@
 #include <iostream>
 #include <cassert>
 #include <stdlib.h>
+#include <boost/thread/locks.hpp>
 
 #include "System/AtExitImpl.hpp"
 
 using namespace std;
+using namespace boost;
+
+typedef lock_guard<recursive_mutex> Lock;
 
 
 namespace System
@@ -21,6 +25,7 @@ AtExitImpl::AtExitImpl(void):
 
 AtExitImpl::~AtExitImpl(void)
 {
+  Lock lock(mutex_);
   assert(deallocationDone_ && "deallocateAll() has not been called. "
                               "this suggest resource leak.");
   assert(deallocators_.size()==0 && "something registered after "
@@ -29,6 +34,7 @@ AtExitImpl::~AtExitImpl(void)
 
 void AtExitImpl::deallocateAll(void)
 {
+  Lock lock(mutex_);
   assert(!deallocationDone_ && "deallocateAll() called more than once");
   deallocationDone_=true;
 
@@ -57,6 +63,7 @@ void AtExitImpl::deallocateAll(void)
 
 void AtExitImpl::registerDeallocator(AtExit::TDeallocPtr ptr)
 {
+  Lock lock(mutex_);
   assert(!deallocationDone_ && "deallocateAll() already called");
 
   TElem elem( ptr.release() );      // convert to container-safe ptr type
