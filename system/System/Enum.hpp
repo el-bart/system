@@ -7,6 +7,7 @@
 
 /* public header */
 
+#include <cassert>
 #include <boost/operators.hpp>
 
 namespace System
@@ -93,6 +94,16 @@ public:
    */
   inline long toLong(void) const
   {
+    return e_;
+  }
+  /** \brief backward compatibility call. its usage is depracticated.
+   *  \return enum value as integer.
+   */
+  inline int toInt(void) const
+  {
+    assert( static_cast<int>(e_)==toLong() &&
+            "Ooops - looks like old interface does not work for"
+            "your compiler/platform. use new version of toLong() instead.");
     return e_;
   }
 

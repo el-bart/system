@@ -100,7 +100,7 @@ template<>
 template<>
 void testObj::test<4>(void)
 {
-  int x;
+  long x;
 
   x=_te.toLong();
   ensure(x==1);
@@ -119,5 +119,14 @@ void testObj::test<5>(void)
   ensure( !(_te!=_te) );
 }
 
-} // namespace tut
+// convertion to int (old, depracticated call)
+template<>
+template<>
+void testObj::test<6>(void)
+{
+  _te=TestEnum::C;
+  int x=_te.toInt();
+  ensure(x==100);
+}
 
+} // namespace tut
