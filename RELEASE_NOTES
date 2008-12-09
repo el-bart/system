@@ -1,4 +1,6 @@
-* added 2nd license: revised BSD
+* updated build_process to v0.5.6.
+* added AtExit class - an OO replacement of limited atexit() system call.
+* added 2nd license: revised BSD.
 * added missing headers.
 * removed extra dependency on pthreads.
 * StateMachine internal states can now handle their states as well (this simplifies life in case of operations like counting, etc...).

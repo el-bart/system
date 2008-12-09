@@ -1,3 +1,2 @@
 15 add manual test for AtExit class (?).
 14 add mutexing to AtExit to make it thread-safe (update class description).
-13 update StateMachine to use IterableEnum instead of Enum.
