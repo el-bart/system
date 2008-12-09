@@ -35,8 +35,15 @@ namespace System
  * to register calls for instances of other objects.
  *
  * class behaves as singleton (via registerDealocator() method).
- * implementatio requires some internal statics therefore this
- * class is NOT thread-safe and is NOT reentrant!
+ * implementation requires some internal statics therefore this
+ * class is NOT thread-safe and is NOT reentrant when constructing
+ * and destroying!
+ * in practise it means that you should ensure that first call
+ * to registerDeallocator() is done from single thread. it must be
+ * assured that when exited from main, no registerDeallocator()
+ * operations are called, as well.
+ * during 'normal' operations (inside main, after initialization)
+ * registration is thread-safe.
  *
  */
 class AtExit: private boost::noncopyable
