@@ -1,0 +1,2 @@
+17 
+16 make AtExit use pthreads and therefore thread safe on init.
