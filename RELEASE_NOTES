@@ -1,3 +1,4 @@
+* replaced all explicit deletes with boost::checked_delete.
 * AtExit is thread safe now.
 * updated build_process to v0.5.6.
 * added AtExit class - an OO replacement of limited atexit() system call.

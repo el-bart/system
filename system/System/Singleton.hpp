@@ -11,6 +11,7 @@
 
 #include <boost/noncopyable.hpp>
 #include <boost/scoped_ptr.hpp>
+#include <boost/checked_delete.hpp>
 #include <cassert>
 
 #include "System/AtExit.hpp"
@@ -68,14 +69,14 @@ private:
     // free when exiting
     virtual ~SingletonDeallocator(void)
     {
-      assert(*dstPtr_==NULL);   // object should be already freed
-      delete *dstPtr_;          // just in case...
+      assert(*dstPtr_==NULL);           // object should be already freed
+      boost::checked_delete(*dstPtr_);  // just in case...
     }
     // deallocation on exit
     virtual void deallocate(void)
     {
-      delete *dstPtr_;          // delete object
-      *dstPtr_=NULL;            // mark pointer as unusable
+      boost::checked_delete(*dstPtr_);  // delete object
+      *dstPtr_=NULL;                    // mark pointer as unusable
     }
   private:
     T **dstPtr_;

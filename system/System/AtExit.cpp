@@ -3,6 +3,7 @@
  *
  */
 #include <stdlib.h>     // atexit()
+#include <boost/checked_delete.hpp>
 #include <cassert>
 
 #include "System/AtExit.hpp"
@@ -39,7 +40,7 @@ static void cStyleCallForAtExit(void)
     // run dealocation of registered elements
     tmpPtr->deallocateAll();
     // free resource
-    delete tmpPtr;
+    boost::checked_delete(tmpPtr);
   }
   assert(atExitImpl==NULL);
 } // cStyleCallForAtExit()
