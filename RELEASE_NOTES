@@ -1,16 +1,1 @@
-* replaced all explicit deletes with boost::checked_delete.
-* AtExit is thread safe now (also during creating/destroing).
-* updated build_process to v0.5.6.
-* added AtExit class - an OO replacement of limited atexit() system call.
-* added 2nd license: revised BSD.
-* added missing headers.
-* removed extra dependency on pthreads.
-* StateMachine internal states can now handle their states as well (this simplifies life in case of operations like counting, etc...).
-* added AutoCptr for mananging C-style pointers (malloc()/free()).
-* removed unfinished code of AutoVector.
-* added doxygen comments.
-* System::Network has been removed - use boost::asio instead.
-* System::Threads he been removed - use boost::thread instead.
-* uses new build_process v0.5.3.
-* keepRange<>() has second implementation allowing to convert between types, with range limitation if needed.
-* added mtest for DiskFile to test if it is poiisble to write file > 2GB.
+* 
