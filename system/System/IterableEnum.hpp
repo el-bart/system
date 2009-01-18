@@ -64,23 +64,33 @@ public:
   class const_iterator: public boost::equality_comparable<const_iterator>
   {
   public:
+    /** \brief create object.
+     */
     const_iterator(void):
       e_( static_cast<EType>( static_cast<long>(E::Min) ) )
     {
       check(e_);
     }
+    /** \brief create iterator from given element.
+     *  \param e element to start iteration from.
+     */
     explicit const_iterator(const EType e):
       e_(e)
     {
       check(e_);
     }
-
+    /** \brief dereference operator.
+     *  \return current element.
+     */
     EType operator*(void) const
     {
       check(e_);
       return e_;
     }
-
+    /** \brief compare iterators.
+     *  \param it iterator to compare with.
+     *  \return true if iterators are equal, false otherwise.
+     */
     bool operator==(const const_iterator &it) const
     {
       check(e_);
@@ -88,7 +98,9 @@ public:
       return e_==it.e_;
     }
 
-    // pre-incrementation
+    /** \brief pre-incrementation.
+     *  \return reference to current object.
+     */
     const const_iterator &operator++(void)
     {
       check(e_);
@@ -96,7 +108,9 @@ public:
       check(e_);
       return *this;
     }
-    // post-incrementation
+    /** \brief post-incrementation.
+     *  \return reference to previous value of itertor.
+     */
     const_iterator operator++(int)
     {
       check(e_);
@@ -120,14 +134,8 @@ public:
   /** \brief gives size of container.  */
   enum { Size=E::Max-E::Min+1 };
 
-  // ensure that Min value is not greater than Max value.
-  // cast here suppress warning when E is decalred in
-  // unnamed namespace.
-  BOOST_STATIC_ASSERT( static_cast<long>(E::Min)<=
-                       static_cast<long>(E::Max)   );
-
   /** \brief construction from enum.
-   *  \param e enum to be constructed from.
+   *  \param t enum to be constructed from.
    */
   template<typename T>
   inline IterableEnum(const T t):   // 'explicit' is not welcomed here
@@ -163,6 +171,12 @@ public:
   }
 
 private:
+  // ensure that Min value is not greater than Max value.
+  // cast here suppress warning when E is decalred in
+  // unnamed namespace.
+  BOOST_STATIC_ASSERT( static_cast<long>(E::Min)<=
+                       static_cast<long>(E::Max)   );
+
   template<typename T>
   void check(const T t) const
   {

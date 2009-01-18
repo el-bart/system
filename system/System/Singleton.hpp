@@ -25,9 +25,9 @@ namespace System
  * implementation is enhanced to allow secure usage, allowing
  * creating objects in proper order destroying in reverse order.
  *
- * \noteit it is recommended to make constructor of class T
- *         private and make Singleton<T> its friend. this ensures
- *         that instances of T won't be made directly by user.
+ * \note it is recommended to make constructor of class T
+ *       private and make Singleton<T> its friend. this ensures
+ *       that instances of T won't be made directly by user.
  *
  */
 template<typename T>
