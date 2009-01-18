@@ -3,6 +3,7 @@
  *
  */
 #include <stdlib.h>     // atexit()
+#include <pthread.h>
 #include <boost/checked_delete.hpp>
 #include <cassert>
 
@@ -18,29 +19,57 @@ namespace
 // pointer to implementation class of AtExit. it is static, raw
 // pointer since it will be freed by AtExit() uppon application
 // termination.
+//
 // by default this pointer will be NULL when application starts.
 // destination object will be assigned uppon first AtExit class
 // usage (it registeres this pointer).
 //
-System::AtExitImpl *atExitImpl;
+// compile-time initialized mutex ensures whole construction is
+// thread safe from the very begining (before any static constructors
+// are run), to the very end.
+//
+System::AtExitImpl *atExitImpl=NULL;
+pthread_mutex_t     mutex     =PTHREAD_MUTEX_INITIALIZER;
+
+//
+// helper class for synchronizing access to atExitImpl.
+// it is manually written for pthreads, since its mutex has to be
+// initialized in compile time, to make it work.
+//
+struct PtrLock
+{
+  PtrLock(void)
+  {
+    if( pthread_mutex_lock(&mutex)!=0 )
+      throw System::Exception("unable to lock mutex for AtExitImpl");
+  }
+
+  ~PtrLock(void)
+  {
+    if( pthread_mutex_unlock(&mutex)!=0 )
+      throw System::Exception("unable to unlock mutex for AtExitImpl");
+  }
+}; // struct PtrLock
+
 } // unnamed namespace
 
 
-// helper that will deallocate objects inside queue.
+// helper that will deallocate objects inside queue and AtExitImpl
+// class itself.
 extern "C"
 {
 static void cStyleCallForAtExit(void)
 {
+  PtrLock lock;
+  // pointer can be null in case when this function has been already
+  // registered, but AtExitImpl's constructor thrown exception.
   if(atExitImpl!=NULL)
   {
-    // do a safe-pass to remove pointer
-    System::AtExitImpl *tmpPtr=atExitImpl;
-    atExitImpl=NULL;
-
     // run dealocation of registered elements
-    tmpPtr->deallocateAll();
+    atExitImpl->deallocateAll();
     // free resource
-    boost::checked_delete(tmpPtr);
+    boost::checked_delete(atExitImpl);
+    atExitImpl=NULL;
   }
   assert(atExitImpl==NULL);
 } // cStyleCallForAtExit()
@@ -52,13 +81,17 @@ namespace System
 
 void AtExit::registerDeallocator(TDeallocPtr p)
 {
-  static bool init=AtExit::init();  // initialize all globals
-  assert(init==true);               // check just in case...
-  AtExit::registerInternal(p);      // forward call to implementation
+  PtrLock lock;
+  if(atExitImpl==NULL)          // not initialized?
+    AtExit::init();             // will throw on failure
+  assert(atExitImpl!=NULL);
+
+  AtExit::registerInternal(p);  // forward call to implementation
 }
 
-bool AtExit::init(void)
+void AtExit::init(void)
 {
+  // lock for this call is made in registerDeallocator()
   assert(atExitImpl==NULL);
 
   // this call, if there is a problem, can be registered/called
@@ -69,17 +102,15 @@ bool AtExit::init(void)
 
   // sanity check
   assert(atExitImpl==NULL);
-
   // init global pointer
   atExitImpl=new AtExitImpl;
-
   // sanity check
   assert(atExitImpl!=NULL);
-  return true;
 }
 
 void AtExit::registerInternal(TDeallocPtr p)
 {
+  // lock for this call is made in registerDeallocator()
   if( p.get()==NULL )
     throw Exception("AtExit::registerInternal(): "
                     "NULL pointer recieved for registration");

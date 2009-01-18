@@ -32,18 +32,10 @@ namespace System
  * in order to overcome this limitations OO AtExit has been provided.
  * it allows to register as many structures as system memory can
  * handle. it also gets object instance as argument, so it is simple
- * to register calls for instances of other objects.
+ * to register calls for instances of other objects (not only types).
  *
- * class behaves as singleton (via registerDealocator() method).
- * implementation requires some internal statics therefore this
- * class is NOT thread-safe and is NOT reentrant when constructing
- * and destroying!
- * in practise it means that you should ensure that first call
- * to registerDeallocator() is done from single thread. it must be
- * assured that when exited from main, no registerDeallocator()
- * operations are called, as well.
- * during 'normal' operations (inside main, after initialization)
- * registration is thread-safe.
+ * class behaves as singleton (via registerDealocator() method)
+ * and is thread-safe through whole program life-time.
  *
  */
 class AtExit: private boost::noncopyable
@@ -63,7 +55,7 @@ public:
 private:
   AtExit(void);
 
-  static bool init(void);
+  static void init(void);
   static void registerInternal(TDeallocPtr p);
 }; // class AtExit
 
