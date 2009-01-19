@@ -102,11 +102,9 @@ $C::
 endif
 	@\$(build-this-component)
 
-# update this script if needed
+# update this dependency file if needed
 $out:: $DEPS_FILES
-	@echo "warrning: dep. file \$(@F) needs to be updated" >&2
-	@echo "warrning: run make again" >&2
-	@$THIS_SCRIPT "$OUTPUT_DIR" "$DEPS_PATH" "$C"
+	@$THIS_SCRIPT "$OUTPUT_DIR" "$DEPS_PATH" "$GEN_LIBS_PATH" "$C"
 EOF
 
 exit 0

@@ -30,7 +30,7 @@ typedef factory::object testObj;
 
 namespace
 {
-tut::factory tf("UserNamespace/SomeTestClass");
+tut::factory tf("UserNamespace/Some");
 }
 
 

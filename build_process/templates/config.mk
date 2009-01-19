@@ -9,3 +9,6 @@ export MODE=default
 # set default profile
 export PROFILE=test
 
+# set default toolchain
+export TC=local
+

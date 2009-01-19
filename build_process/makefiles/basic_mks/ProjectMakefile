@@ -4,6 +4,9 @@ include build_process/makefiles/common/dirs.mk
 # basic configuration for project
 include config.mk
 
+# check basic constraints
+include $(MAKEFILES_COMMON_BASE_DIR)/main_constraints.mk
+
 # define tools being used
 include $(MAKEFILES_COMMON_BASE_DIR)/tools.mk
 # flags for some of tools
@@ -14,9 +17,6 @@ include $(MAKEFILES_COMMON_BASE_DIR)/rules.mk
 
 # define main macros used within this Makefile
 include $(MAKEFILES_COMMON_BASE_DIR)/main_macros.mk
-
-# check basic constraints
-include $(MAKEFILES_COMMON_BASE_DIR)/main_constraints.mk
 
 # make all dependencies for all components in gen
 TMP:=$(shell mkdir -p "$(GEN_COMPONENTS_DEPS_DIR)" && \

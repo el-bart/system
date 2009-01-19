@@ -1,10 +1,5 @@
-CC=gcc
-CXX=g++
-AR=ar
-RANLIB=ranlib
-LD=ld
-STRIP=strip
-DOXYGEN=doxygen
+# include proper toolchain
+include $(MAKEFILES_TOOLCHAINS_BASE_DIR)/$(TC).mk
 
 export CC \
        CXX \

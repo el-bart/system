@@ -1,6 +1,4 @@
 # makro for common calls to build choosen component.
-# it also checks if it should do some special work
-# for PROFILE=test case.
 define build-this-component
 
 	# build given component

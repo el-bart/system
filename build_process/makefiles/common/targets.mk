@@ -16,24 +16,28 @@ define run-in-gen
 	+$(MAKE) $(MFLAGS) -C "$(GEN_BASE_DIR)/$@/`basename $(CURDIR)`" \
 		-f "$(CURDIR)/Makefile" TARGET=$@ $(TARGET) \
 		STRIP_BINARY=$(STRIP_BINARY) \
-		DEP_LIBS_WC="$(DEP_LIBS_WC)"
+		DEP_LIBS_WC="$(DEP_LIBS_WC)" \
+		END_LINK_LIBS="$(END_LINK_LIBS)"
 endef
 
 # inside lib/app we can include any header (not only public ones)
 CXXFLAGS+=-I$(CURDIR)
 CFLAGS  +=-I$(CURDIR)
 
-# external variables passed by upper make
+# external variables are passed by upper make
 
-# this should NEVER happen!
+# this should not happen
 .PHONY: all
 all:
 	@echo
 	@echo 'error - no correct PROFILE has been specified'
-	@echo 'choose one of following:'
-	@echo -e "\tdebug, release, profile, test"
 	@echo
 	@exit 1
+
+# memory debugging is on?
+ifneq (,$(MEM_DEBUG))
+END_LINK_LIBS+=-lefence
+endif
 
 # compiler flags
 PRF_FLAGS:=-pg -DNDEBUG -g3 -O3
@@ -45,58 +49,5 @@ PRF_LDFLAGS:=-pg
 DBG_LDFLAGS:=
 OPT_LDFLAGS:=
 
-
-.PHONY: debug
-debug: CXXFLAGS+=$(DBG_FLAGS)
-debug: CFLAGS  +=$(DBG_FLAGS)
-debug: LDFLAGS +=$(DBG_LDFLAGS)
-debug: TARGET=all
-debug:
-	$(run-in-gen)
-
-.PHONY: release
-release: CXXFLAGS+=$(OPT_FLAGS)
-release: CFLAGS  +=$(OPT_FLAGS)
-release: LDFLAGS +=$(OPT_LDFLAGS)
-release: TARGET=all
-release: STRIP_BINARY=1
-release:
-	$(run-in-gen)
-
-.PHONY: profile
-profile: CXXFLAGS+=$(PRF_FLAGS)
-profile: CFLAGS  +=$(PRF_FLAGS)
-profile: LDFLAGS +=$(PRF_LDFLAGS)
-profile: TARGET=all
-profile:
-	$(run-in-gen)
-
-.PHONY: test
-test: debug
-test: CXXFLAGS+=$(DBG_FLAGS)
-test: CFLAGS  +=$(DBG_FLAGS)
-test: LDFLAGS +=$(DBG_LDFLAGS)
-test: TARGET=test
-test:
-	$(run-in-gen)
-
-.PHONY: mtest
-mtest: debug
-mtest: CXXFLAGS+=$(DBG_FLAGS)
-mtest: CFLAGS  +=$(DBG_FLAGS)
-mtest: LDFLAGS +=$(DBG_LDFLAGS)
-mtest: TARGET=mtest
-mtest:
-	$(run-in-gen)
-
-.PHONY: doc
-doc: TARGET=doc
-doc:
-	$(run-in-gen)
-
-.PHONY: clean
-clean:
-	@echo
-	@echo "##### clean"
-	rm -rvf "$(GENDIR)"
-
+# include profiles from extrnal files
+include $(wildcard $(MAKEFILES_PROFILES_BASE_DIR)/*.mk)
