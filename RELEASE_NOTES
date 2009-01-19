@@ -1,2 +1,2 @@
-* 
-* removed extra link reference to boost::threads
+* build_process v0.6.0 introduced.
+* removed extra link reference to boost::threads.
