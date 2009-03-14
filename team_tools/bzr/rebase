@@ -1,0 +1,84 @@
+#!/bin/bash
+#
+# rebase tool
+#
+# script for making life easier when working with branches
+# hierarchy. automaticaly downloads and merges changes to
+# current branch from its direct parrent (speicifed via
+# config file). when merge is done, its automaticaly
+# commited. otherwise rollback is performed.
+#
+
+SCRIPT_NAME="`basename "$0"`"
+
+function has_changes
+{
+  bzr status --short 2>&1 | grep -q -v '^?'
+}
+
+# sanity check
+if [ "`bzr root`" != "`readlink -f .`" ]
+then
+  echo "$SCRIPT_NAME: this script must be run from branch root directory (`bzr root`)" >&2
+  exit 1
+fi
+
+bzr update > /dev/null 2>&1 || exit $?
+
+# cannot proceed when pending changes are present
+if has_changes
+then
+  echo "$SCRIPT_NAME: error: pending changes have been found" >&2
+  exit 2
+fi
+
+# read configuration
+. ./bzr_team.conf || exit $?
+
+# perform merge
+(
+  # do all necessair merges
+  bzr merge "$PARENT" > "merge.log" 2>&1
+  MERGES_CNT="`bzr conflicts --text | wc -l`"
+  [ "$MERGES_CNT" -gt 0 ] && echo "$SCRIPT_NAME: $MERGES_CNT pending merge(s) detected"
+  bzr conflicts --text | \
+    while read f
+    do
+      echo "$SCRIPT_NAME: non-trivial merge on '$f'"
+      if [ -f "$f.BASE" ] && [ -f "$f.OTHER" ] && [ -f "$f.THIS" ]
+      then
+        kdiff3 -m -b "$f.BASE" -out "$f" -auto "$f.OTHER" "$f.THIS" || exit $?
+      else
+        if [ -f "$f.moved" ]
+        then
+          kdiff3 -m -auto -out "$f" "$f" "$f.moved" || exit $?
+          bzr rm --keep "$f.moved" || exit $?
+        else
+          if [ -f "$f.orig" ]
+          then
+            kdiff3 -m -auto -out "$f" "$f" "$f.orig" || exit $?
+          else
+            # new file have been added
+            :
+          fi
+        fi
+      fi
+      bzr resolve "$f" || exit $?
+    done
+)
+RET=$?
+
+# do final commit/revert
+if [ "$RET" -eq 0 ]
+then
+  rm "merge.log"
+  if has_changes
+  then
+    echo "$SCRIPT_NAME: rebase successful - commiting changes"
+    bzr ci || RET=$?
+  fi
+else
+  echo "$SCRIPT_NAME: error encured - rollbacking changes" >&2
+  bzr revert
+fi
+exit $RET
