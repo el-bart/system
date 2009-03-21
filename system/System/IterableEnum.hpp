@@ -123,10 +123,16 @@ public:
   private:
     inline void check(const EType e) const
     {
-      assert( static_cast<long>(E::Min)<=static_cast<long>(e) );
+      // following asserts are a bit strange formulas, but they disables
+      // warning on some newer compilers, saying that comparison is always
+      // true due to limited range of type. the idea is to transform
+      // abvious "a<=b" to "a-b<=0".
+
+      // check minimum value
+      assert( static_cast<long>(E::Min)-static_cast<long>(e)         <=0 );
       // Max+1 since const_iterator may represent end()
       // iterator as well.
-      assert( static_cast<long>(e)     <=static_cast<long>(E::Max)+1 );
+      assert( static_cast<long>(e)     -(static_cast<long>(E::Max)+1)<=0 );
     }
     EType e_;
   }; // class const_iterator
