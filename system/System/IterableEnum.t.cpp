@@ -288,5 +288,29 @@ void testObj::test<21>(void)
   }
 }
 
-} // namespace tut
+// unnamed namespace for helper code
+namespace
+{
+  struct MySmallEnum
+  {
+    typedef enum
+    {
+      X
+    } Type;
+    enum { Min=X };
+    enum { Max=X };
+  };
 
+  typedef System::IterableEnum<MySmallEnum> TestSmallEnum;
+} // unnamed namespace
+
+template<>
+template<>
+void testObj::test<22>(void)
+{
+  // this code generated warning on some compilers previously.
+  TestSmallEnum te(TestSmallEnum::X);
+  te.begin();
+}
+
+} // namespace tut

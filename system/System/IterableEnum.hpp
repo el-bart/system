@@ -121,7 +121,7 @@ public:
     }
 
   private:
-    void check(const EType e) const
+    inline void check(const EType e) const
     {
       assert( static_cast<long>(E::Min)<=static_cast<long>(e) );
       // Max+1 since const_iterator may represent end()
