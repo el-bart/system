@@ -123,14 +123,10 @@ public:
   private:
     void check(const EType e) const
     {
-      assert( E::Min              <=static_cast<long>(e) );
+      assert( static_cast<long>(E::Min)<=static_cast<long>(e) );
       // Max+1 since const_iterator may represent end()
       // iterator as well.
-      // following "strange" assert is equivalent of:
-      //    assert( static_cast<long>(e)<=E::Max+1 );
-      // whoch does not cause warning about limited range
-      // in the compiler.
-      assert( static_cast<long>(e)-1<=E::Max );
+      assert( static_cast<long>(e)     <=static_cast<long>(E::Max)+1 );
     }
     EType e_;
   }; // class const_iterator
