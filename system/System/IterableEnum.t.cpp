@@ -167,8 +167,8 @@ template<>
 template<>
 void testObj::test<10>(void)
 {
-  ensure( *_te.begin()==TestEnum::A );
-  ensure( *_te.begin()==10          );
+  ensure( *TestEnum::begin()==TestEnum::A );
+  ensure( *TestEnum::begin()==10          );
 }
 
 // test end iterator
@@ -176,8 +176,8 @@ template<>
 template<>
 void testObj::test<11>(void)
 {
-  ensure( *_te.end()==TestEnum::E+1 );
-  ensure( *_te.end()==14+1          );
+  ensure( *TestEnum::end()==TestEnum::E+1 );
+  ensure( *TestEnum::end()==14+1          );
 }
 
 // test getting size of enum-container
@@ -311,6 +311,28 @@ void testObj::test<22>(void)
   // this code generated warning on some compilers previously.
   TestSmallEnum te(TestSmallEnum::X);
   te.begin();
+}
+
+template<>
+template<>
+void testObj::test<23>(void)
+{
+  // smoke test - checks backward compatibility of static calls.
+  // it is enought if this test compiles.
+  ensure("begin() failed", _te.begin()==TestEnum::begin() );
+  ensure("end() failed",   _te.end()  ==TestEnum::end() );
+  ensure("size() failed",  _te.size() ==TestEnum::size() );
+}
+
+template<>
+template<>
+void testObj::test<24>(void)
+{
+  // smoke test for compile time Min Max values presence. it is
+  // enought for this test to compile.
+  const long min=TestEnum::Min;
+  const long max=TestEnum::Max;
+  ensure("min and max are equal", min!=max);
 }
 
 } // namespace tut

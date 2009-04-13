@@ -9,4 +9,3 @@ export MODE=default
 export PROFILE=test
 # default tool chain
 export TC=local
-

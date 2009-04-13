@@ -133,11 +133,14 @@ public:
       // Max+1 since const_iterator may represent end()
       // iterator as well.
       assert( static_cast<long>(e)     -(static_cast<long>(E::Max)+1)<=0 );
+
+      // this supress warning in release mode
+      ignoreParam(e);
     }
     EType e_;
   }; // class const_iterator
 
-  /** \brief gives size of container.  */
+  /** \brief gives compile-time size of container.  */
   enum { Size=E::Max-E::Min+1 };
 
   /** \brief construction from enum.
@@ -153,7 +156,7 @@ public:
   /** \brief  returns iterator to enum's begin
    *  \return begin iterator.
    */
-  inline const_iterator begin(void) const
+  static inline const_iterator begin(void)
   {
     const EType val=static_cast<EType>( static_cast<long>(E::Min)+0 );
     return const_iterator(val);
@@ -162,7 +165,7 @@ public:
   /** \brief  returns iterator to enum's end
    *  \return end iterator.
    */
-  inline const_iterator end(void) const
+  static inline const_iterator end(void)
   {
     const EType val=static_cast<EType>( static_cast<long>(E::Max)+1 );
     return const_iterator(val);
@@ -171,7 +174,7 @@ public:
   /** \brief  computes numer of values in enum.
    *  \return number of elements between Min and Max.
    */
-  inline size_t size(void) const
+  static inline size_t size(void)
   {
     return Size;
   }
@@ -184,18 +187,25 @@ private:
                        static_cast<long>(E::Max)   );
 
   template<typename T>
-  void check(const T t) const
+  inline void check(const T t) const
   {
     check( t.toLong() );
   }
-  void check(const EType e) const
+  inline void check(const EType e) const
   {
     check( static_cast<long>(e) );
   }
-  void check(const long l) const
+  inline void check(const long l) const
   {
     assert( E::Min<=l );
     assert( l<=E::Max );
+    // this supresses warning in release mode
+    ignoreParam(l);
+  }
+  // this call supresses warrning from compiler abiut unused
+  // variable from argument list, in release mode.
+  static inline void ignoreParam(const long)
+  {
   }
 }; // class IterableEnum
 
