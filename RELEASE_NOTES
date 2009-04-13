@@ -1,3 +1,4 @@
+* begin(), end(), size() are now static.
 * fixed warning in assert in IterableEnum<> on some compilers.
 * build_process v0.6.0 introduced.
 * removed extra link reference to boost::threads.
