@@ -12,10 +12,8 @@
 #include <string>
 #include <exception>
 
-
 namespace System
 {
-
 
 /** \brief internal exception class.
  */
@@ -25,15 +23,9 @@ public:
   /** \brief create execption with given message.
    *  \param msg message to represent.
    */
-  Exception(const std::string& msg):
-                _msg(msg)
-  {
-  }
-  /** \brief construct from const char*.
-   *  \param msg message to represent.
-   */
-  Exception(const char msg[]):
-                _msg(msg)
+  template<typename T>
+  Exception(const T &msg):
+                msg_(msg)
   {
   }
   /** \brief destructor requires special flags.
@@ -47,18 +39,18 @@ public:
    */
   inline const std::string& whatAsStr(void) const
   {
-    return _msg;
+    return msg_;
   }
   /** \brief return error message pointer, as const char*.
    *  \return pointer to message.
    */
   virtual const char *what(void) const throw()
   {
-    return _msg.c_str();
+    return msg_.c_str();
   }
 
 private:
-  std::string _msg;
+  std::string msg_;
 }; // class Exception
 
 
