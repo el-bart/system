@@ -1,2 +1,3 @@
+19 make CRTP-base exception class, reusable in different components.
 18 add generic exception c-tor (basing on CRTP) that will provide stack back strace (see man backtrace for more details).
 17 make exceptions more verbose.
