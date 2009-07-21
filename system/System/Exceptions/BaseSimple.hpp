@@ -38,7 +38,7 @@ protected:
    *  \param msg message to represent.
    */
   template<typename T>
-  BaseSimple(const T &msg):
+  explicit BaseSimple(const T &msg):
     StdBase(msg)
   {
   }

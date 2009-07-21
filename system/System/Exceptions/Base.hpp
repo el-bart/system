@@ -49,7 +49,7 @@ protected:
    *  \param msg message to represent.
    */
   template<typename T>
-  Base(const T &msg):
+  explicit Base(const T &msg):
     msg_(msg)
   {
   }
