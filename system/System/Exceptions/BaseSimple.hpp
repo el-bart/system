@@ -1,8 +1,8 @@
 /*
- * Base.hpp
+ * BaseSimple.hpp
  */
-#ifndef INCLUDE_SYSTEM_EXCEPTIONS_BASE_HPP_FILE
-#define INCLUDE_SYSTEM_EXCEPTIONS_BASE_HPP_FILE
+#ifndef INCLUDE_SYSTEM_EXCEPTIONS_BASESIMPLE_HPP_FILE
+#define INCLUDE_SYSTEM_EXCEPTIONS_BASESIMPLE_HPP_FILE
 
 /* public header */
 
@@ -15,33 +15,22 @@ namespace Exceptions
 {
 
 /** \brief generic base for exceptions implementation.
+ *  \note this class does not provide default implementations for standard
+ *        exception methods therefor it requires to have them already
+ *        defined in StdBase (as in std::logic_error for instance).
  *  \param CRTP    derived class (to start new hierarchy.
  *  \param StdBase base class for exception from sntadard library.
  */
 template<typename CRTP, typename StdBase>
-class Base: public StdBase
+class BaseSimple: public StdBase
 {
 public:
-  /** \brief destructor requires special flags.
-   */
-  virtual ~Base(void) throw()
-  {
-  }
-
   /** \brief return error message as string.
    *  \return error message.
    */
-  inline const std::string& whatAsStr(void) const
+  inline std::string whatAsStr(void) const
   {
-    return msg_;
-  }
-
-  /** \brief return error message pointer, as const char*.
-   *  \return pointer to message.
-   */
-  virtual const char *what(void) const throw()
-  {
-    return msg_.c_str();
+    return StdBase::what();
   }
 
 protected:
@@ -49,14 +38,11 @@ protected:
    *  \param msg message to represent.
    */
   template<typename T>
-  Base(const T &msg):
-    msg_(msg)
+  BaseSimple(const T &msg):
+    StdBase(msg)
   {
   }
-
-private:
-  std::string msg_;
-}; // class Base
+}; // class BaseSimple
 
 }; // namespace Exceptions
 }; // namespace System

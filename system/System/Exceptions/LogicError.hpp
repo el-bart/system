@@ -7,7 +7,7 @@
 
 /* public header */
 
-#include "System/Exceptions/Base.hpp"
+#include "System/Exceptions/BaseSimple.hpp"
 
 namespace System
 {
@@ -18,14 +18,14 @@ namespace Exceptions
  *  \note throwing this type of error may be threated as an release-time
  *        assert equivalent.
  */
-class LogicError: public Base<LogicError, std::logic_error>
+class LogicError: public BaseSimple<LogicError, std::logic_error>
 {
 protected:
   /** \brief create execption with given message.
    *  \param msg message to represent.
    */
   LogicError(const std::string &msg):
-    Exceptions::Base<LogicError, std::logic_error>(msg)
+    Exceptions::BaseSimple<LogicError, std::logic_error>(msg)
   {
   }
 }; // class LogicError
