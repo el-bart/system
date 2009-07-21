@@ -11,20 +11,20 @@
 
 namespace System
 {
-namespace BadAlloc
+namespace Exceptions
 {
 
 /** \brief internal exception class.
  */
-class BadAlloc: public Base<Exception, std::bad_alloc>
+class BadAlloc: public Base<BadAlloc, std::bad_alloc>
 {
-public:
+protected:
   /** \brief create execption with given message.
    *  \param msg message to represent.
    */
   template<typename T>
   BadAlloc(const T &msg):
-    Exceptions::Base<Exception, std::exception>(msg)
+    Exceptions::Base<BadAlloc, std::bad_alloc>(msg)
   {
   }
 }; // class BadAlloc
