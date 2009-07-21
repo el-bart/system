@@ -9,8 +9,9 @@
 #include <vector>
 #include <string>
 
+#include "System/ExceptionSyscallFailed.hpp"
+
 // TODO: tests
-// TODO: comments
 // TODO: implementation
 
 namespace System

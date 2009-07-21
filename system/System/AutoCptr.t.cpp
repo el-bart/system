@@ -98,5 +98,16 @@ void testObj::test<3>(void)
   }
 }
 
+// test holding char **
+template<>
+template<>
+void testObj::test<4>(void)
+{
+  char         **ptr=static_cast<char**>( malloc(303) );
+  AutoCptr<char*> p(ptr);           // allocate and catch.
+  ensure( p.get()!=NULL );          // test if it passed.
+}
+
+
 } // namespace tut
 
