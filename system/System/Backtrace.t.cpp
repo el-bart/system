@@ -113,4 +113,28 @@ void testObj::test<6>(void)
   bt1=bt2;
 }
 
+// test buffor enlargement for big traces.
+template<>
+template<>
+void testObj::test<7>(void)
+{
+  // the magic value for this test is 256: this is default initial size of table
+  // with output addresse for backtrace.
+  const size_t    size=256+1;
+  const Backtrace bt  =myCall(size);    // this should call reallocation
+  ensure("resizing probably failed", bt.size()>size);
+}
+
+// test for multiple buffer enlargement
+template<>
+template<>
+void testObj::test<8>(void)
+{
+  // the magic value for this test is 256: this is default initial size of table
+  // with output addresse for backtrace.
+  const size_t    size=256*10;
+  const Backtrace bt  =myCall(size);    // this should call reallocation
+  ensure("resizing probably failed", bt.size()>size);
+}
+
 } // namespace tut

@@ -17,20 +17,47 @@ using namespace std;
 namespace System
 {
 
+namespace
+{
+AutoCptr<void*> memAlloc(const size_t num)
+{
+  const size_t    size=num*sizeof(void*);
+  AutoCptr<void*> ptr( static_cast<void**>( malloc(size) ) );
+  if(ptr.get()==NULL)
+    throw ExceptionBadAlloc("memAlloc(): unable to allocate memory with malloc()");
+  return ptr;
+} // memAlloc()
+} // unnmaed namespace
+
 Backtrace::Backtrace(void)
 {
-  void *buffer[256];
-  int   size =sizeof(buffer)/sizeof(buffer[0]);
-  int   count=backtrace(buffer, size);
-  // TODO: if count==size -> not whole stack trace has been read
+  int             count =-1;
+  int             size  =256;
+  AutoCptr<void*> buffer( memAlloc(size).release() );
 
-  char **names;
-  names=backtrace_symbols(buffer, count);
+  // enlarge buffer untill whole read fits
+  while(true)
+  {
+    count=backtrace(buffer.get(), size);    // try to read into buffer
+    assert(count>0);
+    if(count<size)                          // reading succeeded?
+      break;
+    // otherwise enlarge buffer and try again
+    size  *=4;
+    buffer.reset( memAlloc(size).release() );
+  } // while(true)
+
+  // translate addresses to sybol names
+  assert(count>0);
+  assert(size>count);
+  char **names=NULL;
+  names=backtrace_symbols(buffer.get(), count);
   if(names==NULL)
     throw ExceptionSyscallFailed("Backtrace::Backtrace(): backtrace_symbols() "
                                  "failed: " + string( strerror(errno) ) );
   AutoCptr<char*> namesHolder(names);
 
+  // rewrite table to vector
   assert( bt_.size()==0 );
   bt_.reserve(size);
   for(int i=0; i<count; ++i)
