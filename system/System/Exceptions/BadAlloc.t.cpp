@@ -63,7 +63,7 @@ void testObj::test<1>(void)
 // test for base class
 template<>
 template<>
-void testObj::test<4>(void)
+void testObj::test<2>(void)
 {
   const MyException  me(someStr);
   const bad_alloc   &base=me;   // this line must compile
