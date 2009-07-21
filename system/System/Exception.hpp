@@ -25,7 +25,7 @@ public:
    */
   template<typename T>
   Exception(const T &msg):
-                Exceptions::Base<Exception, std::exception>(msg)
+    Exceptions::Base<Exception, std::exception>(msg)
   {
   }
 }; // class Exception

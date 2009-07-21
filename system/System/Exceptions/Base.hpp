@@ -22,14 +22,6 @@ template<typename CRTP, typename StdBase>
 class Base: public StdBase
 {
 public:
-  /** \brief create execption with given message.
-   *  \param msg message to represent.
-   */
-  template<typename T>
-  Base(const T &msg):
-    msg_(msg)
-  {
-  }
   /** \brief destructor requires special flags.
    */
   virtual ~Base(void) throw()
@@ -49,6 +41,16 @@ public:
   virtual const char *what(void) const throw()
   {
     return msg_.c_str();
+  }
+
+protected:
+  /** \brief create execption with given message.
+   *  \param msg message to represent.
+   */
+  template<typename T>
+  Base(const T &msg):
+    msg_(msg)
+  {
   }
 
 private:
