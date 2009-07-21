@@ -1,5 +1,4 @@
+23 add more tests for AutoCptr - it does not see to work fine when assigning/constructing from AutoCptr returned from a function.
+22 implement reast of std::exceptions using Base and BaseSimple wrappers.
 21 add template-base FSM implementation.
-20 make more CRTP-based exceptions for std::exceptions (logic_error, invalid_argument, out_of_range).
-19 make CRTP-base exception class, reusable in different components.
-18 add generic exception c-tor (basing on CRTP) that will provide stack back strace (see man backtrace for more details).
 17 make exceptions more verbose.
