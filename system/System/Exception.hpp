@@ -1,7 +1,8 @@
 /*
  * Exception.hpp
  *
- * everything within this namespace should use this.
+ * this is implementation class of base exception for System library and
+ * should not be used as a base class outside of it.
  *
  */
 #ifndef INCLUDE_SYSTEM_EXCEPTION_HPP_FILE
@@ -9,15 +10,14 @@
 
 /* public header */
 
-#include <string>
-#include <exception>
+#include "System/Exceptions/Base.hpp"
 
 namespace System
 {
 
 /** \brief internal exception class.
  */
-class Exception: public std::exception
+class Exception: public Exceptions::Base<Exception, std::exception>
 {
 public:
   /** \brief create execption with given message.
@@ -25,36 +25,11 @@ public:
    */
   template<typename T>
   Exception(const T &msg):
-                msg_(msg)
+                Exceptions::Base<Exception, std::exception>(msg)
   {
   }
-  /** \brief destructor requires special flags.
-   */
-  virtual ~Exception(void) throw()
-  {
-  }
-
-  /** \brief return error message as string.
-   *  \return error message.
-   */
-  inline const std::string& whatAsStr(void) const
-  {
-    return msg_;
-  }
-  /** \brief return error message pointer, as const char*.
-   *  \return pointer to message.
-   */
-  virtual const char *what(void) const throw()
-  {
-    return msg_.c_str();
-  }
-
-private:
-  std::string msg_;
 }; // class Exception
-
 
 }; // namespace System
 
 #endif
-

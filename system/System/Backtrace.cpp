@@ -1,6 +1,7 @@
 /*
  * Backtrace.cpp
  */
+#include <sstream>
 #include <execinfo.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -40,6 +41,12 @@ Backtrace::Backtrace(void)
 
 std::string Backtrace::toString(void) const
 {
+  // create single, big string with multiple lines, representing backtrace.
+  stringstream ss;
+  for(const_iterator it=begin(); it!=end(); ++it)
+    ss<<*it<<endl;
+
+  return ss.str();
 }
 
 } // namespace System
