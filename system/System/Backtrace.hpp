@@ -8,12 +8,7 @@
 
 #include <vector>
 #include <string>
-
-#include "System/ExceptionSyscallFailed.hpp"
-#include "System/ExceptionBadAlloc.hpp"
-
-// TODO: tests
-// TODO: implementation
+#include <stdexcept>
 
 namespace System
 {

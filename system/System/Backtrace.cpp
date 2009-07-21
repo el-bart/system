@@ -24,7 +24,7 @@ AutoCptr<void*> memAlloc(const size_t num)
   const size_t    size=num*sizeof(void*);
   AutoCptr<void*> ptr( static_cast<void**>( malloc(size) ) );
   if(ptr.get()==NULL)
-    throw ExceptionBadAlloc("memAlloc(): unable to allocate memory with malloc()");
+    throw runtime_error("memAlloc(): unable to allocate memory with malloc()");
   return ptr;
 } // memAlloc()
 } // unnmaed namespace
@@ -53,8 +53,8 @@ Backtrace::Backtrace(void)
   char **names=NULL;
   names=backtrace_symbols(buffer.get(), count);
   if(names==NULL)
-    throw ExceptionSyscallFailed("Backtrace::Backtrace(): backtrace_symbols() "
-                                 "failed: " + string( strerror(errno) ) );
+    throw runtime_error("Backtrace::Backtrace(): backtrace_symbols() "
+                        "failed: " + string( strerror(errno) ) );
   AutoCptr<char*> namesHolder(names);
 
   // rewrite table to vector

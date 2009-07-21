@@ -9,6 +9,8 @@
 #include <string>
 #include <stdexcept>
 
+#include "System/Backtrace.hpp"
+
 namespace System
 {
 namespace Exceptions
@@ -44,6 +46,14 @@ public:
     return msg_.c_str();
   }
 
+  /** \brief give access to dumped backtrace.
+   *  \return backtrace reference.
+   */
+  const Backtrace &getBacktrace(void) const
+  {
+    return bt_;
+  }
+
 protected:
   /** \brief create execption with given message.
    *  \param msg message to represent.
@@ -56,6 +66,7 @@ protected:
 
 private:
   std::string msg_;
+  Backtrace   bt_;
 }; // class Base
 
 }; // namespace Exceptions

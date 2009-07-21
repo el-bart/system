@@ -39,6 +39,7 @@ tut::factory tf("System/Exceptions/Base");
 }
 
 using namespace std;
+using namespace System;
 using namespace System::Exceptions;
 
 namespace tut
@@ -94,5 +95,14 @@ void testObj::test<4>(void)
   base.what();                  // this suppress warning from compiler
 }
 
-} // namespace tut
+// check backtrace presence
+template<>
+template<>
+void testObj::test<5>(void)
+{
+  const MyException  me(someStr);
+  const Backtrace   &bt=me.getBacktrace();
+  ensure("backtrace is too short", bt.size()>3);
+}
 
+} // namespace tut
