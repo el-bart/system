@@ -24,7 +24,8 @@ protected:
   /** \brief create execption with given message.
    *  \param msg message to represent.
    */
-  LogicError(const std::string &msg):
+  template<typename T>
+  LogicError(const T &msg):
     Exceptions::BaseSimple<LogicError, std::logic_error>(msg)
   {
   }
