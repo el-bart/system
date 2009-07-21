@@ -23,7 +23,7 @@ protected:
    *  \param msg message to represent.
    */
   template<typename T>
-  BadAlloc(const T &msg):
+  explicit BadAlloc(const T &msg):
     Exceptions::Base<BadAlloc, std::bad_alloc>(msg)
   {
   }

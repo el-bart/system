@@ -23,7 +23,7 @@ protected:
    *  \param msg message to represent.
    */
   template<typename T>
-  RuntimeError(const T &msg):
+  explicit RuntimeError(const T &msg):
     Exceptions::BaseSimple<RuntimeError, std::runtime_error>(msg)
   {
   }

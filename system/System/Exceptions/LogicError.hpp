@@ -25,7 +25,7 @@ protected:
    *  \param msg message to represent.
    */
   template<typename T>
-  LogicError(const T &msg):
+  explicit LogicError(const T &msg):
     Exceptions::BaseSimple<LogicError, std::logic_error>(msg)
   {
   }
