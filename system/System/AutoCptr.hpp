@@ -64,10 +64,11 @@ template<typename T>
 class AutoCptr: public boost::equality_comparable< AutoCptr<T> >,
                 public System::AutoVariable< CptrHolder<T> >
 {
+private:
+  typedef CptrHolder<T>                 THolder;
+  typedef System::AutoVariable<THolder> AutoBase;
+
 public:
-  /** \brief holder class.
-   */
-  typedef CptrHolder<T>            THolder;
   /** \brief pointer type held inside.
    */
   typedef typename THolder::TValue TPtr;
@@ -76,7 +77,7 @@ public:
    *  \param fs pointer to be held.
    */
   explicit AutoCptr(TPtr fs=NULL):
-    System::AutoVariable<THolder>(fs)
+    AutoBase(fs)
   {
   }
 }; // class AutoCptr

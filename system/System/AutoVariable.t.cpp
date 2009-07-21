@@ -264,8 +264,4 @@ void testObj::test<11>(void)
   }
 }
 
-// TODO: add tests for assignment when returning from a funciton:      Aptr a; a=f();
-// TODO: add tests for copy c-truction when returning from a funciton: Aptr a=f();
-
 } // namespace tut
-

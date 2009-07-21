@@ -27,6 +27,12 @@ struct AutoCptrTestData
     tut::ensure( _ap2.get()!=NULL );
   }
 
+  ACP mkNew(int size) const
+  {
+    ACP a( malloc(size) );
+    return a;
+  }
+
   ACP _ap1;
   ACP _ap2;
 };
@@ -108,6 +114,13 @@ void testObj::test<4>(void)
   ensure( p.get()!=NULL );          // test if it passed.
 }
 
+// test copy construction
+template<>
+template<>
+void testObj::test<5>(void)
+{
+  ACP a( mkNew(10) );
+  //ensure( p.get()!=NULL );          // test if it passed.
+}
 
 } // namespace tut
-
