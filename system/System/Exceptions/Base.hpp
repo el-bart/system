@@ -7,7 +7,7 @@
 /* public header */
 
 #include <string>
-#include <exception>
+#include <stdexcept>
 
 namespace System
 {

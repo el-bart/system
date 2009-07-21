@@ -14,7 +14,7 @@ namespace System
 namespace Exceptions
 {
 
-/** \brief internal exception class.
+/** \brief base exception class for resource allocation errors.
  */
 class BadAlloc: public Base<BadAlloc, std::bad_alloc>
 {
