@@ -120,7 +120,36 @@ template<>
 void testObj::test<5>(void)
 {
   ACP a( mkNew(10) );
-  //ensure( p.get()!=NULL );          // test if it passed.
+  ensure( a.get()!=NULL );          // test if it passed.
+}
+
+// test assignment
+template<>
+template<>
+void testObj::test<6>(void)
+{
+  ACP a( mkNew(10) );
+  ACP b( mkNew(10) );
+  ensure( a.get()!=NULL );
+  ensure( b.get()!=NULL );
+
+  a=b;
+  ensure( a.get()!=NULL );          // test if it passed.
+  ensure( b.get()==NULL );          // test if it passed.
+}
+
+// test forwarding for already deallocated object
+template<>
+template<>
+void testObj::test<7>(void)
+{
+  ACP a( mkNew(10) );
+  ACP b( mkNew(10) );
+  a=b;
+  // generaly it is ok if the following line does not crash
+  a=b;
+  ensure( a.get()==NULL );          // test if it passed.
+  ensure( b.get()==NULL );          // test if it passed.
 }
 
 } // namespace tut
