@@ -135,6 +135,7 @@ public:
    */
   AutoVariable& operator=(AutoVariable &av)
   {
+    _t.deallocate();
     _t=av._t;
     av.invalidate();
     return *this;

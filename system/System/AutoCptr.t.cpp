@@ -20,7 +20,7 @@ struct AutoCptrTestData
   typedef AutoCptr<void> ACP;
 
   AutoCptrTestData(void):
-    _ap1( malloc(2)      ),
+    _ap1( malloc(2*1024) ),
     _ap2( malloc(4*1024) )
   {
     tut::ensure( _ap1.get()!=NULL );
@@ -29,7 +29,7 @@ struct AutoCptrTestData
 
   ACP mkNew(int size) const
   {
-    ACP a( malloc(size) );
+    ACP a( malloc(size*1024) );
     return a;
   }
 

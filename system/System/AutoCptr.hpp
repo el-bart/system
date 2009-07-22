@@ -39,7 +39,7 @@ public:
     /** \brief create with value.
      *  \param p pointe rto hold.
      */
-    explicit Helper(Ptr p=NULL):
+    inline explicit Helper(Ptr p=NULL):
       p_(p)
     {
     }
@@ -133,6 +133,7 @@ public:
    */
   AutoCptr& operator=(AutoCptr &ap)
   {
+    deallocate();
     h_=ap.h_;
     ap.invalidate();
     return *this;
@@ -153,10 +154,10 @@ private:
   }
   inline void deallocate(void)
   {
-    if(h_.p_!=NULL)
+    if( isInitialized() )
     {
       free(h_.p_);
-      h_.p_=NULL;
+      invalidate();
     }
   }
 
