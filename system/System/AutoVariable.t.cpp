@@ -27,7 +27,7 @@ struct AutoVariableTestData
     {
       return _v;
     }
-    void dealocate(void)
+    void deallocate(void)
     {
       if(_v==-1)
         return;

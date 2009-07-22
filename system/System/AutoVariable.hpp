@@ -21,7 +21,7 @@ namespace System
  *
  *  this is example code showing how to write
  *  data-specific classes. assume MyT to be class
- *  to be held (notice that it does NOT dealocate()'s
+ *  to be held (notice that it does NOT deallocate()'s
  *  object itself!).
  *
  *  \code
@@ -35,7 +35,7 @@ namespace System
  *     SomeAutoHolder(void);    // create uninitialized object.
  *
  *     TValue get(void) const;  // return current value.
- *     void dealocate(void);    // dealocate resource being held.
+ *     void deallocate(void);   // dealocate resource being held.
  *                              // this method must be resistant to
  *                              // call on uninitialized value _v!
  *   private:
@@ -89,7 +89,7 @@ public:
    */
   ~AutoVariable(void)
   {
-    _t.dealocate();
+    _t.deallocate();
   }
 
   /** \brief returns user data type.
@@ -100,12 +100,12 @@ public:
     return _t.get();
   }
 
-  /** \brief dealocates resource held and stores new one.
+  /** \brief deallocates resource held and stores new one.
    *  \param v new value to be stored.
    */
   void reset(TValue v)
   {
-    _t.dealocate();
+    _t.deallocate();
     _t=T(v);
   }
 

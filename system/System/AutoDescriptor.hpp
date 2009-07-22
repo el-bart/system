@@ -18,6 +18,8 @@
 namespace System
 {
 
+namespace detail
+{
 /** \brief helper class for internal usage in AutoDescriptor.
  */
 class DescriptorHolder
@@ -43,7 +45,7 @@ public:
   }
   /** \brief closes descriptor held inside.
    */
-  void dealocate(void)
+  void deallocate(void)
   {
     if(_v!=-1)
     {
@@ -56,22 +58,12 @@ private:
   TValue _v;
 }; // class DescriptorHolder
 
-/** \brief auto_ptr<>-like class for holding file/socket descriptors.
+} // namespace detail
+
+/** \brief typedef for descriptor hoder.
  */
-class AutoDescriptor: public boost::equality_comparable<AutoDescriptor>,
-                      public AutoVariable<DescriptorHolder>
-{
-public:
-  /** \brief constructor creating object to hold descriptor.
-   *  \param fd file descriptor to hold inside.
-   */
-  explicit AutoDescriptor(const int fd=-1):
-    AutoVariable<DescriptorHolder>(fd)
-  {
-  }
-}; // class AutoDescriptor
+typedef System::AutoVariable<detail::DescriptorHolder> AutoDescriptor;
 
 } // namespace System
 
 #endif
-

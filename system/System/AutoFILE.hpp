@@ -18,6 +18,8 @@
 
 namespace System
 {
+namespace detail
+{
 
 /** \brief helper class for internal usage in AutoFILE.
  */
@@ -44,7 +46,7 @@ public:
   }
   /** \brief closes descriptor held inside.
    */
-  void dealocate(void)
+  void deallocate(void)
   {
     if(_v!=NULL)
     {
@@ -57,23 +59,12 @@ private:
   TValue _v;
 }; // class FILEHolder
 
+} // namespace detail
 
-/** \brief auto_ptr<>-like class for holding FILE* stream pointers.
+/** \brief declaration of auto FILE holder.
  */
-class AutoFILE: public boost::equality_comparable<AutoFILE>,
-                public System::AutoVariable<FILEHolder>
-{
-public:
-  /** \brief create FILE* holder.
-   *  \param fs FILE pointer to be held.
-   */
-  explicit AutoFILE(FILE *fs=NULL):
-    System::AutoVariable<FILEHolder>(fs)
-  {
-  }
-}; // class AutoFILE
+typedef System::AutoVariable<detail::FILEHolder> AutoFILE;
 
 } // namespace System
 
 #endif
-
