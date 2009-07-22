@@ -32,6 +32,8 @@ struct AutoVariableTestData
       if(_v==-1)
         return;
 
+      // ok - throwing strings is ugly, but this is out of the hierarchy
+      // class that will not be caught by tut.
       if(_check)
         throw std::string("dealocate(): "
                           "dealocating when not requested");

@@ -2,6 +2,7 @@
  * DiskFile.cpp
  *
  */
+#include <sstream>
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
@@ -36,11 +37,10 @@ DiskFile::DiskFile( std::pair<std::string, boost::shared_ptr<AutoDescriptor> > p
 void DiskFile::throwFileErrorException(const char *methodName,
                                        const char *action)
 {
-  string errReason=string( strerror(errno) );
-  string err      =string(methodName) + string(": unable to ") +
-                   string(action) + string(" '") +
-                   getName() + string("' file: ") + errReason;
-  throw Exception(err);
+  stringstream ss;
+  ss<<methodName<<": unable to "<<action<<" '"
+    <<getName()<<"' file: "<< strerror(errno);
+  throw Exception( ss.str() );
 }
 
 

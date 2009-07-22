@@ -37,11 +37,7 @@ int main(int argc, char **argv)
       if(i%10==0)
         cerr<<"\r"<<i<<"MB ("<< (100*i)/total <<"%)";
       if( write(fd, onemb, size)!=size )// write do disk
-      {
-        string err="write(): ";
-        err+=string( strerror(errno) );
-        throw Exception(err);
-      }
+        throw Exception( string("write() error: ") + strerror(errno) );
     } // for(write>2GB)
     cerr<<endl;
   }

@@ -1,3 +1,4 @@
+* exceptions thrown by library are slightly more verbose now.
 * updated Auto* classes to allow "regular" copying as atuo_ptr<> does, in all situations.
 * fixed resource leaks in ssignemnt for AutoVariable.
 * providede Backtrace for clearting stack backtraces (usefull for exceptions).

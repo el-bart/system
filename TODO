@@ -1,6 +1,4 @@
 25
 24 think about non-always copying Backtrace information in exception.
-23 add more tests for AutoCptr - it does not see to work fine when assigning/constructing from AutoCptr returned from a function.
 22 implement reast of std::exceptions using Base and BaseSimple wrappers.
 21 add template-base FSM implementation.
-17 make exceptions more verbose.

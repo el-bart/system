@@ -17,8 +17,6 @@
 
 #include "System/Exception.hpp"
 
-// TODO: comments
-
 namespace System
 {
 
