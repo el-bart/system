@@ -33,7 +33,7 @@ Backtrace::Backtrace(void)
 {
   int             count =-1;
   int             size  =256;
-  AutoCptr<void*> buffer( memAlloc(size).release() );
+  AutoCptr<void*> buffer( memAlloc(size) );
 
   // enlarge buffer untill whole read fits
   while(true)
