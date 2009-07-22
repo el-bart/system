@@ -44,7 +44,7 @@ Backtrace::Backtrace(void)
       break;
     // otherwise enlarge buffer and try again
     size  *=4;
-    buffer.reset( memAlloc(size).release() );
+    buffer.reset( memAlloc(size) );
   } // while(true)
 
   // translate addresses to sybol names
