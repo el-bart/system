@@ -44,7 +44,9 @@ Backtrace::Backtrace(void)
       break;
     // otherwise enlarge buffer and try again
     size  *=4;
-    buffer.reset( memAlloc(size) );
+    // TODO: why can't this be one line? bug to be fixed...
+    AutoCptr<void*> tmp( memAlloc(size) );
+    buffer=tmp;
   } // while(true)
 
   // translate addresses to sybol names

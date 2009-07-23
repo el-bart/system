@@ -232,7 +232,7 @@ void testObj::test<10>(void)
 // when passing ownership via release().
 template<>
 template<>
-void testObj::test<12>(void)
+void testObj::test<11>(void)
 {
   try
   {
@@ -251,7 +251,7 @@ void testObj::test<12>(void)
 // when passing ownership via copy-construction.
 template<>
 template<>
-void testObj::test<11>(void)
+void testObj::test<12>(void)
 {
   try
   {
@@ -264,6 +264,29 @@ void testObj::test<11>(void)
     TestDataHolder::setCheck(false);
     fail( ex.c_str() );
   }
+}
+
+// test assignment operator
+template<>
+template<>
+void testObj::test<13>(void)
+{
+  TestAV a;
+  a=_av1;
+  ensure(     a.isInitialized() );
+  ensure( !_av1.isInitialized() );
+}
+
+// test assignment from call
+template<>
+template<>
+void testObj::test<14>(void)
+{
+  TestAV a;
+  ensure( !_av1.isInitialized() );
+  // TODO: why this does not compile?
+  a=mkTestAV();
+  ensure( a.isInitialized() );
 }
 
 } // namespace tut

@@ -75,7 +75,7 @@ public:
   /** \brief copy constructor.
    *  \param ap class to take ownership from.
    */
-  AutoCptr(AutoCptr &ap):
+  AutoCptr(AutoCptr<T> &ap):
     h_(ap.h_)
   {
     ap.invalidate();
@@ -129,7 +129,7 @@ public:
    *  \param ap object to take ownership from.
    *  \returns reference to current object.
    */
-  AutoCptr& operator=(AutoCptr &ap)
+  AutoCptr<T>& operator=(AutoCptr<T> &ap)
   {
     deallocate();
     h_=ap.h_;

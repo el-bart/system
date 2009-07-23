@@ -152,4 +152,14 @@ void testObj::test<7>(void)
   ensure( b.get()==NULL );          // test if it passed.
 }
 
+// test assignment when returning from call
+template<>
+template<>
+void testObj::test<8>(void)
+{
+  ACP a( mkNew(10) );
+  // TODO - why this does not compile?
+  a.operator=(mkNew(20));
+}
+
 } // namespace tut
