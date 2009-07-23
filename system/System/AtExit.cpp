@@ -2,6 +2,7 @@
  * AtExit.cpp
  *
  */
+#include <iostream>
 #include <stdlib.h>     // atexit()
 #include <pthread.h>
 #include <boost/checked_delete.hpp>
@@ -47,7 +48,13 @@ struct PtrLock
   ~PtrLock(void)
   {
     if( pthread_mutex_unlock(&mutex)!=0 )
-      throw System::Exception("unable to unlock mutex for AtExitImpl");
+    {
+      assert(!"unable to unlock mutex for AtExitImpl");
+      cerr<<"System::<unnamed_namespace>::PtrLock::~PtrLock(): "
+            "unable to unlock mutex for AtExitImpl"<<endl;
+      cerr<<"System::<unnamed_namespace>::PtrLock::~PtrLock(): "
+            "you should NEVER see this error!"<<endl;
+    }
   }
 }; // struct PtrLock
 
