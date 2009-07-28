@@ -157,8 +157,10 @@ template<>
 template<>
 void testObj::test<8>(void)
 {
-  ACP a( mkNew(10) );
+  ACP a;
+  ensure("pre-condition failed", !a.isInitialized() );
   a=mkNew(20);
+  ensure( a.isInitialized() );
 }
 
 } // namespace tut
