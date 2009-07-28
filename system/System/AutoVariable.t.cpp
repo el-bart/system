@@ -283,8 +283,7 @@ template<>
 void testObj::test<14>(void)
 {
   TestAV a;
-  ensure( !_av1.isInitialized() );
-  // TODO: why this does not compile?
+  ensure("pre-condition failed", !a.isInitialized() );
   a=mkTestAV();
   ensure( a.isInitialized() );
 }

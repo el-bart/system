@@ -39,7 +39,7 @@ namespace System
  *                              // this method must be resistant to
  *                              // call on uninitialized value _v!
  *   private:
- *     TValue _v;
+ *     TValue v_;
  *   };
  *
  *  \endcode
@@ -56,16 +56,16 @@ public:
   /** \brief constructs class from user data-holder.
    *  \param t user data holder.
    */
-  explicit AutoVariable(T t):
-    _t(t)
+  AutoVariable(T t):
+    t_(t)
   {
   }
 
   /** \brief constructs class from user-data.
    *  \param v raw user data.
    */
-  explicit AutoVariable(TValue v):
-    _t(v)
+  AutoVariable(TValue v):
+    t_(v)
   {
   }
 
@@ -80,7 +80,7 @@ public:
    *  \param av class to take ownership from.
    */
   AutoVariable(AutoVariable &av):
-    _t(av._t)
+    t_(av.t_)
   {
     av.invalidate();    // ownership has been already passed
   }
@@ -89,15 +89,15 @@ public:
    */
   ~AutoVariable(void)
   {
-    _t.deallocate();
+    t_.deallocate();
   }
 
   /** \brief returns user data type.
    *  \return user data in raw form.
    */
-  inline TValue get(void) const
+  TValue get(void) const
   {
-    return _t.get();
+    return t_.get();
   }
 
   /** \brief deallocates resource held and stores new one.
@@ -105,8 +105,8 @@ public:
    */
   void reset(TValue v)
   {
-    _t.deallocate();
-    _t=T(v);
+    t_.deallocate();
+    t_=T(v);
   }
 
   /** \brief gives back ownership of resource without deallocating it.
@@ -114,7 +114,7 @@ public:
    */
   TValue release(void)
   {
-    TValue v=_t.get();
+    TValue v=t_.get();
     invalidate();
     return v;
   }
@@ -124,9 +124,20 @@ public:
    */
   operator T(void)
   {
-    T t=_t;
+    T t=t_;
     invalidate();
     return t;
+  }
+
+  /** \brief assignment operator.
+   *  \param h helper object to assign from.
+   *  \returns reference to current object.
+   */
+  AutoVariable& operator=(T t)
+  {
+    t_.deallocate();
+    t_=t;
+    return *this;
   }
 
   /** \brief assignment operator.
@@ -135,8 +146,8 @@ public:
    */
   AutoVariable& operator=(AutoVariable &av)
   {
-    _t.deallocate();
-    _t=av._t;
+    t_.deallocate();
+    t_=av.t_;
     av.invalidate();
     return *this;
   }
@@ -147,16 +158,16 @@ public:
   bool isInitialized(void) const
   {
     const T invalid;
-    return _t.get()!=invalid.get();
+    return t_.get()!=invalid.get();
   }
 
 private:
   void invalidate(void)
   {
-    _t=T();
+    t_=T();
   }
 
-  T _t;
+  T t_;
 }; // class AutoVariable
 
 } // namespace System
