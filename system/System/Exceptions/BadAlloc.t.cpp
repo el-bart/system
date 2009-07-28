@@ -40,11 +40,11 @@ namespace tut
 
 namespace
 {
-struct MyException: public BadAlloc
+struct MyException: public BadAlloc<MyException>
 {
   template<typename T>
   MyException(const T &t):
-    BadAlloc(t)
+    BadAlloc<MyException>(t)
   {
   }
 }; // struct MyException

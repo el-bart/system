@@ -16,7 +16,8 @@ namespace Exceptions
 
 /** \brief base exception class for resource allocation errors.
  */
-class BadAlloc: public Base<BadAlloc, std::bad_alloc>
+template<typename CRTP>
+class BadAlloc: public Base<BadAlloc<CRTP>, std::bad_alloc>
 {
 protected:
   /** \brief create execption with given message.

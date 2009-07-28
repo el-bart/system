@@ -18,7 +18,8 @@ namespace Exceptions
  *  \note throwing this type of error may be threated as an release-time
  *        assert equivalent.
  */
-class LogicError: public BaseSimple<LogicError, std::logic_error>
+template<typename CRTP>
+class LogicError: public BaseSimple<LogicError<CRTP>, std::logic_error>
 {
 protected:
   /** \brief create execption with given message.
@@ -26,7 +27,7 @@ protected:
    */
   template<typename T>
   explicit LogicError(const T &msg):
-    Exceptions::BaseSimple<LogicError, std::logic_error>(msg)
+    Exceptions::BaseSimple<LogicError<CRTP>, std::logic_error>(msg)
   {
   }
 }; // class LogicError

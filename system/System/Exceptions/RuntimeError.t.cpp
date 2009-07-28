@@ -40,11 +40,11 @@ namespace tut
 
 namespace
 {
-struct MyException: public RuntimeError
+struct MyException: public RuntimeError<MyException>
 {
   template<typename T>
   MyException(const T &t):
-    RuntimeError(t)
+    RuntimeError<MyException>(t)
   {
   }
 }; // struct MyException

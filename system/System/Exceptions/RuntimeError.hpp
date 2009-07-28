@@ -16,7 +16,8 @@ namespace Exceptions
 
 /** \brief base exception class for errors reported at runtime.
  */
-class RuntimeError: public BaseSimple<RuntimeError, std::runtime_error>
+template<typename CRTP>
+class RuntimeError: public BaseSimple<RuntimeError<CRTP>, std::runtime_error>
 {
 protected:
   /** \brief create execption with given message.
@@ -24,7 +25,7 @@ protected:
    */
   template<typename T>
   explicit RuntimeError(const T &msg):
-    Exceptions::BaseSimple<RuntimeError, std::runtime_error>(msg)
+    Exceptions::BaseSimple<RuntimeError<CRTP>, std::runtime_error>(msg)
   {
   }
 }; // class RuntimeError

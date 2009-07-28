@@ -40,11 +40,11 @@ namespace tut
 
 namespace
 {
-struct MyException: public LogicError
+struct MyException: public LogicError<MyException>
 {
   template<typename T>
   MyException(const T &t):
-    LogicError(t)
+    LogicError<MyException>(t)
   {
   }
 }; // struct MyException
