@@ -130,7 +130,7 @@ public:
   }
 
   /** \brief assignment operator.
-   *  \param h helper object to assign from.
+   *  \param t helper object to assign from.
    *  \returns reference to current object.
    */
   AutoVariable& operator=(T t)
