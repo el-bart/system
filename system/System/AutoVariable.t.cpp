@@ -288,4 +288,16 @@ void testObj::test<14>(void)
   ensure( a.isInitialized() );
 }
 
+// test for resource deallocation; this is smoke test - if resource leaks
+// valgrind will show this.
+template<>
+template<>
+void testObj::test<15>(void)
+{
+  TestAV a=mkTestAV();
+  ensure("pre-condition failed", a.isInitialized() );
+  a=mkTestAV();
+  ensure( a.isInitialized() );
+}
+
 } // namespace tut
