@@ -1,4 +1,3 @@
 25
-24 think about non-always copying Backtrace information in exception.
 22 implement reast of std::exceptions using Base and BaseSimple wrappers.
 21 add template-base FSM implementation.
