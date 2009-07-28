@@ -15,8 +15,6 @@
 #include <unistd.h>
 #include <boost/operators.hpp>
 
-#include "System/Exception.hpp"
-
 namespace System
 {
 
@@ -37,7 +35,7 @@ public:
     /** \brief create with value.
      *  \param p pointe rto hold.
      */
-    inline explicit Helper(Ptr p=NULL):
+    explicit Helper(Ptr p=NULL):
       p_(p)
     {
     }
@@ -53,7 +51,7 @@ public:
   /** \brief constructs class from user data-holder.
    *  \param h user data holder.
    */
-  explicit AutoCptr(Helper h):
+  AutoCptr(Helper h):
     h_(h)
   {
   }
@@ -61,7 +59,7 @@ public:
   /** \brief constructs class from user-data.
    *  \param p raw user data.
    */
-  explicit AutoCptr(Ptr p):
+  AutoCptr(Ptr p):
     h_(p)
   {
   }
@@ -91,7 +89,7 @@ public:
   /** \brief returns user data type.
    *  \return user data in raw form.
    */
-  inline Ptr get(void) const
+  Ptr get(void) const
   {
     return h_.p_;
   }
@@ -126,6 +124,17 @@ public:
   }
 
   /** \brief assignment operator.
+   *  \param h helper object ot assign from.
+   *  \returns reference to current object.
+   */
+  AutoCptr<T>& operator=(Helper h)
+  {
+    deallocate();
+    h_=h;
+    return *this;
+  }
+
+  /** \brief assignment operator.
    *  \param ap object to take ownership from.
    *  \returns reference to current object.
    */
@@ -146,11 +155,11 @@ public:
   }
 
 private:
-  inline void invalidate(void)
+  void invalidate(void)
   {
     h_=Helper();
   }
-  inline void deallocate(void)
+  void deallocate(void)
   {
     if( isInitialized() )
     {

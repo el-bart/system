@@ -158,8 +158,7 @@ template<>
 void testObj::test<8>(void)
 {
   ACP a( mkNew(10) );
-  // TODO - why this does not compile?
-  a.operator=(mkNew(20));
+  a=mkNew(20);
 }
 
 } // namespace tut
