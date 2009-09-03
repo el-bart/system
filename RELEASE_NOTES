@@ -4,6 +4,8 @@
 * fixed resource leaks in ssignemnt for AutoVariable.
 * providede Backtrace for clearting stack backtraces (usefull for exceptions).
 * added Exceptions::* for creating own exceptions easily.
+
+-- v0.4.3 --
 * fixed convention in Exception.
 * begin(), end(), size() are now static.
 * fixed warning in assert in IterableEnum<> on some compilers.
