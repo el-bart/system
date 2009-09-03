@@ -102,13 +102,13 @@ template<>
 template<>
 void testObj::test<4>(void)
 {
-  long x;
+  int x;
 
-  x=_te.toLong();
+  x=_te.toInt();
   ensure(x==10);
 
   _te=TestEnum::C;
-  x=_te.toLong();
+  x=_te.toInt();
   ensure(x==12);
 }
 
@@ -119,7 +119,7 @@ void testObj::test<5>(void)
 {
   TestEnumBase base   =_te;
   TestEnum     derived=base;
-  ensure( derived.toLong()==base.toLong() );
+  ensure( derived.toInt()==base.toInt() );
 }
 
 // test assigning from base
@@ -130,7 +130,7 @@ void testObj::test<6>(void)
   TestEnum     derived=_te;
   TestEnumBase base2  =TestEnumBase::D;
   derived=base2;
-  ensure( derived.toLong()==base2.toLong() );
+  ensure( derived.toInt()==base2.toInt() );
 }
 
 // test assiging from pure enum
@@ -140,7 +140,7 @@ void testObj::test<7>(void)
 {
   TestEnum derived=_te;
   derived=TestEnum::D;
-  ensure( derived.toLong()==TestEnum::D );
+  ensure( derived.toInt()==TestEnum::D );
 }
 
 // test comparing to self
@@ -278,7 +278,7 @@ template<>
 template<>
 void testObj::test<21>(void)
 {
-  long v=static_cast<long>(TestEnum::Min);
+  long v=static_cast<int>(TestEnum::Min);
   for(TestEnum::const_iterator it=_te.begin();
       it!=_te.end();
       ++it)

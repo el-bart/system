@@ -7,8 +7,9 @@
 
 /* public header */
 
-#include <cassert>
 #include <boost/operators.hpp>
+#include <boost/static_assert.hpp>
+#include <cassert>
 
 namespace System
 {
@@ -87,23 +88,20 @@ public:
     return e_==e;
   }
 
-  /** \brief explicit convertion is prefered since implicit
-   *         might cause compiler confusions when comparing
-   *         with raw int values.
+  /** \brief backward compatibility call - do NOT use it anymore.
    *  \return enum value as integer.
    */
   inline long toLong(void) const
   {
+    BOOST_STATIC_ASSERT( sizeof(e_)<=sizeof(long) );
     return e_;
   }
-  /** \brief backward compatibility call. its usage is depracticated.
+  /** \brief returns enum as a number.
    *  \return enum value as integer.
    */
   inline int toInt(void) const
   {
-    assert( static_cast<int>(e_)==toLong() &&
-            "Ooops - looks like old interface does not work for"
-            "your compiler/platform. use new version of toLong() instead.");
+    BOOST_STATIC_ASSERT( sizeof(e_)==sizeof(int) );
     return e_;
   }
 

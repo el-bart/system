@@ -67,7 +67,7 @@ public:
     /** \brief create object.
      */
     const_iterator(void):
-      e_( static_cast<EType>( static_cast<long>(E::Min) ) )
+      e_( static_cast<EType>( static_cast<int>(E::Min) ) )
     {
       check(e_);
     }
@@ -129,10 +129,10 @@ public:
       // abvious "a<=b" to "a-b<=0".
 
       // check minimum value
-      assert( static_cast<long>(E::Min)-static_cast<long>(e)         <=0 );
+      assert( static_cast<int>(E::Min)-static_cast<int>(e)         <=0 );
       // Max+1 since const_iterator may represent end()
       // iterator as well.
-      assert( static_cast<long>(e)     -(static_cast<long>(E::Max)+1)<=0 );
+      assert( static_cast<int>(e)     -(static_cast<int>(E::Max)+1)<=0 );
 
       // this supress warning in release mode
       ignoreParam(e);
@@ -158,7 +158,7 @@ public:
    */
   static inline const_iterator begin(void)
   {
-    const EType val=static_cast<EType>( static_cast<long>(E::Min)+0 );
+    const EType val=static_cast<EType>( static_cast<int>(E::Min)+0 );
     return const_iterator(val);
   }
 
@@ -167,7 +167,7 @@ public:
    */
   static inline const_iterator end(void)
   {
-    const EType val=static_cast<EType>( static_cast<long>(E::Max)+1 );
+    const EType val=static_cast<EType>( static_cast<int>(E::Max)+1 );
     return const_iterator(val);
   }
 
@@ -183,19 +183,19 @@ private:
   // ensure that Min value is not greater than Max value.
   // cast here suppress warning when E is decalred in
   // unnamed namespace.
-  BOOST_STATIC_ASSERT( static_cast<long>(E::Min)<=
-                       static_cast<long>(E::Max)   );
+  BOOST_STATIC_ASSERT( static_cast<int>(E::Min)<=
+                       static_cast<int>(E::Max)   );
 
   template<typename T>
   inline void check(const T t) const
   {
-    check( t.toLong() );
+    check( t.toInt() );
   }
   inline void check(const EType e) const
   {
-    check( static_cast<long>(e) );
+    check( static_cast<int>(e) );
   }
-  inline void check(const long l) const
+  inline void check(const int l) const
   {
     assert( E::Min<=l );
     assert( l<=E::Max );

@@ -100,13 +100,13 @@ template<>
 template<>
 void testObj::test<4>(void)
 {
-  long x;
+  int x;
 
-  x=_te.toLong();
+  x=_te.toInt();
   ensure(x==1);
 
   _te=TestEnum::C;
-  x=_te.toLong();
+  x=_te.toInt();
   ensure(x==100);
 }
 
