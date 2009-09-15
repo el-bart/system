@@ -1,3 +1,12 @@
+-- v0.3.0 --
+* merging directories now work as it should, with respect to version history of an element.
+* merging is more robust now.
+* added automatic detection of CPUs count for paraller builds when delivering.
+* fixed config files names in example.
+
+-- v0.2.2 --
+* fixed bug with silent non-rebasing when host hostname of parent is invalid.
+* comments in delivery script updated.
 * build config is not in a separate file, which is not-user specific, therefore can be added to repository.
 * added 2nd license: revised BSD.
 * branch is now updated before checking for changes.
