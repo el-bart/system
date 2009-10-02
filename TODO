@@ -1,3 +1,4 @@
-26
+27
+26 consider using futex() in System.
 25 add MultiLock which takes set of mutexes as parameters and locks them in proper order (i.e. memory appearance order) to prevent dead locks.
 21 add template-base FSM implementation.
