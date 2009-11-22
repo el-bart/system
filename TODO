@@ -3,4 +3,5 @@
 26 consider using futex() in System.
 27 System::Exception*(where*, what*).
 28 prepare macro for creating exceptions, that would take down file name, line number and call name out-of-the-box.
-29
+29 implement System::SharedPtr that allows casting non-const -> const and derived -> base, just as regular ptrs does.
+30
