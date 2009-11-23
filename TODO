@@ -4,4 +4,7 @@
 27 System::Exception*(where*, what*).
 28 prepare macro for creating exceptions, that would take down file name, line number and call name out-of-the-box.
 29 implement System::SharedPtr that allows casting non-const -> const and derived -> base, just as regular ptrs does.
-30
+30 System::SharedPtr<allowNulls>
+31 System::OneInstance
+32 System::Singleton::->
+33
