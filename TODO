@@ -7,4 +7,5 @@
 30 System::SharedPtr<allowNulls>
 31 System::OneInstance
 32 System::Singleton::->
-33
+33 create dynamic pool thread ("free lunch is over" -- Herb Sutter), adopting to work load.
+34
