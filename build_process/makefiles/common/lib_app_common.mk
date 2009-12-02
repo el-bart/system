@@ -1,3 +1,5 @@
+# TODO: TEST_LINK_LIBS looks like it should be removed (not used)
+
 .PHONY: test
 test:: copy_testdata
 test:: $(TEST_PROGRAM_NAME)
@@ -33,7 +35,7 @@ LIBS_GEN_DEPS:=$(wildcard $(DEP_LIBS_WC)) $(GEN_LIBS_DIR)/$(LIBRARY_NAME)
 
 %.mt: %.mt.o $(LIBS_GEN_DEPS)
 	@echo "LD    $@"
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(TEST_LINK_LIBS) \
+	$(LD) $(LDFLAGS) -o $@ $^ $(TEST_LINK_LIBS) \
 		-l$(COMPONENT_NAME) $(LINK_LIBS)
 
 $(CBIN_MTEST)::
@@ -42,18 +44,13 @@ $(CBIN_MTEST)::
 
 
 .PHONY: copy_testdata
-copy_testdata: testdata
-
-testdata:
-	if test -d "$(THIS_SRC_BASE_DIR)/features/testdata" ; \
-	then \
-	  echo "copying test data" ; \
-	  cp -pur "$(THIS_SRC_BASE_DIR)/features/testdata" . ; \
-	fi
+copy_testdata:
+	cp -purv "$(THIS_SRC_FEATURES_TESTDATA_DIR)" . 2>/dev/null | \
+	  sed 's:^.* -> ...\(.*\).$$:COPY  \1:'
 
 $(TEST_PROGRAM_NAME):: $(CXXOBJS_TEST) $(COBJS_TEST) $(LIBS_GEN_DEPS)
 	@echo "LD    $@"
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(TEST_LINK_LIBS) \
+	$(LD) $(LDFLAGS) -o $@ $^ $(TEST_LINK_LIBS) \
 		-l$(COMPONENT_NAME) $(LINK_LIBS) $(END_LINK_LIBS)
 
 LIBRARY_OBJ_DEPS:=$(CXXOBJS_NOMAIN) $(COBJS_NOMAIN)
@@ -66,10 +63,11 @@ $(LIBRARY_NAME):: $(LIBRARY_DEPS)
 endif
 ifeq (dynamic,$(LIBRARY_TYPE))
 CXXFLAGS+=-fPIC
-LDFLAGS +=-shared -fPIC
+LDFLAGS +=-fPIC
+$(LIBRARY_NAME):: LDFLAGS+=-shared
 $(LIBRARY_NAME):: $(LIBRARY_DEPS)
 	@echo "LD    $@"
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(LIBRARY_OBJ_DEPS) $(LINK_LIBS) $(END_LINK_LIBS)
+	$(LD) $(LDFLAGS) -o $@ $(LIBRARY_OBJ_DEPS) $(LINK_LIBS) $(END_LINK_LIBS)
 endif
 
 # ensure there is proper link in gen

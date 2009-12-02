@@ -21,6 +21,7 @@ include $(MAKEFILES_COMMON_BASE_DIR)/main_macros.mk
 # make all dependencies for all components in gen
 TMP:=$(shell mkdir -p "$(GEN_COMPONENTS_DEPS_DIR)" && \
              $(MAKE_COMPONENTDEPS_SCRIPT) \
+               "$(SRC_BASE_DIR)" \
                "$(GEN_COMPONENTS_DEPS_DIR)" \
                "$(COMPONENT_DEPS_REL_PATH)" \
                "$(GEN_LIBS_DIR)" \
@@ -32,11 +33,11 @@ include $(GEN_COMPONENTS_DEPS_DIR)/_default_target_.mk
 
 
 # include all generated component-dependencies
-include $(wildcard $(GEN_COMPONENTS_DEPS_DIR)/*.mk)
+include $(wildcard $(GEN_COMPONENTS_DEPS_DIR)/[^_]*.mk)
 
 
 # clean specific profile
 .PHONY: clean
 clean:
-	rm -rfv $(GEN_BASE_DIR)/$(PROFILE)
+	rm -rfv $(GEN_BASE_DIR)/$(PROFILE)_$(TC)_$(MEM_CHECK)
 

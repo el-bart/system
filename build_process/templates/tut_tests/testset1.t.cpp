@@ -6,10 +6,13 @@
  */
 #include <tut.h>
 
-namespace UserNamespace
-{
+#include "UserNamespace/Some.hpp"
 
-struct SomeTestClass
+using namespace UserNamespace;
+
+namespace
+{
+struct TestClass
 {
   bool isZero(int v) const
   {
@@ -17,22 +20,12 @@ struct SomeTestClass
   }
 };
 
-} // namespace UserNamespace
-
-
-namespace tut
-{
-typedef UserNamespace::SomeTestClass TestClass;
-typedef test_group<TestClass> factory;
+typedef TestClass TestClass;
+typedef tut::test_group<TestClass> factory;
 typedef factory::object testObj;
-} // namespace tut
 
-
-namespace
-{
-tut::factory tf("UserNamespace/Some");
-}
-
+factory tf("UserNamespace/Some");
+} // unnamed namespace
 
 
 namespace tut
@@ -47,4 +40,3 @@ void testObj::test<1>(void)
 }
 
 } // namespace tut
-

@@ -13,3 +13,10 @@ TOOLCHAINS_LIST:=$(shell cd "$(MAKEFILES_TOOLCHAINS_BASE_DIR)" && ls | sed 's:\.
 ifneq ($(TC),$(findstring $(TC),$(TOOLCHAINS_LIST)))
 $(error toolchain (TC) not set (aviable are: $(TOOLCHAINS_LIST)))
 endif # TC not set
+
+#
+# is any mode set?
+#
+ifeq (,$(MODE))
+$(error mode (MODE) not set)
+endif # TC not set

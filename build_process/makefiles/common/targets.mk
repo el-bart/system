@@ -1,19 +1,15 @@
 # makro for common calls
 define run-in-gen
 	@echo
-	@echo "##### build $(COMPONENT_NAME) in $@"
+	@echo "##### build $(COMPONENT_NAME) in $@_$(TC)_$(MEM_CHECK)"
 	# make gen/ dir structure for source files
-	GEN_NOW="$(GEN_BASE_DIR)/$@/`basename $(CURDIR)`" && \
+	GEN_NOW="$(GEN_BASE_DIR)/$@_$(TC)_$(MEM_CHECK)/`basename $(CURDIR)`" && \
 		mkdir -p "$$GEN_NOW" && cd "$$GEN_NOW" && \
 		mkdir -p $(SOURCE_DIRS)
-	# make includes/ dir structure for global includes files
-	mkdir -p $(GEN_INCLUDES_DIR)
-	cp -p --parent `find . -type f -iname '*.h*' \
-		-exec grep -l '^/\* public header \*/$$' {} \; | grep -v '/.svn'` \
-		$(GEN_INCLUDES_DIR) \
-		2>/dev/null ; true
+	# make gen dir
 	mkdir -p "$(GEN_LIBS_DIR)"
-	+$(MAKE) $(MFLAGS) -C "$(GEN_BASE_DIR)/$@/`basename $(CURDIR)`" \
+	# run
+	+$(MAKE) $(MFLAGS) -C "$(GEN_BASE_DIR)/$@_$(TC)_$(MEM_CHECK)/`basename $(CURDIR)`" \
 		-f "$(CURDIR)/Makefile" TARGET=$@ $(TARGET) \
 		STRIP_BINARY=$(STRIP_BINARY) \
 		DEP_LIBS_WC="$(DEP_LIBS_WC)" \
@@ -34,20 +30,12 @@ all:
 	@echo
 	@exit 1
 
-# memory debugging is on?
-ifneq (,$(MEM_DEBUG))
-END_LINK_LIBS+=-lefence
-endif
-
-# compiler flags
-PRF_FLAGS:=-pg -DNDEBUG -g3 -O3
-DBG_FLAGS:=-g3
-OPT_FLAGS:=-O3 -DNDEBUG -Werror
-
-# linker flags
-PRF_LDFLAGS:=-pg
-DBG_LDFLAGS:=
-OPT_LDFLAGS:=
+# include toolchain-specific flags
+include $(MAKEFILES_TOOLCHAINS_BASE_DIR)/$(TC)-flags.mk
+# add project-specific flags
+OPT_FLAGS+=$(USER_OPT_FLAGS)
+DBG_FLAGS+=$(USER_DBG_FLAGS)
+PRF_FLAGS+=$(USER_PRF_FLAGS)
 
 # include profiles from extrnal files
 include $(wildcard $(MAKEFILES_PROFILES_BASE_DIR)/*.mk)
