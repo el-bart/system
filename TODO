@@ -9,4 +9,5 @@
 32 System::Singleton::->
 33 create dynamic threads pool ("free lunch is over" -- Herb Sutter), adopting to work load.
 34 add method for returning name of exception, to the base class (via typeid(*this).name() call).
-35
+35 thread-safe containters would be nice feature.
+36
