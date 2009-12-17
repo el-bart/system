@@ -11,5 +11,5 @@
 34 add method for returning name of exception, to the base class (via typeid(*this).name() call).
 35 thread-safe containters would be nice feature.
 36 static, thread-safe mutex/lock implementation.
-37 fix problem with Backtrace.
+37 fix problem with Backtrace (bug in the library? check man's example program).
 38
