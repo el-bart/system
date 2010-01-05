@@ -12,4 +12,5 @@
 35 thread-safe containters would be nice feature.
 36 static, thread-safe mutex/lock implementation.
 37 fix problem with Backtrace (bug in the library? check man's example program).
-38
+38 prepare backend for running separate thread for handling signals (see: http://www.linuxjournal.com/article/2121).
+39
