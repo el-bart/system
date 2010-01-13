@@ -66,8 +66,10 @@ template<>
 void testObj::test<2>(void)
 {
   const MyException    me(someStr);
-  const runtime_error &base=me; // this line must compile
-  base.what();                  // this suppress warning from compiler
+  const runtime_error &base2=me;// this line must compile
+  const exception     &base1=me;// this line must compile
+  base1.what();                 // this suppress warning from compiler
+  base2.what();                 // this suppress warning from compiler
 }
 
 } // namespace tut
