@@ -8,7 +8,7 @@
 /* public header */
 
 // defines SYSTEM_FUNCTION_NAME macro that gets funciton name.
-#if __GNUC__ >= 2
+#if __GNUC__ >= 3
   #define SYSTEM_FUNCTION_NAME __PRETTY_FUNCTION__
 #else
   #define SYSTEM_FUNCTION_NAME __FUNCTION__
