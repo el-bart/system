@@ -60,7 +60,7 @@ void testObj::test<2>(void)
 {
   const Backtrace &bt1=myCall(10);
   const Backtrace &bt2=myCall(21);
-  ensure_equals("backtrace counts does not match", 11, bt2.size()-bt1.size() );
+  ensure_equals("backtrace counts does not match", bt2.size()-bt1.size(), 11);
 }
 
 
