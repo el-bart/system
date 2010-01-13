@@ -29,7 +29,8 @@ namespace Exceptions
 struct CommonElements
 {
   /** \brief gets type name by means of RTTI.
-   *  \return naem of class.
+   *  \param t class to check.
+   *  \return name of class.
    */
   template<typename T>
   std::string getTypeName(const T &t) const
