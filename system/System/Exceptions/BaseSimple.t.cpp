@@ -54,6 +54,11 @@ struct MyException: public BaseSimple<MyException, std::logic_error>
     BaseSimple<MyException, std::logic_error>(t)
   {
   }
+  template<typename T>
+  MyException(const Location &where, const T &t):
+    BaseSimple<MyException, std::logic_error>(where, t)
+  {
+  }
 }; // struct MyException
 
 const char *someStr="hello world!";
@@ -93,6 +98,16 @@ void testObj::test<4>(void)
   const MyException  me(someStr);
   const logic_error &base=me;   // this line must compile
   base.what();                  // this suppress warning from compiler
+}
+
+// test c-tor with location information
+template<>
+template<>
+void testObj::test<6>(void)
+{
+  const MyException  me(SYSTEM_SAVE_LOCATION, someStr);
+  const logic_error &base=me;   // this line must compile
+  ensure("no/wrong location info", strstr( base.what(), "BaseSimple.t.cpp:")!=NULL );
 }
 
 } // namespace tut

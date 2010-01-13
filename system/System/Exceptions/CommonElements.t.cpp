@@ -71,4 +71,13 @@ void testObj::test<5>(void)
                 ce_.cc("a", "b", "c", "d", "e", "f"), "abcdef");
 }
 
+// test Location name
+template<>
+template<>
+void testObj::test<6>(void)
+{
+  const CommonElements::Location loc(SYSTEM_SAVE_LOCATION);
+  loc.getStr(); // to suppress warning.
+}
+
 } // namespace tut

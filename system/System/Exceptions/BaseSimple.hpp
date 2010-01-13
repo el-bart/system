@@ -45,6 +45,16 @@ protected:
     StdBase(msg)
   {
   }
+  /** \brief create execption with given message.
+   *  \param where place where exception has been raised.
+   *  \param msg   message to represent.
+   *  \note use SYSTEM_SAVE_LOCATION macro to generate 'where' field.
+   */
+  template<typename T>
+  explicit BaseSimple(const Location &where, const T &msg):
+    StdBase( cc(where.getStr(), ": ", msg) )
+  {
+  }
 }; // class BaseSimple
 
 }; // namespace Exceptions

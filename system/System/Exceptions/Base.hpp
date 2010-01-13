@@ -57,6 +57,17 @@ protected:
   {
   }
 
+  /** \brief create execption with given message.
+   *  \param where location where message has been generated.
+   *  \param msg   message to represent.
+   *  \note use SYSTEM_SAVE_LOCATION macro to generate 'where' field.
+   */
+  template<typename T>
+  explicit Base(const Location &where, const T &msg):
+    msg_( cc(where.getStr(), ": ", msg) )
+  {
+  }
+
 private:
   std::string msg_;
 }; // class Base

@@ -10,13 +10,26 @@
 #include <string>
 #include <sstream>
 
+#include "System/Exceptions/detail/Location.hpp"
+#include "System/FunctionName.hpp"
+
 namespace System
 {
 namespace Exceptions
 {
 
+/** \brief macro for saving location in file.
+ */
+#define SYSTEM_SAVE_LOCATION ::System::Exceptions::CommonElements::Location(__FILE__, __LINE__, SYSTEM_FUNCTION_NAME)
+
+
+/** \brief common elements used by exceptions.
+ */
 struct CommonElements
 {
+  /** \brief location class name to be used in user's code. */
+  typedef detail::Location Location;
+
   /** \brief create string from concatenating arguments.
    *  \param t1 any paramter.
    *  \param t2 any paramter.

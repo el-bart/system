@@ -54,6 +54,11 @@ struct MyException: public Base<MyException, std::exception>
     Base<MyException, std::exception>(t)
   {
   }
+  template<typename T>
+  MyException(const detail::Location &where, const T &t):
+    Base<MyException, std::exception>(where, t)
+  {
+  }
 }; // struct MyException
 
 const char *someStr="hello world!";
@@ -93,6 +98,16 @@ void testObj::test<4>(void)
   const MyException  me(someStr);
   const exception   &base=me;   // this line must compile
   base.what();                  // this suppress warning from compiler
+}
+
+// test saving location
+template<>
+template<>
+void testObj::test<5>(void)
+{
+  const MyException  me(SYSTEM_SAVE_LOCATION, someStr);
+  const exception   &base=me;   // this line must compile
+  ensure("no/wrong location info", strstr( base.what(), "Base.t.cpp:")!=NULL );
 }
 
 } // namespace tut
