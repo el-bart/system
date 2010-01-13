@@ -30,7 +30,6 @@ public:
   virtual ~Base(void) throw()
   {
   }
-
   /** \brief return error message as string.
    *  \return error message.
    */
@@ -38,7 +37,6 @@ public:
   {
     return msg_;
   }
-
   /** \brief return error message pointer, as const char*.
    *  \return pointer to message.
    */
