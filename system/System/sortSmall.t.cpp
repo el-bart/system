@@ -197,4 +197,45 @@ void testObj::test<11>(void)
   ensure_equals("invalid element 3", v[3].id_, 6);
 }
 
+namespace
+{
+struct MyStructStr
+{
+  MyStructStr(const char *str):
+    str_(str)
+  {
+  }
+
+  std::string str_;
+}; // struct MyStructStr
+
+struct MyStructStrSWO
+{
+  bool operator()(const MyStructStr &left, const MyStructStr &right) const
+  {
+    return left.str_.length()<right.str_.length();
+  }
+}; // struct MyStructStrSWO
+} // unnamed namespace
+
+// test if sorting is stable
+template<>
+template<>
+void testObj::test<12>(void)
+{
+  std::vector<MyStructStr> v;
+  v.push_back("has");
+  v.push_back("alice");
+  v.push_back("doom");
+  v.push_back("winny");
+  v.push_back("cat");
+  sortSmall( v.begin(), v.end(), MyStructStrSWO() );
+  ensure_equals("invalid element 0", v[0].str_, "has");
+  ensure_equals("invalid element 1", v[1].str_, "cat");
+  ensure_equals("invalid element 2", v[2].str_, "doom");
+  ensure_equals("invalid element 3", v[3].str_, "alice");
+  ensure_equals("invalid element 3", v[4].str_, "winny");
+}
+
+
 } // namespace tut

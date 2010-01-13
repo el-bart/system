@@ -3,6 +3,8 @@
 * added FunctionName.hpp with macro wrapping and setting SYSTEM_FUNCTION_NAME macro to return pretty-function name, when possible and funciton name as a fallback.
 * added location inforamtion for all exception classes (new c-tor has been added).
 * exceptions can now return their name (via RTTI) with getTypeName().
+* fixed Backtrace's tests (tail-recursion on newer gcc versions).
+* added sortSmall - algorithm dedicated for sorting small and very small data sets (few to few tens of elements).
 
 -- v0.5.0 --
 * *Enum::toInt() is now standard.
