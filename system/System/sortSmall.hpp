@@ -38,9 +38,10 @@ void sortSmall(TIterator begin, TIterator end, TStrictWeakOrdering swo)
   if(begin==end)                // empty array is always sorted.
     return;
 
-  bool changed=false;
+  bool changed;
   do
   {
+    changed=false;
     TIterator itCurr=begin;
     TIterator itNext=begin;
     ++itNext;
