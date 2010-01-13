@@ -49,14 +49,15 @@ namespace
 {
 struct MyException: public BaseSimple<MyException, std::logic_error>
 {
+  typedef BaseSimple<MyException, std::logic_error> MyBase;
   template<typename T>
   MyException(const T &t):
-    BaseSimple<MyException, std::logic_error>(t)
+    MyBase(t)
   {
   }
   template<typename T>
   MyException(const Location &where, const T &t):
-    BaseSimple<MyException, std::logic_error>(where, t)
+    MyBase(where, t)
   {
   }
 }; // struct MyException
@@ -110,5 +111,15 @@ void testObj::test<6>(void)
   ensure("no/wrong location info", strstr( base.what(), "BaseSimple.t.cpp:")!=NULL );
 }
 
-} // namespace tut
+// test getting type name
+template<>
+template<>
+void testObj::test<7>(void)
+{
+  const MyException          me(someStr);
+  const MyException::MyBase &base=me;       // this line must compile
+  ensure("invalid type name",
+         strstr(base.getTypeName().c_str(), "MyException")!=NULL );
+}
 
+} // namespace tut

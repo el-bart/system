@@ -44,6 +44,13 @@ public:
   {
     return msg_.c_str();
   }
+  /** \brief gets type info.
+   *  \return name of real type for this class.
+   */
+  std::string getTypeName(void) const
+  {
+    return CommonElements::getTypeName(*this);
+  }
 
 protected:
   /** \brief create execption with given message.
