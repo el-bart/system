@@ -10,12 +10,15 @@
 
 #include "System/AtExit.hpp"
 #include "System/AtExitImpl.hpp"
+#include "System/Threads/SafeInitLocking.hpp"
 
 using namespace std;
+using System::Threads::SafeInitLock;
 
 
 namespace
 {
+
 //
 // pointer to implementation class of AtExit. it is static, raw
 // pointer since it will be freed by AtExit() uppon application
@@ -30,33 +33,7 @@ namespace
 // are run), to the very end.
 //
 System::AtExitImpl *atExitImpl=NULL;
-pthread_mutex_t     mutex     =PTHREAD_MUTEX_INITIALIZER;
-
-//
-// helper class for synchronizing access to atExitImpl.
-// it is manually written for pthreads, since its mutex has to be
-// initialized in compile time, to make it work.
-//
-struct PtrLock
-{
-  PtrLock(void)
-  {
-    if( pthread_mutex_lock(&mutex)!=0 )
-      throw System::Exception("unable to lock mutex for AtExitImpl");
-  }
-
-  ~PtrLock(void)
-  {
-    if( pthread_mutex_unlock(&mutex)!=0 )
-    {
-      assert(!"unable to unlock mutex for AtExitImpl");
-      cerr<<"System::<unnamed_namespace>::PtrLock::~PtrLock(): "
-            "unable to unlock mutex for AtExitImpl"<<endl;
-      cerr<<"System::<unnamed_namespace>::PtrLock::~PtrLock(): "
-            "you should NEVER see this error!"<<endl;
-    }
-  }
-}; // struct PtrLock
+SYSTEM_MAKE_SAFEINIT_MUTEX(mutex)
 
 } // unnamed namespace
 
@@ -67,7 +44,7 @@ extern "C"
 {
 static void cStyleCallForAtExit(void)
 {
-  PtrLock lock;
+  SafeInitLock lock(mutex);
   // pointer can be null in case when this function has been already
   // registered, but AtExitImpl's constructor thrown exception.
   if(atExitImpl!=NULL)
@@ -88,7 +65,7 @@ namespace System
 
 void AtExit::registerDeallocator(TDeallocPtr p)
 {
-  PtrLock lock;
+  SafeInitLock lock(mutex);
   if(atExitImpl==NULL)          // not initialized?
     AtExit::init();             // will throw on failure
   assert(atExitImpl!=NULL);
