@@ -4,7 +4,6 @@
 29 implement System::SharedPtr that allows casting non-const -> const and derived -> base, just as regular ptrs does.
 30 System::SharedPtr<allowNulls>
 31 System::OneInstance
-32 System::Singleton::->
 33 create dynamic threads pool ("free lunch is over" -- Herb Sutter), adopting to work load.
 35 thread-safe containters would be nice feature.
 36 static, thread-safe mutex/lock implementation.
