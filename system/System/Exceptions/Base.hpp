@@ -9,6 +9,8 @@
 #include <string>
 #include <stdexcept>
 
+#include "System/Exceptions/CommonElements.hpp"
+
 namespace System
 {
 namespace Exceptions
@@ -19,7 +21,8 @@ namespace Exceptions
  *  \param StdBase base class for exception from sntadard library.
  */
 template<typename CRTP, typename StdBase>
-class Base: public StdBase
+class Base: public    StdBase,
+            protected CommonElements
 {
 public:
   /** \brief destructor requires special flags.
