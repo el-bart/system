@@ -38,12 +38,9 @@ void sortSmall(TIterator begin, TIterator end, TStrictWeakOrdering swo)
   if(begin==end)                // empty array is always sorted.
     return;
 
-  TIterator loop=begin;
-  ++loop;
-  for(; loop!=end; ++loop)      // N-1 loops
+  bool changed=false;
+  do
   {
-    bool changed=false;
-
     TIterator itCurr=begin;
     TIterator itNext=begin;
     ++itNext;
@@ -53,11 +50,8 @@ void sortSmall(TIterator begin, TIterator end, TStrictWeakOrdering swo)
         detail::swapElements(*itNext, *itCurr);
         changed=true;
       }
-
-    // no more repeats if already sorted
-    if(!changed)
-      break;
   }
+  while(changed);
 }
 
 template<typename TIterator>
