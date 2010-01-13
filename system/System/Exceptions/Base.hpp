@@ -15,7 +15,7 @@ namespace Exceptions
 {
 
 /** \brief generic base for exceptions implementation.
- *  \param CRTP    derived class (to start new hierarchy.
+ *  \param CRTP    derived class (to start new hierarchy).
  *  \param StdBase base class for exception from sntadard library.
  */
 template<typename CRTP, typename StdBase>
