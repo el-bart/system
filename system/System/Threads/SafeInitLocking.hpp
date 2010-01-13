@@ -17,8 +17,9 @@ namespace Threads
 
 /** \brief creates mutex type, that will be initialized during compile-time.
  *  \param name name for this mutex.
+ *  \note when using this macro do NOT end it with a semicollon.
  */
-#define SYSTEM_MAKE_SAFEINIT_MUTEX(name) static pthread_mutex_t name=PTHREAD_MUTEX_INITIALIZER
+#define SYSTEM_MAKE_SAFEINIT_MUTEX(name) namespace { pthread_mutex_t name=PTHREAD_MUTEX_INITIALIZER; }
 
 /** \brief lock that allows thread-safe locking during initialization.
  *
@@ -34,8 +35,9 @@ namespace Threads
  *  <code>
  *  // MyClass.cpp file
  *
- *  SYSTEM_MAKE_SAFEINIT_MUTEX(g_myMutex);  // mutex in initialized in
- *                                          // compile-time
+ *  SYSTEM_MAKE_SAFEINIT_MUTEX(g_myMutex)   // mutex in initialized in
+ *                                          // compile-time. notice NO ending
+ *                                          // semicollon in macro usage.
  *
  *  void MyClass::staticMethodUsedBeforeMain(void)
  *  {

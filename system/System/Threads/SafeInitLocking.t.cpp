@@ -14,10 +14,10 @@ namespace
 
 // smoke test for global initialization - it should not crash
 // the test application.
-SYSTEM_MAKE_SAFEINIT_MUTEX(g_testMutex);
+SYSTEM_MAKE_SAFEINIT_MUTEX(g_testMutex)
 SafeInitLock g_testLock(g_testMutex);
 
-SYSTEM_MAKE_SAFEINIT_MUTEX(g_mutex);
+SYSTEM_MAKE_SAFEINIT_MUTEX(g_mutex)
 
 struct TestClass
 {
