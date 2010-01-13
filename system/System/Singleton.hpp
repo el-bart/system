@@ -28,6 +28,7 @@ namespace System
  * \note it is recommended to make constructor of class T
  *       private and make Singleton<T> its friend. this ensures
  *       that instances of T won't be made directly by user.
+ *       T should not noncopyable as well.
  *
  */
 template<typename T>

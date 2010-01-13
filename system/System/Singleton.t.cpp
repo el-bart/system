@@ -155,7 +155,7 @@ template<>
 template<>
 void testObj::test<4>(void)
 {
-  // at first register checker
+  // first register checker
   AtExit::TDeallocPtr dealloc(new TestExitNull);
   AtExit::registerDeallocator(dealloc);
   // now register singleton (implicit) and test if pointer is fine
@@ -164,4 +164,3 @@ void testObj::test<4>(void)
 }
 
 } // namespace tut
-
