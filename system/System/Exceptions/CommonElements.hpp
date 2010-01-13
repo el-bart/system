@@ -9,6 +9,7 @@
 
 #include <string>
 #include <sstream>
+#include <typeinfo>
 
 #include "System/Exceptions/detail/Location.hpp"
 #include "System/FunctionName.hpp"
@@ -27,6 +28,15 @@ namespace Exceptions
  */
 struct CommonElements
 {
+  /** \brief gets type name by means of RTTI.
+   *  \return naem of class.
+   */
+  template<typename T>
+  std::string getTypeName(const T &t) const
+  {
+    return typeid(t).name();
+  }
+
   /** \brief location class name to be used in user's code. */
   typedef detail::Location Location;
 

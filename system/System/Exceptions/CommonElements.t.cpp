@@ -3,6 +3,7 @@
  *
  */
 #include <tut/tut.hpp>
+#include <cstring>
 
 #include "System/Exceptions/CommonElements.hpp"
 
@@ -10,6 +11,19 @@ using namespace System::Exceptions;
 
 namespace
 {
+
+struct Base
+{
+  virtual ~Base(void)
+  {
+  }
+};
+
+struct Derived: public Base
+{
+};
+
+
 struct TestClass
 {
   CommonElements ce_;
@@ -78,6 +92,16 @@ void testObj::test<6>(void)
 {
   const CommonElements::Location loc(SYSTEM_SAVE_LOCATION);
   loc.getStr(); // to suppress warning.
+}
+
+// test getting type info
+template<>
+template<>
+void testObj::test<7>(void)
+{
+  const Derived  d;
+  const Base    &b=d;
+  ensure("invalid type", strstr(ce_.getTypeName(b).c_str(), "Derived")!=NULL );
 }
 
 } // namespace tut
