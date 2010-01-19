@@ -25,6 +25,10 @@ namespace System
  * implementation is enhanced to allow secure usage, allowing
  * creating objects in proper order destroying in reverse order.
  *
+ * notice that if ogerd of creation/destruction must be preserved
+ * singleton A using singleton B must call B::get() in its c-tor
+ * to ensure they are created in proper order.
+ *
  * \note it is recommended to make constructor of class T
  *       private and make Singleton<T> its friend. this ensures
  *       that instances of T won't be made directly by user.
@@ -46,6 +50,10 @@ public:
    */
   inline static T *get(void)
   {
+    // TODO: this init is NOT thread safe - fix this!
+    // TODO: using this in a running thread, after leaving
+    //       main() may cause dongling-pointer dereference.
+    //       it should be fixed (shared_ptr+weak_ptr?).
     static T *t=init(&t);
     assert(t!=NULL &&
            "object's initialization failed (not RAII-compliant?) or "
@@ -71,7 +79,7 @@ private:
     virtual ~SingletonDeallocator(void)
     {
       assert(*dstPtr_==NULL);           // object should be already freed
-      boost::checked_delete(*dstPtr_);  // just in case...
+      deallocate();                     // just in case...
     }
     // deallocation on exit
     virtual void deallocate(void)

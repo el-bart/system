@@ -6,4 +6,6 @@
 33 create dynamic threads pool ("free lunch is over" -- Herb Sutter), adopting to work load.
 35 thread-safe containters would be nice feature.
 38 prepare backend for running separate thread for handling signals (see: http://www.linuxjournal.com/article/2121).
-39
+39 work on Singleton a little bit more.
+40 make Singleton a Phoenix singleton.
+41
