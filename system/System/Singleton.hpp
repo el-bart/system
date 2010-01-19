@@ -33,6 +33,11 @@ Threads::SafeInitLock::MutexType &getSingletonMutex(void);
  * singleton A using singleton B must call B::get() in its c-tor
  * to ensure they are created in proper order.
  *
+ * singleton can be safely used before main(), in global constructors
+ * and from multiple threads. it should NOT be used in destructors
+ * of global objects though, since it may lead to dongling pointer
+ * dereference, under certain conditions.
+ *
  * \note it is recommended to make constructor of class T
  *       private and make Singleton<T> its friend. this ensures
  *       that instances of T won't be made directly by user.
