@@ -15,13 +15,6 @@ namespace System
 namespace Threads
 {
 
-/** \brief creates mutex type, that will be initialized during compile-time.
- *  \param name name for this mutex.
- *  \note when using this macro do NOT end it with a semicollon.
- *  \warning this macro MUST be places IN CPP file!
- */
-#define SYSTEM_MAKE_SAFEINIT_MUTEX(name) namespace { pthread_mutex_t name=PTHREAD_MUTEX_INITIALIZER; }
-
 /** \brief lock that allows thread-safe locking during initialization.
  *
  *  problem with common C++ wrappers is that they require c-tor to be run
@@ -51,6 +44,9 @@ namespace Threads
 class SafeInitLock: private boost::noncopyable
 {
 public:
+  /** \brief typedef to use for representation of mutex. */
+  typedef pthread_mutex_t MutexType;
+
   /** \brief lock safely initialized mutex.
    *  \param mutex mutex to be locked.
    */
@@ -60,8 +56,15 @@ public:
   ~SafeInitLock(void);
 
 private:
-  pthread_mutex_t &mutex_;
+  MutexType &mutex_;
 }; // class SafeInitLock
+
+/** \brief creates mutex type, that will be initialized during compile-time.
+ *  \param name name for this mutex.
+ *  \note when using this macro do NOT end it with a semicollon.
+ *  \warning this macro MUST be places IN CPP file!
+ */
+#define SYSTEM_MAKE_SAFEINIT_MUTEX(name) namespace { SafeInitLock::MutexType name=PTHREAD_MUTEX_INITIALIZER; }
 
 } // namespace Threads
 } // namespace System

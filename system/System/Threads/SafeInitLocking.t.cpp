@@ -59,4 +59,13 @@ void testObj::test<3>(void)
     SafeInitLock lock(g_mutex);
 }
 
+// check typedef
+template<>
+template<>
+void testObj::test<4>(void)
+{
+  SafeInitLock::MutexType &mt=g_mutex;
+  SafeInitLock lock(mt);
+}
+
 } // namespace tut
