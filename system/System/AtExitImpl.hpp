@@ -41,6 +41,7 @@ public:
 
 private:
   typedef boost::shared_ptr<AtExitResourceDeallocator> TElem;
+  // TODO: this container should probably be changed to std::vector<>
   typedef std::list<TElem>                             TList;
 
   TList deallocators_;
