@@ -3,6 +3,7 @@
  *
  */
 #include <tut.h>
+#include <boost/thread.hpp>
 
 #include "System/Singleton.hpp"
 
@@ -130,9 +131,17 @@ void testObj::test<3>(void)
 
 namespace
 {
+bool isNullSingletonDeallocated;
 struct SomeTestData
 {
-  int x;
+  SomeTestData(void)
+  {
+    isNullSingletonDeallocated=false;
+  }
+  ~SomeTestData(void)
+  {
+    isNullSingletonDeallocated=true;
+  }
 }; // struct SomeTestData
 typedef Singleton<SomeTestData> TestNullSingleton;
 
@@ -140,10 +149,12 @@ struct TestExitNull: public AtExitResourceDeallocator
 {
   virtual void deallocate(void)
   {
-    // NOTE: test has been commented since Singleton checks
-    //       if pointer isn't NULL by default.
-    // pointer should be free and NULL'ed by now
-    //assert( TestNullSingleton::get()==NULL );
+    // NOTE: test has been limited to external value check
+    //       since Singleton checks if pointer isn't NULL
+    //      by default.
+    // singleton should be free and NULL'ed by now
+    assert( isNullSingletonDeallocated==true &&
+            "something went wrong - singleton not deallocated" );
   }
 }; // struct TestExitNull
 } // unnamed namespace
@@ -161,6 +172,83 @@ void testObj::test<4>(void)
   // now register singleton (implicit) and test if pointer is fine
   ensure("object inside singleton not created",
          TestNullSingleton::get()!=NULL);
+  assert( isNullSingletonDeallocated==false &&
+          "allocation failed - cannot proceed");
+}
+
+namespace
+{
+int allocatedImplementationsCount=0;
+
+template<int N>
+struct CountAllocations
+{
+  CountAllocations(void)
+  {
+    ++allocatedImplementationsCount;
+    boost::thread::yield();             // the most 'inaproperiate' moment
+                                        // to interrupt singleton and test
+  }
+}; // struct CountAllocations
+
+struct CollableCountAllocations
+{
+  void operator()(void)
+  {
+    boost::thread::yield();
+    Singleton< CountAllocations<0> >::get();
+    Singleton< CountAllocations<1> >::get();
+    Singleton< CountAllocations<2> >::get();
+    Singleton< CountAllocations<3> >::get();
+    Singleton< CountAllocations<4> >::get();
+    Singleton< CountAllocations<5> >::get();
+    Singleton< CountAllocations<6> >::get();
+    Singleton< CountAllocations<7> >::get();
+    Singleton< CountAllocations<8> >::get();
+    Singleton< CountAllocations<9> >::get();
+    Singleton< CountAllocations<10> >::get();
+    Singleton< CountAllocations<11> >::get();
+    Singleton< CountAllocations<12> >::get();
+    Singleton< CountAllocations<13> >::get();
+    Singleton< CountAllocations<14> >::get();
+    Singleton< CountAllocations<15> >::get();
+    Singleton< CountAllocations<16> >::get();
+    Singleton< CountAllocations<17> >::get();
+    Singleton< CountAllocations<18> >::get();
+    Singleton< CountAllocations<19> >::get();
+    Singleton< CountAllocations<20> >::get();
+    Singleton< CountAllocations<21> >::get();
+    Singleton< CountAllocations<22> >::get();
+    Singleton< CountAllocations<23> >::get();
+    Singleton< CountAllocations<24> >::get();
+    Singleton< CountAllocations<25> >::get();
+    Singleton< CountAllocations<26> >::get();
+    Singleton< CountAllocations<27> >::get();
+    Singleton< CountAllocations<28> >::get();
+    Singleton< CountAllocations<29> >::get();
+  }
+}; // struct CollableCountAllocations
+} // unnamed namespace
+
+// test if there is no race between multiple allocations
+template<>
+template<>
+void testObj::test<5>(void)
+{
+  CollableCountAllocations cca;
+  boost::thread th1(cca);
+  boost::thread th2(cca);
+  boost::thread th3(cca);
+  boost::thread th4(cca);
+  boost::thread::yield();
+
+  th1.join();
+  th2.join();
+  th3.join();
+  th4.join();
+
+  ensure_equals("invalid allocations - init() is not thread-safe",
+                allocatedImplementationsCount, 30);
 }
 
 } // namespace tut

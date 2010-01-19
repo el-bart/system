@@ -15,10 +15,14 @@
 #include <cassert>
 
 #include "System/AtExit.hpp"
-
+#include "System/Threads/SafeInitLocking.hpp"
 
 namespace System
 {
+namespace detail
+{
+Threads::SafeInitLock::MutexType &getSingletonMutex(void);
+} // namespace detail
 
 /** \brief Mayer's singleton implementation on template.
  *
@@ -50,14 +54,18 @@ public:
    */
   inline static T *get(void)
   {
-    // TODO: this init is NOT thread safe - fix this!
     // TODO: using this in a running thread, after leaving
     //       main() may cause dongling-pointer dereference.
     //       it should be fixed (shared_ptr+weak_ptr?).
-    static T *t=init(&t);
-    assert(t!=NULL &&
-           "object's initialization failed (not RAII-compliant?) or "
-           "using object after its deallocation");
+    static T *t=NULL;
+    if(t==NULL)
+    {
+      // all singletons locked with the same mutex - overkill, but secure.
+      Threads::SafeInitLock lock( detail::getSingletonMutex() );
+      if(t==NULL)
+        init(&t);
+    }
+    assert(t!=NULL && "object's initialization failed");
     return t;
   }
 
@@ -93,18 +101,14 @@ private:
 
   // helper method that creates output object. this allows to keep
   // singleton's get() as clean and simple as possible.
-  static T *init(T **dstPtr)
+  static void init(T **dstPtr)
   {
     assert(dstPtr!=NULL);
     // register singleton's deallocator
     AtExit::TDeallocPtr dealloc( new SingletonDeallocator(dstPtr) );
     assert( dealloc.get()!=NULL );
     AtExit::registerDeallocator(dealloc);
-
-    // return pointer as a result
-    T *t=*dstPtr;
-    assert(t!=NULL);
-    return t;
+    assert(*dstPtr!=NULL);
   } // init()
 
   Singleton(void);  // no instances allowed

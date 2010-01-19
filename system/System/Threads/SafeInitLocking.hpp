@@ -59,12 +59,13 @@ private:
   MutexType &mutex_;
 }; // class SafeInitLock
 
+
 /** \brief creates mutex type, that will be initialized during compile-time.
  *  \param name name for this mutex.
  *  \note when using this macro do NOT end it with a semicollon.
  *  \warning this macro MUST be places IN CPP file!
  */
-#define SYSTEM_MAKE_SAFEINIT_MUTEX(name) namespace { SafeInitLock::MutexType name=PTHREAD_MUTEX_INITIALIZER; }
+#define SYSTEM_MAKE_SAFEINIT_MUTEX(name) namespace { ::System::Threads::SafeInitLock::MutexType name=PTHREAD_MUTEX_INITIALIZER; }
 
 } // namespace Threads
 } // namespace System
