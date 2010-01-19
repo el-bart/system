@@ -18,6 +18,7 @@ namespace Threads
 /** \brief creates mutex type, that will be initialized during compile-time.
  *  \param name name for this mutex.
  *  \note when using this macro do NOT end it with a semicollon.
+ *  \warning this macro MUST be places IN CPP file!
  */
 #define SYSTEM_MAKE_SAFEINIT_MUTEX(name) namespace { pthread_mutex_t name=PTHREAD_MUTEX_INITIALIZER; }
 
