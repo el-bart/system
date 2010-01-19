@@ -1,8 +1,7 @@
 21 add template-base FSM implementation.
 25 add MultiLock which takes set of mutexes as parameters and locks them in proper order (i.e. memory appearance order) to prevent dead locks.
 26 consider using futex() in System.
-29 implement System::SharedPtr that allows casting non-const -> const and derived -> base, just as regular ptrs does.
-30 System::SharedPtr<allowNulls>
+30 System::SharedPtrNotNULL<> (with non-const->const and derived->base convertions the same way as boost::shared_ptr<> does).
 31 System::OneInstance
 33 create dynamic threads pool ("free lunch is over" -- Herb Sutter), adopting to work load.
 35 thread-safe containters would be nice feature.
