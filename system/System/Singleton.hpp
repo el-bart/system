@@ -19,10 +19,6 @@
 
 namespace System
 {
-namespace detail
-{
-Threads::SafeInitLock::MutexType &getSingletonMutex(void);
-} // namespace detail
 
 /** \brief Mayer's/Phoenix singleton implementation on template.
  *
@@ -72,7 +68,7 @@ public:
     if(t==NULL)
     {
       // all singletons locked with the same mutex - overkill, but secure.
-      Threads::SafeInitLock lock( detail::getSingletonMutex() );
+      Threads::SafeInitLock lock( getSingletonMutex() );
       if(t==NULL)
         init(&t);
     }
@@ -121,6 +117,13 @@ private:
     AtExit::registerDeallocator(dealloc);
     assert(*dstPtr!=NULL);
   } // init()
+
+  // gives access to static mutex, that's always ready to usage.
+  static Threads::SafeInitLock::MutexType &getSingletonMutex(void)
+  {
+    SYSTEM_MAKE_STATIC_SAFEINIT_MUTEX(mutex);
+    return mutex;
+  }
 
   Singleton(void);  // no instances allowed
 }; // class Singleton
