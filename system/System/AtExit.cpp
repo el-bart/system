@@ -44,18 +44,25 @@ extern "C"
 {
 static void cStyleCallForAtExit(void)
 {
-  SafeInitLock lock(g_mutex);
-  // pointer can be null in case when this function has been already
-  // registered, but AtExitImpl's constructor thrown exception.
-  if(atExitImpl!=NULL)
+  // swap this queue with new (NULL - will be allocated, if needed) so
+  // that it is possible to register new handlers while processing
+  // other handlers.
+  System::AtExitImpl *tmp=NULL;
   {
-    // run dealocation of registered elements
-    atExitImpl->deallocateAll();
-    // free resource
-    boost::checked_delete(atExitImpl);
+    SafeInitLock lock(g_mutex);
+    tmp       =atExitImpl;
     atExitImpl=NULL;
   }
-  assert(atExitImpl==NULL);
+  // pointer can be null in case when this function has been already
+  // registered, but AtExitImpl's constructor thrown exception or when
+  // adding something to queue from queue itself (ex. Phoenix Singleton).
+  if(tmp!=NULL)
+  {
+    // run dealocation of registered elements
+    tmp->deallocateAll();
+    // free resource
+    boost::checked_delete(tmp);
+  }
 } // cStyleCallForAtExit()
 } // extern "C"
 

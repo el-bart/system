@@ -251,4 +251,151 @@ void testObj::test<5>(void)
                 allocatedImplementationsCount, 30);
 }
 
+
+namespace
+{
+bool isSTDDeallocated;
+struct STD
+{
+  STD(void)
+  {
+    isSTDDeallocated=false;
+  }
+  ~STD(void)
+  {
+    isSTDDeallocated=true;
+  }
+}; // struct STD
+} // unnamed namespace
+
+// test SingletonData c-tor/d-tor
+template<>
+template<>
+void testObj::test<6>(void)
+{
+  {
+    detail::SingletonData<STD> tmp(new STD);
+    ensure("allocation failed", !isSTDDeallocated);
+  }
+  ensure("deallocation failed",  isSTDDeallocated);
+}
+
+// test SingletonData::get()
+template<>
+template<>
+void testObj::test<7>(void)
+{
+  STD                        *rawPtr=new STD;
+  detail::SingletonData<STD>  obj(rawPtr);
+  ensure("allocation failed", !isSTDDeallocated);
+  ensure("invalid pointer", rawPtr==obj.get().get() );
+}
+
+// test deallocation
+template<>
+template<>
+void testObj::test<8>(void)
+{
+  detail::SingletonData<STD> obj(new STD);
+  ensure("allocation failed", !isSTDDeallocated);
+  ensure("NULL pointer allocated", obj.get().get()!=NULL );
+  ensure("expired() is true too soon", obj.expired()==false);
+
+  obj.prepareToDeallocate();
+  ensure("NULL pointer allocated", obj.get().get()==NULL );
+  ensure("expired() is false after deallocation", obj.expired()==true);
+}
+
+// test deallocation when copies still exist
+template<>
+template<>
+void testObj::test<9>(void)
+{
+  detail::SingletonData<STD> obj(new STD);
+  ensure("allocation failed", !isSTDDeallocated);
+  boost::shared_ptr<STD>     tmp=obj.get();
+  ensure("NULL pointer allocated", obj.get().get()!=NULL );
+  ensure("expired() is true too soon", obj.expired()==false);
+
+  obj.prepareToDeallocate();
+  ensure("deallocation of exisitng object", obj.get().get()!=NULL );
+  ensure("expired() is true when instances exist", obj.expired()==false);
+
+  tmp.reset();
+  ensure("removing last instance didn't changed anything", obj.get().get()==NULL );
+  ensure("expired() is false after deallocation", obj.expired()==true);
+}
+
+
+namespace
+{
+struct ExampleDataStruct
+{
+  void foo(void)
+  {
+  }
+}; // struct ExampleDataStruct
+
+typedef Singleton<ExampleDataStruct> ExampleSingleton;
+} // unnamed namespace
+
+// test getting pointer wrapper
+template<>
+template<>
+void testObj::test<10>(void)
+{
+  ExampleSingleton::PointerWrapper pw=ExampleSingleton::get();
+  pw->foo();
+}
+
+// test getting raw pointer
+template<>
+template<>
+void testObj::test<11>(void)
+{
+  ExampleDataStruct *ptr=ExampleSingleton::get();
+  ptr->foo();
+}
+
+
+namespace
+{
+bool dataPostExists;
+struct DataPost
+{
+  DataPost(void)
+  {
+    dataPostExists=true;
+  }
+  ~DataPost(void)
+  {
+    dataPostExists=false;
+  }
+}; // struct DataPost
+
+struct DataPre
+{
+  ~DataPre(void)
+  {
+    assert(dataPostExists==false && "d-tor of DataPre not called");
+    DataPost *ptr=Singleton<DataPost>::get();
+    assert(dataPostExists==true && "phoenix didn't araised from ashes");
+    assert(ptr!=NULL && "NULL pointer recieved, though phoenix raised from ashes");
+  }
+}; // struct DataPtr
+} // unnamed namespace
+
+// test getting pointer wrapper
+template<>
+template<>
+void testObj::test<12>(void)
+{
+  Singleton<DataPre>::get();    // first init
+  Singleton<DataPost>::get();   // second init
+  ensure("singleton not raised - it will fail...", dataPostExists==true);
+  // when d-tor will be called in atexit() it will be firstly called for
+  // Singleton<DataPost> instance. Singleton<DataPte> should use phoenix
+  // singleton's availability to overcome this issue
+}
+
 } // namespace tut
