@@ -5,6 +5,8 @@
 * exceptions can now return their name (via RTTI) with getTypeName().
 * fixed Backtrace's tests (tail-recursion on newer gcc versions).
 * fixed race condition when initializing Singleton from multiple threads.
+* Singleton is now Phoenix/Mayer's Singleton with thread-safe initialization and release.
+* AtExit now allows registering new handlers from another handler (while executing).
 
 -- v0.5.0 --
 * *Enum::toInt() is now standard.
