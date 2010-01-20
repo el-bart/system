@@ -29,13 +29,12 @@ namespace Threads
  *  <code>
  *  // MyClass.cpp file
  *
- *  SYSTEM_MAKE_SAFEINIT_MUTEX(g_myMutex)   // mutex in initialized in
- *                                          // compile-time. notice NO ending
- *                                          // semicollon in macro usage.
  *
  *  void MyClass::staticMethodUsedBeforeMain(void)
  *  {
- *    SafeInitLock lock(g_myMutex);         // we can lock, since mutex is
+ *    SYSTEM_MAKE_STATIC_SAFEINIT_MUTEX(myMutex);   // this (static) mutex is initialized
+ *                                                  // in compile-time.
+ *    SafeInitLock lock(myMutex);           // we can lock, since mutex is
  *                                          // always valid
  *    // [critical section goes here]
  *  }
@@ -62,10 +61,10 @@ private:
 
 /** \brief creates mutex type, that will be initialized during compile-time.
  *  \param name name for this mutex.
- *  \note when using this macro do NOT end it with a semicollon.
- *  \warning this macro MUST be places IN CPP file!
+ *  \note variable defined by this macro is static.
+ *  \warning this macro MUST be places inside function, method or namespace scope.
  */
-#define SYSTEM_MAKE_SAFEINIT_MUTEX(name) namespace { ::System::Threads::SafeInitLock::MutexType name=PTHREAD_MUTEX_INITIALIZER; }
+#define SYSTEM_MAKE_STATIC_SAFEINIT_MUTEX(name) static ::System::Threads::SafeInitLock::MutexType name=PTHREAD_MUTEX_INITIALIZER
 
 } // namespace Threads
 } // namespace System

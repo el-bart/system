@@ -33,7 +33,7 @@ namespace
 // are run), to the very end.
 //
 System::AtExitImpl *atExitImpl=NULL;
-SYSTEM_MAKE_SAFEINIT_MUTEX(mutex)
+SYSTEM_MAKE_STATIC_SAFEINIT_MUTEX(g_mutex);
 
 } // unnamed namespace
 
@@ -44,7 +44,7 @@ extern "C"
 {
 static void cStyleCallForAtExit(void)
 {
-  SafeInitLock lock(mutex);
+  SafeInitLock lock(g_mutex);
   // pointer can be null in case when this function has been already
   // registered, but AtExitImpl's constructor thrown exception.
   if(atExitImpl!=NULL)
@@ -65,7 +65,7 @@ namespace System
 
 void AtExit::registerDeallocator(TDeallocPtr p)
 {
-  SafeInitLock lock(mutex);
+  SafeInitLock lock(g_mutex);
   if(atExitImpl==NULL)          // not initialized?
     AtExit::init();             // will throw on failure
   assert(atExitImpl!=NULL);

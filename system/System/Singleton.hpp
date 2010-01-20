@@ -24,7 +24,7 @@ namespace detail
 Threads::SafeInitLock::MutexType &getSingletonMutex(void);
 } // namespace detail
 
-/** \brief Mayer's singleton implementation on template.
+/** \brief Mayer's/Phoenix singleton implementation on template.
  *
  * implementation is enhanced to allow secure usage, allowing
  * creating objects in proper order destroying in reverse order.
@@ -35,8 +35,14 @@ Threads::SafeInitLock::MutexType &getSingletonMutex(void);
  *
  * singleton can be safely used before main(), in global constructors
  * and from multiple threads. it should NOT be used in destructors
- * of global objects though, since it may lead to dongling pointer
- * dereference, under certain conditions.
+ * of global objects when working multi-thread though, since it may
+ * lead to dongling pointer dereference, under certain conditions
+ * (ont thread just returned from get() while other calls delete
+ * via atexit().
+ * this singleton's implementation is Phoenix singleton as long as
+ * used without threads. when singleton may be used from thread
+ * it should NOT be considered as Phoenix and neved used after
+ * the main().
  *
  * \note it is recommended to make constructor of class T
  *       private and make Singleton<T> its friend. this ensures

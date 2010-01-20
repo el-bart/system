@@ -9,7 +9,7 @@ namespace System
 namespace detail
 {
 
-SYSTEM_MAKE_SAFEINIT_MUTEX(g_mutex)
+SYSTEM_MAKE_STATIC_SAFEINIT_MUTEX(g_mutex);
 
 Threads::SafeInitLock::MutexType &getSingletonMutex(void)
 {
