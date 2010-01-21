@@ -7,4 +7,5 @@
 35 thread-safe containters would be nice feature.
 38 prepare backend for running separate thread for handling signals (see: http://www.linuxjournal.com/article/2121).
 41 think if Singleton can be implemented with Schwarz's Counters (http://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Nifty_Counter).
-42
+42 add FD_CLOEXEC when calling open() in the library.
+43
