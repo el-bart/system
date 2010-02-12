@@ -1,4 +1,4 @@
--- v?.?.? --
+-- v0.6.0 --
 * likely.hpp implements compiler huristics for branches.
 * added FunctionName.hpp with macro wrapping and setting SYSTEM_FUNCTION_NAME macro to return pretty-function name, when possible and funciton name as a fallback.
 * added location inforamtion for all exception classes (new c-tor has been added).
@@ -7,6 +7,7 @@
 * fixed race condition when initializing Singleton from multiple threads.
 * Singleton is now Phoenix/Mayer's Singleton with thread-safe initialization and release.
 * AtExit now allows registering new handlers from another handler (while executing).
+* build_process v1.3.0 introduced.
 
 -- v0.5.0 --
 * *Enum::toInt() is now standard.
