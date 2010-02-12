@@ -1,9 +1,9 @@
-CC:=gcc
-CXX:=g++
-AR:=ar
+CC:=icc
+CXX:=icc
+AR:=xiar
 RANLIB:=ranlib
 NM:=nm
-#LD:=ld
+#LD:=xild
 LD:=$(CXX)
 STRIP:=strip
 DOXYGEN:=doxygen
