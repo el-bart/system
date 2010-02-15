@@ -19,14 +19,16 @@ namespace detail
 {
 } // namespace detail
 
+/*
 template<typename TMutex, typename TLock, size_t N>
 class SequenceLock: private boost::noncopyable
 {
 public:
   // TODO
-  SequenceLock( 
+  //SequenceLock( 
 
 }; // class SequenceLock
+*/
 
 } // namespace Threads
 } // namespace System
