@@ -1,3 +1,6 @@
+-- ?? --
+* fixed remarks on intel's toolchain.
+
 -- v0.6.0 --
 * likely.hpp implements compiler huristics for branches.
 * added FunctionName.hpp with macro wrapping and setting SYSTEM_FUNCTION_NAME macro to return pretty-function name, when possible and funciton name as a fallback.
