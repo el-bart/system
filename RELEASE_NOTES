@@ -1,5 +1,6 @@
 -- ?? --
 * fixed remarks on intel's toolchain.
+* added real-time timer showing time elapsed since its start.
 
 -- v0.6.0 --
 * likely.hpp implements compiler huristics for branches.
