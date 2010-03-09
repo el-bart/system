@@ -15,6 +15,7 @@ namespace System
 /** \brief real-time timer class.
  *
  *  class implements timer to meauser real (wall) time elapsed.
+ *  it has similar to boost::timer API (i.e. timer for measuring CPU time).
  */
 class Timer
 {
