@@ -22,7 +22,7 @@ SignalRegistrator::SignalRegistrator(int signum, void (*handler)(int) ):
 {
   // check input
   if(handler==NULL)
-    throw ExceptionPointerIsNULL("handler");
+    throw ExceptionPointerIsNULL(SYSTEM_SAVE_LOCATION, "handler");
 
   // prepare data structures
   memset(&current_, 0, sizeof(current_) );

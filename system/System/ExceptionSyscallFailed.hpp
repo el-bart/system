@@ -21,11 +21,12 @@ class ExceptionSyscallFailed: public Exceptions::RuntimeError
 {
 public:
   /** \brief create execption with given message.
-   *  \param msg message to represent.
+   *  \param where place where exception has been raisen.
+   *  \param msg   message to represent.
    */
   template<typename T>
-  explicit ExceptionSyscallFailed(const T &msg):
-    RuntimeError(msg)
+  ExceptionSyscallFailed(const Location &where, const T &msg):
+    RuntimeError(where, msg)
   {
   }
 }; // class ExceptionSyscallFailed

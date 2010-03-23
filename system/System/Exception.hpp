@@ -19,27 +19,14 @@ namespace System
  */
 class Exception: public Exceptions::RuntimeError<Exception>
 {
-private:
-  typedef Exceptions::RuntimeError<Exception> BaseC;
-
 public:
-  /** \brief create execption with given message.
-   *  \param msg message to represent.
-   */
-  template<typename T>
-  explicit Exception(const T &msg):
-    BaseC(msg)
-  {
-    // TODO: remove this c-tor as obsolete.
-  }
-
   /** \brief create execption with given message.
    *  \param where location of exception raising.
    *  \param msg   message to represent.
    */
   template<typename T>
   Exception(const typename BaseC::Location &where, const T &msg):
-    BaseC(where, msg)
+    Exceptions::RuntimeError<Exception>(where, msg)
   {
   }
 }; // class Exception

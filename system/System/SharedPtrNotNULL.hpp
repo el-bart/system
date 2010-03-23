@@ -162,7 +162,7 @@ private:
   void ensure(const T *t) const
   {
     if(t==NULL)
-      throw ExceptionPointerIsNULL("t");
+      throw ExceptionPointerIsNULL(SYSTEM_SAVE_LOCATION, "t");
   }
 
   PtrT ptr_;

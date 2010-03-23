@@ -21,11 +21,12 @@ class ExceptionBadAlloc: public Exceptions::BadAlloc
 {
 public:
   /** \brief create execption with given message.
-   *  \param msg message to represent.
+   *  \param where place exception has been risen in.
+   *  \param msg   message to represent.
    */
   template<typename T>
-  explicit ExceptionBadAlloc(const T &msg):
-    Exceptions::BadAlloc(msg)
+  ExceptionBadAlloc(const Location &where, const T &msg):
+    Exceptions::BadAlloc(where, msg)
   {
   }
 }; // class ExceptionBadAlloc

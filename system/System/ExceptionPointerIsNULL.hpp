@@ -18,10 +18,11 @@ class ExceptionPointerIsNULL: public Exception
 {
 public:
   /** \brief create execption with given message.
-   *  \param name name of variable that has been detected NULL.
+   *  \param where place where exception has been raisen.
+   *  \param name  name of variable that has been detected NULL.
    */
-  explicit ExceptionPointerIsNULL(const char *name):
-    Exception( cc("NULL pointere recieved: ", name) )
+  ExceptionPointerIsNULL(const Location &where, const char *name):
+    Exception( where, cc("NULL pointere recieved: ", name) )
   {
   }
 }; // class ExceptionPointerIsNULL
