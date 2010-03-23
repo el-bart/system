@@ -30,6 +30,6 @@ public:
   }
 }; // class ExceptionSyscallFailed
 
-}; // namespace System
+} // namespace System
 
 #endif

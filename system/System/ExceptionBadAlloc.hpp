@@ -30,6 +30,6 @@ public:
   }
 }; // class ExceptionBadAlloc
 
-}; // namespace System
+} // namespace System
 
 #endif
