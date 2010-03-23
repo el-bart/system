@@ -7,22 +7,21 @@
 
 /* public header */
 
-#include "System/Exceptions/RuntimeError.hpp"
+#include "System/Exception.hpp"
 
 namespace System
 {
 
 /** \brief exception when NULL pointer is passed, when not expected.
  */
-class ExceptionPointerIsNULL: public Exceptions::RuntimeError<ExceptionPointerIsNULL>
+class ExceptionPointerIsNULL: public Exception
 {
 public:
   /** \brief create execption with given message.
    *  \param name name of variable that has been detected NULL.
    */
   explicit ExceptionPointerIsNULL(const char *name):
-    Exceptions::RuntimeError<ExceptionPointerIsNULL>(
-                         cc("NULL pointere recieved: ", name) )
+    Exception( cc("NULL pointere recieved: ", name) )
   {
   }
 }; // class ExceptionPointerIsNULL
