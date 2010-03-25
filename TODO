@@ -1,11 +1,9 @@
 21 add template-base FSM implementation.
 25 add MultiLock which takes set of mutexes as parameters and locks them in proper order (i.e. memory appearance order) to prevent dead locks.
 26 consider using futex() in System.
-30 System::SharedPtrNotNULL<> (with non-const->const and derived->base convertions the same way as boost::shared_ptr<> does).
 31 System::OneInstance
 33 create dynamic threads pool ("free lunch is over" -- Herb Sutter), adopting to work load.
 35 thread-safe containters would be nice feature.
 38 prepare backend for running separate thread for handling signals (see: http://www.linuxjournal.com/article/2121).
-41 think if Singleton can be implemented with Schwarz's Counters (http://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Nifty_Counter).
-42 add FD_CLOEXEC when calling open() in the library.
-43
+43 implement Math namespace.
+44
