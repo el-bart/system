@@ -1,9 +1,9 @@
 /*
- * ScopedCustomPointer.hpp
+ * ScopedPtrCustom.hpp
  *
  */
-#ifndef INCLUDE_SYSTEM_SCOPEDCUSTOMPOINTER_HPP_FILE
-#define INCLUDE_SYSTEM_SCOPEDCUSTOMPOINTER_HPP_FILE
+#ifndef INCLUDE_SYSTEM_SCOPEDPTRCUSTOM_HPP_FILE
+#define INCLUDE_SYSTEM_SCOPEDPTRCUSTOM_HPP_FILE
 
 #include <boost/noncopyable.hpp>
 #include <boost/operators.hpp>
@@ -16,17 +16,26 @@ namespace System
 /** \brief boost::scoped_ptr<> equivalent for types with custom deallocators.
  *  \param T           type of element, that pointer to will be held.
  *  \param deallocator deallocating call.
+ *
+ *  this class is especially usefull when cooperating with C-code that
+ *  uses custom allocators and deallocators for its structures.
+ *  example usage:
+ *  \code
+ *    extlib_struct *s=extlib_create(...);
+ *    ScopedPtrCustom<extlib_struct, extlib_destroy> ptr(s);
+ *    // extlib_destroy(s) will be called uppon scope leaving.
+ *  \endcode
  */
 template<typename T, void(*deallocator)(T *t)>
-class ScopedCustomPointer: private boost::noncopyable,
-                           public  boost::less_than_comparable< ScopedCustomPointer<T, deallocator> >,
-                           public  boost::equivalent<           ScopedCustomPointer<T, deallocator> >,
-                           public  boost::equality_comparable<  ScopedCustomPointer<T, deallocator> >
+class ScopedPtrCustom: private boost::noncopyable,
+                           public  boost::less_than_comparable< ScopedPtrCustom<T, deallocator> >,
+                           public  boost::equivalent<           ScopedPtrCustom<T, deallocator> >,
+                           public  boost::equality_comparable<  ScopedPtrCustom<T, deallocator> >
 
 {
 public:
   /** \brief type of this object. */
-  typedef ScopedCustomPointer<T, deallocator> this_type;
+  typedef ScopedPtrCustom<T, deallocator> this_type;
   /** \brief type of element held inside. */
   typedef T                                   element_type;
   /** \brief type of element held inside. */
@@ -39,13 +48,13 @@ public:
   /** \brief gets ownership of given object.
    *  \param t pointer to take ownership of.
    */
-  explicit ScopedCustomPointer(pointer t):
+  explicit ScopedPtrCustom(pointer t):
     t_(t)
   {
   }
   /** \brief deallocates pointer held inside.
    */
-  ~ScopedCustomPointer(void)
+  ~ScopedPtrCustom(void)
   {
     if(t_!=NULL)
       (*deallocator)(t_);
@@ -128,7 +137,7 @@ public:
 
 private:
   pointer t_;
-}; // class ScopedCustomPointer
+}; // class ScopedPtrCustom
 
 } // namespace System
 

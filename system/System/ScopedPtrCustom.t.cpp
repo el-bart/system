@@ -1,15 +1,15 @@
 /*
- * ScopedCustomPointer.t.cpp
+ * ScopedPtrCustom.t.cpp
  *
  */
 #include <tut.h>
 
-#include "System/ScopedCustomPointer.hpp"
+#include "System/ScopedPtrCustom.hpp"
 
 namespace System
 {
 
-struct ScopedCustomPointerTestClass
+struct ScopedPtrCustomTestClass
 {
 };
 
@@ -18,7 +18,7 @@ struct ScopedCustomPointerTestClass
 
 namespace tut
 {
-typedef System::ScopedCustomPointerTestClass TestClass;
+typedef System::ScopedPtrCustomTestClass TestClass;
 typedef test_group<TestClass> factory;
 typedef factory::object testObj;
 } // namespace tut
@@ -26,7 +26,7 @@ typedef factory::object testObj;
 
 namespace
 {
-tut::factory tf("System/ScopedCustomPointer");
+tut::factory tf("System/ScopedPtrCustom");
 }
 
 using namespace System;
