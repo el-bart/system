@@ -1,11 +1,9 @@
 # makro for common calls
 define run-in-gen
-	@echo
-	@echo "##### build $(COMPONENT_NAME) in $@_$(TC)_$(MEM_CHECK)"
 	# make gen/ dir structure for source files
 	GEN_NOW="$(GEN_BASE_DIR)/$@_$(TC)_$(MEM_CHECK)/`basename $(CURDIR)`" && \
 		mkdir -p "$$GEN_NOW" && cd "$$GEN_NOW" && \
-		mkdir -p $(SOURCE_DIRS)
+		mkdir -p . $(SOURCE_DIRS)
 	# make gen dir
 	mkdir -p "$(GEN_LIBS_DIR)"
 	# run
@@ -36,6 +34,10 @@ include $(MAKEFILES_TOOLCHAINS_BASE_DIR)/$(TC)-flags.mk
 OPT_FLAGS+=$(USER_OPT_FLAGS)
 DBG_FLAGS+=$(USER_DBG_FLAGS)
 PRF_FLAGS+=$(USER_PRF_FLAGS)
+# add project-specific link flags
+OPT_LDFLAGS+=$(USER_OPT_LDFLAGS)
+DBG_LDFLAGS+=$(USER_DBG_LDFLAGS)
+PRF_LDFLAGS+=$(USER_PRF_LDFLAGS)
 # add common flags, for all profiles
 CXXFLAGS+=$(CMN_FLAGS)
 CFLAGS  +=$(CMN_FLAGS)
