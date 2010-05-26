@@ -25,30 +25,33 @@ namespace System
  *    ScopedPtrCustom<extlib_struct, extlib_destroy> ptr(s);
  *    // extlib_destroy(s) will be called uppon scope leaving.
  *  \endcode
+ *
+ *  \note is is guaranteed that 'deallocator' will be never called on a
+ *        NULL pointer, so it can be not-NULL-safe.
  */
 template<typename T, void(*deallocator)(T *t)>
 class ScopedPtrCustom: private boost::noncopyable,
-                           public  boost::less_than_comparable< ScopedPtrCustom<T, deallocator> >,
-                           public  boost::equivalent<           ScopedPtrCustom<T, deallocator> >,
-                           public  boost::equality_comparable<  ScopedPtrCustom<T, deallocator> >
+                       public  boost::less_than_comparable< ScopedPtrCustom<T, deallocator> >,
+                       public  boost::equivalent<           ScopedPtrCustom<T, deallocator> >,
+                       public  boost::equality_comparable<  ScopedPtrCustom<T, deallocator> >
 
 {
 public:
   /** \brief type of this object. */
   typedef ScopedPtrCustom<T, deallocator> this_type;
   /** \brief type of element held inside. */
-  typedef T                                   element_type;
+  typedef T                               element_type;
   /** \brief type of element held inside. */
-  typedef T                                   value_type;
+  typedef T                               value_type;
   /** \brief type of pointer to element held inside. */
-  typedef T*                                  pointer;
+  typedef T*                              pointer;
   /** \brief type of reference to element held inside. */
-  typedef T&                                  reference;
+  typedef T&                              reference;
 
   /** \brief gets ownership of given object.
    *  \param t pointer to take ownership of.
    */
-  explicit ScopedPtrCustom(pointer t):
+  explicit ScopedPtrCustom(pointer t=NULL):
     t_(t)
   {
   }
@@ -56,8 +59,7 @@ public:
    */
   ~ScopedPtrCustom(void)
   {
-    if(t_!=NULL)
-      (*deallocator)(t_);
+    deallocate();
   }
 
   /** \brief comapre pointers.
@@ -124,7 +126,6 @@ public:
     other.t_=get();
     t_=tmp;
   }
-
   /** \brief releases pointer held inside.
    *  \return pointer, that is no longer owned by this object.
    */
@@ -134,8 +135,26 @@ public:
     t_=NULL;
     return tmp;
   }
+  /** \brief set new pointer's value.
+   *  \param t new value to be set.
+   */
+  void reset(pointer t=NULL)
+  {
+    deallocate();
+    t_=t;
+  }
 
 private:
+  void deallocate(void)
+  {
+    if(t_!=NULL)
+    {
+      (*deallocator)(t_);
+      t_=NULL;
+    }
+    assert(t_==NULL);
+  }
+
   pointer t_;
 }; // class ScopedPtrCustom
 
