@@ -4,6 +4,7 @@
 * implemented helper for registration handlers for signals.
 * file opening uses now O_CLOEXEC flag by default.
 * implemented SharedPtrNotNULL template - boost::shred_ptr<> equivalent, that ensures that pointer is NOT NULL.
+* implemented ScopedPtrCustom template - boost::scoped_ptr<> equivalent, that allows user-provided function to free pointer.
 
 -- v0.6.0 --
 * likely.hpp implements compiler huristics for branches.
