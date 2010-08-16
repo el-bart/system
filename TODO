@@ -1,9 +1,7 @@
-21 add template-base FSM implementation.
-25 add MultiLock which takes set of mutexes as parameters and locks them in proper order (i.e. memory appearance order) to prevent dead locks.
-26 consider using futex() in System.
-31 System::OneInstance
-33 create dynamic threads pool ("free lunch is over" -- Herb Sutter), adopting to work load.
-35 thread-safe containters would be nice feature.
-38 prepare backend for running separate thread for handling signals (see: http://www.linuxjournal.com/article/2121).
-43 implement Math namespace.
-44
+* add template-base FSM implementation.
+* consider using futex() in System.
+* implement System::OneInstance
+* create dynamic threads pool ("free lunch is over" -- Herb Sutter), adopting to work load.
+* thread-safe containters would be nice feature.
+* prepare backend for running separate thread for handling signals (see: http://www.linuxjournal.com/article/2121).
+* implement Math namespace.
