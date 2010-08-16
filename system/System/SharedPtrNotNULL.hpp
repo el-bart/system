@@ -85,6 +85,7 @@ public:
   }
   /** \brief less-then compare
    *  \param other element to compare with.
+   *  \return true if this<other, false otherwise.
    */
   inline bool operator<(const this_type &other) const
   {
