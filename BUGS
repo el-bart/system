@@ -1,0 +1,1 @@
+* signelton's PointerWrapper must have overloaded opcy c-tor and assignment operator, since it has shared ptr that can be accessed through many threads.
