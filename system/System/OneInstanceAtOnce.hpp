@@ -21,6 +21,8 @@ namespace System
 {
 
 /** \brief class that one instnace of is allowed at a time.
+ *  \param T         type to create guard for (CRTP-style).
+ *  \param useAssert true if use asserts in debug mode, false otherwise.
  *
  *  this class ensures only one copy of a given type instance can
  *  be present in the system at a given time. if it is not the case
