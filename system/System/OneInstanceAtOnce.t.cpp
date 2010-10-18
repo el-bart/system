@@ -6,21 +6,21 @@
  */
 #include <tut/tut.hpp>
 
-// NOTE: a little magic goes here in order to provide own assert() declaration
-struct AssertionFailed
-{
-}; // struct AssertionFailed
-#include <cassert>
-#undef assert
-bool g_useAssert;
-#define assert(expr) do { if( g_useAssert && !(expr) ) throw AssertionFailed(); } while(0)
 #include "System/OneInstanceAtOnce.hpp"
-#undef assert
 
 using namespace System;
 
 namespace
 {
+
+struct TestObj: private OneInstanceAtOnce<TestObj, false>
+{
+};
+struct OtherTestObj: private OneInstanceAtOnce<OtherTestObj, false>
+{
+};
+
+
 struct TestClass
 {
 };
@@ -40,8 +40,7 @@ template<>
 template<>
 void testObj::test<1>(void)
 {
-  g_useAssert=true;
-  OneInstanceAtOnce<TestClass> tmp;
+  TestObj tmp;
 }
 
 // test creating multiple instances one after another
@@ -49,49 +48,38 @@ template<>
 template<>
 void testObj::test<2>(void)
 {
-  g_useAssert=true;
   {
-    OneInstanceAtOnce<TestClass> tmp;
+    TestObj tmp;
   }
   {
-    OneInstanceAtOnce<TestClass> tmp;
-  }
-}
-
-// test creating second instance in debug mode
-template<>
-template<>
-void testObj::test<3>(void)
-{
-  g_useAssert=true;
-  OneInstanceAtOnce<TestClass> tmp1;
-  try
-  {
-    OneInstanceAtOnce<TestClass> tmp2;
-    fail("asseration didn't failed for the second instance");
-  }
-  catch(const AsserationFailed &)
-  {
-    // this is expected
+    TestObj tmp;
   }
 }
 
 // test creating second instance in release mode
 template<>
 template<>
-void testObj::test<4>(void)
+void testObj::test<3>(void)
 {
-  g_useAssert=false;
-  OneInstanceAtOnce<TestClass> tmp1;
+  TestObj tmp1;
   try
   {
-    OneInstanceAtOnce<TestClass> tmp2;
+    TestObj tmp2;
     fail("exception not thrown for the second instance");
   }
   catch(const std::logic_error &)
   {
     // this is expected
   }
+}
+
+// test if creating instances of different types does not colide
+template<>
+template<>
+void testObj::test<4>(void)
+{
+  TestObj      tmp1;
+  OtherTestObj tmp2;
 }
 
 } // namespace tut

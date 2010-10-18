@@ -40,20 +40,20 @@ namespace System
  *    - second instance can be created, whenfirst one is destroyed.
  *
  */
-template<typename T>
+template<typename T, bool useAssert=true>
 class OneInstanceAtOnce: private boost::noncopyable
 {
 protected:
   /** \brief check if no instances are present.
    */
-  TempFile(void)
+  OneInstanceAtOnce(void)
   {
     check(true);
   }
 
   /** \brief release lock - next instance can be created.
    */
-  ~TempFile(void)
+  ~OneInstanceAtOnce(void)
   {
     check(false);
   }
@@ -71,7 +71,8 @@ private:
     {
       if(exists)
       {
-        assert(!"attempting to create second instance of this type");
+        if(useAssert)
+          assert(!"attempting to create second instance of this type");
         throw std::logic_error("attempting to create second instance of this type");
       }
       exists=true;
