@@ -1,4 +1,5 @@
 -- ?? --
+* OneInstanceAtOnce - guard class that ensures that only one instance of a given object is present at a given time in system.
 
 -- v0.6.0 --
 * fixed remarks on intel's toolchain.
