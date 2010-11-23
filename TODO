@@ -5,3 +5,4 @@
 * thread-safe containters would be nice feature.
 * prepare backend for running separate thread for handling signals (see: http://www.linuxjournal.com/article/2121).
 * implement Math namespace.
+* implement GlobalInit - wrapper template class that initializes uppon first usage and deinitializes in atexit(); add option to re-init after main() if needed.
