@@ -2,6 +2,7 @@
 * OneInstanceAtOnce - guard class that ensures that only one instance of a given object is present at a given time in system.
 * ignore<>() - helper that prevents warnings about unused variable (ex.: that is needed only in debug).
 * fixed SharedPtrNotNULL API to have explicit back-to-shared_ptr<> convertion method.
+* GlobalInit<> - secure, thread safe initializer of the libraries that need such before usage.
 
 -- v0.6.0 --
 * fixed remarks on intel's toolchain.
