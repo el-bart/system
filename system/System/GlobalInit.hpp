@@ -29,17 +29,17 @@ Threads::SafeInitLock::MutexType &getGlabalInitMutex(void);
  * \brief template wrapper for global (de)initilization oof data.
  *
  * number of libraries uses global data that are not initialized
- * in the proper way, sometimes are not deinitializaed at all, initalizaiton
+ * in the proper way, sometimes are not uninitializaed at all, initalizaiton
  * is not thread safe, etc... this wrapper solves this issues.
  *
- * this class initializes user object in thread-safe way, and deinitializes
+ * this class initializes user object in thread-safe way, and uninitializes
  * it uppon program exit. when it is needed once more, it will be
  * re-initialized and deallocated stright away.
  *
- * used-defined T type has to provide static methods init() and deinit()
+ * used-defined T type has to provide static methods init() and uninit()
  * that performs as-is initialization (i.e. no locking, checks, etc...)
- * and deinitialization of given element, respecitively.
- * NOTE: deinit() must NOT throw!
+ * and uninitialization of given element, respecitively.
+ * when init() throws, uninit() is never called.  uninit() must NOT throw!
  */
 template<typename T>
 class GlobalInit
@@ -50,11 +50,11 @@ public:
     Threads::SafeInitLock lock( detail::getGlabalInitMutex() );
     if( counter(lock)==0 )
     {
-      AtExit::TDeallocPtr  deinit(new GlobalDeinit);
-      GlobalDeinit        *tmp=deinit.get();
-      AtExit::registerDeallocator(deinit);
+      GlobalUninit        *tmp=new GlobalUninit();
+      AtExit::TDeallocPtr  uninit(tmp);     // put to auto-ptr
+      AtExit::registerDeallocator(uninit);
       T::init();                            // initialize user object
-      tmp->unlock();                        // allow deallocation in atexit()
+      tmp->unlock(lock);                    // allow deallocation in atexit()
       atExitMark(lock)=false;
     }
     // mark usage
@@ -69,14 +69,13 @@ public:
     ++counter(lock);
   }
 
-  const GlobalInit &operator=(const GlobalInit &other)
+  const GlobalInit &operator=(const GlobalInit &/*other*/)
   {
-    if(this==&other)
-      return *this;
-    Threads::SafeInitLock lock( detail::getGlabalInitMutex() );
-    assert( counter(lock)>0 );
-    // mark usage
-    ++counter(lock);
+    // NOTE: nothing has to be done here, since each copy is equivalent to
+    //       other (no private fields) and overwriting one instance with
+    //       another does not change total objects count (i.e. object being
+    //       assigned to already exists).
+    return *this;
   }
 
   ~GlobalInit(void)
@@ -89,24 +88,23 @@ public:
     // finished we have to deallocate ourselves
     if( counter(lock)==0 && atExitMark(lock)==true )
     {
-      T::deinit();
+      T::uninit();
       atExitMark(lock)=false;
     }
   }
 
 private:
-  // helper class to deinitialize given library
-  class GlobalDeinit: public AtExitResourceDeallocator
+  // helper class to uninitialize given library
+  class GlobalUninit: public AtExitResourceDeallocator
   {
   public:
-    GlobalDeinit(void):
+    GlobalUninit(void):
       unlocked_(false)
     {
     }
     // enable deallocation feature
-    void unlock(void)
+    void unlock(Threads::SafeInitLock &)
     {
-      Threads::SafeInitLock lock( detail::getGlabalInitMutex() );
       unlocked_=true;
     }
     // deallocation itself
@@ -116,22 +114,22 @@ private:
       if(unlocked_==false)      // something failed during initialization - do nothing
         return;
       if( counter(lock)==0 )    // only if noone is using this any more
-        T::deinit();
+        T::uninit();
       atExitMark(lock)=true;    // mark that atexit() has been already done
     }
 
   private:
     bool unlocked_;
-  }; // class GlobalDeinit
+  }; // class GlobalUninit
 
   // this must be done within a lock to ensure safe initialization
-  unsigned long &counter(Threads::SafeInitLock &)
+  static unsigned long &counter(Threads::SafeInitLock &)
   {
     static unsigned long cnt=0;
     return cnt;
   }
   // mark that atexit handle has already finished
-  bool &atExitMark(Threads::SafeInitLock &)
+  static bool &atExitMark(Threads::SafeInitLock &)
   {
     static bool mark=false;
     return mark;
