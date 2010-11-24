@@ -9,6 +9,7 @@
 
 #include "System/Threads/SafeInitLocking.hpp"
 #include "System/AtExit.hpp"
+#include "System/ignore.hpp"
 
 namespace System
 {
@@ -76,6 +77,14 @@ Threads::SafeInitLock::MutexType &getGlabalInitMutex(void);
 template<typename T>
 class GlobalInit
 {
+private:
+  typedef enum
+  {
+    STATE_UNINITIALIZED,    // not yet initialized
+    STATE_INITIALIZED,      // init() called
+    STATE_ATEXIT_END        // atexit() finished but was unable to uninit() (still in use)
+  } State;
+
 public:
   /** \brief create handle object.
    *
@@ -83,15 +92,15 @@ public:
    */
   GlobalInit(void)
   {
-    Threads::SafeInitLock lock( detail::getGlabalInitMutex() );
-    if( counter(lock)==0 )
+    Threads::SafeInitLock lock( mutex() );
+    if( mark(lock)==STATE_UNINITIALIZED )
     {
+      assert( counter(lock)==0 );
       GlobalUninit        *tmp=new GlobalUninit();
       AtExit::TDeallocPtr  uninit(tmp);     // put to auto-ptr
-      AtExit::registerDeallocator(uninit);
+      AtExit::registerDeallocator(uninit);  // register uninitializer
       T::init();                            // initialize user object
-      tmp->unlock(lock);                    // allow deallocation in atexit()
-      atExitMark(lock)=false;
+      mark(lock)=STATE_INITIALIZED;         // mark successfull initialization
     }
     // mark usage
     ++counter(lock);
@@ -103,8 +112,9 @@ public:
    */
   GlobalInit(const GlobalInit &/*other*/)
   {
-    Threads::SafeInitLock lock( detail::getGlabalInitMutex() );
+    Threads::SafeInitLock lock( mutex() );
     assert( counter(lock)>0 );
+    assert( mark(lock)!=STATE_UNINITIALIZED );
     // mark usage
     ++counter(lock);
   }
@@ -114,6 +124,9 @@ public:
    */
   const GlobalInit &operator=(const GlobalInit &/*other*/)
   {
+    Threads::SafeInitLock lock( mutex() );
+    assert( counter(lock)>0 );
+    assert( mark(lock)!=STATE_UNINITIALIZED );
     // NOTE: nothing has to be done here, since each copy is equivalent to
     //       other (no private fields) and overwriting one instance with
     //       another does not change total objects count (i.e. object being
@@ -128,48 +141,44 @@ public:
    */
   ~GlobalInit(void)
   {
-    Threads::SafeInitLock lock( detail::getGlabalInitMutex() );
+    Threads::SafeInitLock lock( mutex() );
     assert( counter(lock)>0 );
+    assert( mark(lock)!=STATE_UNINITIALIZED );
     // mark usage
     --counter(lock);
     // if this is the last instance and atexit() has been already
     // finished we have to deallocate ourselves
-    if( counter(lock)==0 && atExitMark(lock)==true )
-    {
-      T::uninit();
-      atExitMark(lock)=false;
-    }
+    if( counter(lock)==0 && mark(lock)==STATE_ATEXIT_END )
+      uninit(lock);
   }
 
 private:
   // helper class to uninitialize given library
-  class GlobalUninit: public AtExitResourceDeallocator
+  struct GlobalUninit: public AtExitResourceDeallocator
   {
-  public:
-    GlobalUninit(void):
-      unlocked_(false)
-    {
-    }
-    // enable deallocation feature
-    void unlock(Threads::SafeInitLock &)
-    {
-      unlocked_=true;
-    }
     // deallocation itself
     virtual void deallocate(void)
     {
-      Threads::SafeInitLock lock( detail::getGlabalInitMutex() );
-      if(unlocked_==false)      // something failed during initialization - do nothing
+      Threads::SafeInitLock lock( mutex() );
+      if( mark(lock)==STATE_UNINITIALIZED ) // something failed during initialization - do nothing
         return;
-      if( counter(lock)==0 )    // only if noone is using this any more
-        T::uninit();
-      atExitMark(lock)=true;    // mark that atexit() has been already done
+      if( counter(lock)==0 )                // only if no one is using this any more
+        uninit(lock);                       // if not used, uninitialize it
+      else
+        mark(lock)=STATE_ATEXIT_END;        // makr that atexit() didn't called uninit()
     }
+  }; // struct GlobalUninit
 
-  private:
-    bool unlocked_;
-  }; // class GlobalUninit
-
+  // get per-instance mutex (required to allow chain-initialization)
+  static Threads::SafeInitLock::MutexType &mutex(void)
+  {
+    // it has to be locked by global mutex to ensure valid initialization
+    // before first usage
+    Threads::SafeInitLock lock( detail::getGlabalInitMutex() );
+    // this is static inside
+    SYSTEM_MAKE_STATIC_SAFEINIT_MUTEX(mutex);
+    return mutex;
+  }
   // this must be done within a lock to ensure safe initialization
   static unsigned long &counter(Threads::SafeInitLock &)
   {
@@ -177,10 +186,20 @@ private:
     return cnt;
   }
   // mark that atexit handle has already finished
-  static bool &atExitMark(Threads::SafeInitLock &)
+  static State &mark(Threads::SafeInitLock &)
   {
-    static bool mark=false;
+    static State mark=STATE_UNINITIALIZED;
     return mark;
+  }
+  // performs deallocation
+  static void uninit(Threads::SafeInitLock &lock)
+  {
+    ignore(lock);
+    assert( counter(lock)==0 );
+    assert( mark(lock)!=STATE_UNINITIALIZED );
+
+    T::uninit();                        // not used, so can be uninitialized
+    mark(lock)=STATE_UNINITIALIZED;     // mark deallocation
   }
 }; // class GlobalInit
 

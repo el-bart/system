@@ -8,6 +8,7 @@
  */
 #include <tut.h>
 #include <boost/lexical_cast.hpp>
+#include <boost/thread.hpp>
 #include <cassert>
 
 #include "System/GlobalInit.hpp"
@@ -48,10 +49,11 @@ private:
 
 struct TestClass
 {
-  void registerCheck(int n, State *s) const
+  static bool registerCheck(int n, State *s)
   {
     AtExit::TDeallocPtr test( new TestResults(n, s) );
     AtExit::registerDeallocator(test);
+    return true;
   }
 };
 
@@ -282,6 +284,178 @@ void testObj::test<9>(void)
     ensure_equals("not initialized", g_stateInitLast, STATE_INITIALIZED);
   }
   ensure_equals("uninitialized too fast", g_stateInitLast, STATE_INITIALIZED);
+}
+
+namespace
+{
+static State g_stateGlobalInit=STATE_UNUSED;
+
+struct TestGlobalInit
+{
+  static void init(void)
+  {
+    g_stateGlobalInit=STATE_INITIALIZED;
+  }
+  static void uninit(void)
+  {
+    g_stateGlobalInit=STATE_UNINITIALIZED;
+  }
+};
+
+bool                       g_checkTestGlobalInit=TestClass::registerCheck(10, &g_stateGlobalInit);
+GlobalInit<TestGlobalInit> g_testGlobalInit;
+} // unnamed namespace
+// test if global init works fine
+template<>
+template<>
+void testObj::test<10>(void)
+{
+  ensure_equals("not initialized", g_stateGlobalInit, STATE_INITIALIZED);
+}
+
+namespace
+{
+static State g_stateChainInit1=STATE_UNUSED;
+struct TestChainInit1
+{
+  static void init(void)
+  {
+    g_stateChainInit1=STATE_INITIALIZED;
+  }
+  static void uninit(void)
+  {
+    g_stateChainInit1=STATE_UNINITIALIZED;
+  }
+};
+
+static State g_stateChainInit2=STATE_UNUSED;
+struct TestChainInit2
+{
+  static void init(void)
+  {
+    GlobalInit<TestChainInit1> tmp1;        //require entity1
+    g_stateChainInit2=STATE_INITIALIZED;
+  }
+  static void uninit(void)
+  {
+    g_stateChainInit2=STATE_UNINITIALIZED;
+  }
+};
+} // unnamed namespace
+// test if chain of inits works fine
+template<>
+template<>
+void testObj::test<11>(void)
+{
+  registerCheck(11, &g_stateChainInit1);
+  registerCheck(11, &g_stateChainInit2);
+
+  // entity1 is initialized implicitly by entity2
+  //GlobalInit<TestChainInit1> tmp1;
+  GlobalInit<TestChainInit2> tmp2;
+
+  ensure_equals("entity 1 not initialized", g_stateChainInit1, STATE_INITIALIZED);
+  ensure_equals("entity 2 not initialized", g_stateChainInit2, STATE_INITIALIZED);
+}
+
+namespace
+{
+static int g_initCounter=0;
+struct TestInitCounter
+{
+  static void init(void)
+  {
+    ++g_initCounter;
+    // give some time for the second thread to work
+    for(int i=0; i<1000; ++i)
+      boost::this_thread::yield();
+  }
+  static void uninit(void)
+  {
+    assert( g_initCounter==1 );
+    --g_initCounter;
+  }
+};
+
+struct TestInitCounterThread
+{
+  void operator()(void)
+  {
+    GlobalInit<TestInitCounter> tmp;
+  }
+};
+} // unnamed namespace
+// test for locking when using from multiple threads
+template<>
+template<>
+void testObj::test<12>(void)
+{
+  // created two threads that want to initialize data
+  boost::thread th1( (TestInitCounterThread()) );
+  boost::thread th2( (TestInitCounterThread()) );
+  boost::thread th3( (TestInitCounterThread()) );
+  // wait for them to finish
+  th1.join();
+  th2.join();
+  th3.join();
+  // check post-condition
+  ensure_equals("race condition duruing initialization detected", g_initCounter, 1);
+}
+
+namespace
+{
+int g_sequenceInitCount=0;
+struct TestSequenceInitCount
+{
+  static void init(void)
+  {
+    ++g_sequenceInitCount;
+  }
+  static void uninit(void)
+  {
+    --g_sequenceInitCount;
+    assert( g_sequenceInitCount==0 );
+  }
+};
+} // unnamed namespace
+// test regular initialization/uninitialization
+template<>
+template<>
+void testObj::test<13>(void)
+{
+  ensure_equals("already initialized", g_sequenceInitCount, 0);
+  GlobalInit<TestSequenceInitCount> tmp1;
+  ensure_equals("invalid ocunter after init 1", g_sequenceInitCount, 1);
+  GlobalInit<TestSequenceInitCount> tmp2;
+  ensure_equals("invalid ocunter after init 2", g_sequenceInitCount, 1);
+}
+
+namespace
+{
+int g_sequenceInitUninitCount=0;
+struct TestSequenceInitUninitCount
+{
+  static void init(void)
+  {
+    ++g_sequenceInitUninitCount;
+  }
+  static void uninit(void)
+  {
+  }
+};
+} // unnamed namespace
+// smoke tesr for re-initialization
+template<>
+template<>
+void testObj::test<14>(void)
+{
+  ensure_equals("already initialized", g_sequenceInitUninitCount, 0);
+  for(int i=0; i<3; ++i)
+  {
+    GlobalInit<TestSequenceInitUninitCount> tmp;
+    ensure_equals( ("invalid counter value in loop#" + boost::lexical_cast<std::string>(i)).c_str(),
+                   g_sequenceInitUninitCount, 1);
+  }
 }
 
 } // namespace tut
