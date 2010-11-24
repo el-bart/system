@@ -26,9 +26,9 @@ enum State
   STATE_UNINITIALIZED
 };
 
-struct TestResults: public AtExitResourceDeallocator
+struct TestResult: public AtExitResourceDeallocator
 {
-  TestResults(int n, State *s):
+  TestResult(int n, State *s):
     n_(n),
     s_(s)
   {
@@ -44,14 +44,14 @@ struct TestResults: public AtExitResourceDeallocator
 private:
   int    n_;
   State *s_;
-}; // struct TestResults
+}; // struct TestResult
 
 
 struct TestClass
 {
   static bool registerCheck(int n, State *s)
   {
-    AtExit::TDeallocPtr test( new TestResults(n, s) );
+    AtExit::TDeallocPtr test( new TestResult(n, s) );
     AtExit::registerDeallocator(test);
     return true;
   }
@@ -456,6 +456,67 @@ void testObj::test<14>(void)
     ensure_equals( ("invalid counter value in loop#" + boost::lexical_cast<std::string>(i)).c_str(),
                    g_sequenceInitUninitCount, 1);
   }
+}
+
+namespace
+{
+int g_stateReinit=0;
+struct TestReinitCheck: public AtExitResourceDeallocator
+{
+  virtual void deallocate(void)
+  {
+    tut::ensure_equals("reinitialization does not work", g_stateReinit, 0x33);
+  }
+}; // struct TestReinitCheck
+struct TestReinit;
+struct ReinitDuringAtExit: public AtExitResourceDeallocator
+{
+  virtual void deallocate(void)
+  {
+    // register checker
+    AtExit::TDeallocPtr test(new TestReinitCheck);
+    AtExit::registerDeallocator(test);
+    // re-init entity
+    GlobalInit<TestReinit> tmp;
+  }
+}; // struct TestReinitCheck
+struct TestReinit
+{
+  static void init(void)
+  {
+    if(g_stateReinit&0x01)
+      g_stateReinit|=0x10;
+    else
+      g_stateReinit|=0x01;
+  }
+  static void uninit(void)
+  {
+    if(g_stateReinit&0x02)
+      g_stateReinit|=0x20;
+    else
+    {
+      g_stateReinit|=0x02;
+      // register new creation to atexit - this will reinitialize entity
+      AtExit::TDeallocPtr test(new ReinitDuringAtExit);
+      AtExit::registerDeallocator(test);
+    }
+  }
+};
+struct TestReinitCtor
+{
+  TestReinitCtor(void)
+  {
+    GlobalInit<TestReinit> tmp;
+  }
+};
+TestReinitCtor g_testReinitCtor;
+} // unnamed namespace
+// test re-initialization
+template<>
+template<>
+void testObj::test<15>(void)
+{
+  ensure_equals("first initialization failed", g_stateReinit, 0x01);
 }
 
 } // namespace tut
