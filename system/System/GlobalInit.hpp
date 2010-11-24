@@ -39,6 +39,7 @@ Threads::SafeInitLock::MutexType &getGlabalInitMutex(void);
  * used-defined T type has to provide static methods init() and deinit()
  * that performs as-is initialization (i.e. no locking, checks, etc...)
  * and deinitialization of given element, respecitively.
+ * NOTE: deinit() must NOT throw!
  */
 template<typename T>
 class GlobalInit
@@ -49,9 +50,11 @@ public:
     Threads::SafeInitLock lock( detail::getGlabalInitMutex() );
     if( counter(lock)==0 )
     {
-      AtExit::TDeallocPtr deinit(new GlobalDeinit);
-      T::init();
-      AtExit::registerDeallocator(deinit);  // TODO: what if this throws?
+      AtExit::TDeallocPtr  deinit(new GlobalDeinit);
+      GlobalDeinit        *tmp=deinit.get();
+      AtExit::registerDeallocator(deinit);
+      T::init();                            // initialize user object
+      tmp->unlock();                        // allow deallocation in atexit()
       atExitMark(lock)=false;
     }
     // mark usage
@@ -93,16 +96,33 @@ public:
 
 private:
   // helper class to deinitialize given library
-  struct GlobalDeinit: public AtExitResourceDeallocator
+  class GlobalDeinit: public AtExitResourceDeallocator
   {
+  public:
+    GlobalDeinit(void):
+      unlocked_(false)
+    {
+    }
+    // enable deallocation feature
+    void unlock(void)
+    {
+      Threads::SafeInitLock lock( detail::getGlabalInitMutex() );
+      unlocked_=true;
+    }
+    // deallocation itself
     virtual void deallocate(void)
     {
       Threads::SafeInitLock lock( detail::getGlabalInitMutex() );
-      if( counter(lock)==0 )
+      if(unlocked_==false)      // something failed during initialization - do nothing
+        return;
+      if( counter(lock)==0 )    // only if noone is using this any more
         T::deinit();
-      atExitMark(lock)=true;
+      atExitMark(lock)=true;    // mark that atexit() has been already done
     }
-  }; // GlobalDeinit
+
+  private:
+    bool unlocked_;
+  }; // class GlobalDeinit
 
   // this must be done within a lock to ensure safe initialization
   unsigned long &counter(Threads::SafeInitLock &)
