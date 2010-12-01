@@ -1,7 +1,5 @@
 /*
- * testset1.t.cpp
- *
- * some example test set for test application.
+ * OneInstanceAtOnce.t.cpp
  *
  */
 #include <tut/tut.hpp>

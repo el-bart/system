@@ -30,18 +30,17 @@ class SharedPtrNotNULL: public boost::less_than_comparable< SharedPtrNotNULL<T> 
 {
 public:
   /** \brief type used as boost::shared_ptr<>. */
-  typedef boost::shared_ptr<T> PtrT;
-
+  typedef boost::shared_ptr<T>             SharedPtr;
   /** \brief type of this object. */
-  typedef SharedPtrNotNULL<T>         this_type;
+  typedef SharedPtrNotNULL<T>              this_type;
   /** \brief type of element held inside (for compatibility with boost::shared_ptr). */
-  typedef typename PtrT::element_type element_type;
+  typedef typename SharedPtr::element_type element_type;
   /** \brief type of element held inside (for compatibility with boost::shared_ptr). */
-  typedef typename PtrT::value_type   value_type;
+  typedef typename SharedPtr::value_type   value_type;
   /** \brief type of pointer to element held inside (for compatibility with boost::shared_ptr). */
-  typedef typename PtrT::pointer      pointer;
+  typedef typename SharedPtr::pointer      pointer;
   /** \brief type of reference to element held inside (for compatibility with boost::shared_ptr). */
-  typedef typename PtrT::reference    reference;
+  typedef typename SharedPtr::reference    reference;
 
   /** \brief create class from raw-pointer.
    *  \param t pointer to take ownership of.
@@ -54,15 +53,17 @@ public:
   /** \brief copy c-tor.
    *  \param other object to copy from.
    */
-  SharedPtrNotNULL(const this_type &other)
+  template<typename U>
+  SharedPtrNotNULL(const SharedPtrNotNULL<U> &other)
   {
-    ptr_=other.ptr_;
+    ptr_=other.shared_ptr();
     assert( ptr_.get()!=NULL );
   }
   /** \brief create object from boost::shared_ptr<>.
    *  \param p pointer to share.
    */
-  SharedPtrNotNULL(PtrT p):
+  template<typename U>
+  SharedPtrNotNULL(const boost::shared_ptr<U> &p):
     ptr_(p)
   {
     ensure();
@@ -70,15 +71,17 @@ public:
   /** \brief create object from std::auto_ptr<>.
    *  \param p pointer get ownership of.
    */
-  SharedPtrNotNULL(std::auto_ptr<T> p):
+  template<typename U>
+  SharedPtrNotNULL(std::auto_ptr<U> p):
     ptr_( p.release() )
   {
     ensure();
+    assert( p.get()==NULL );
   }
-  /** \brief conversion operator.
+  /** \brief conversion to boost::shared_ptr<>.
    *  \return boost::shared_ptr<> for a given value.
    */
-  operator PtrT(void) const
+  SharedPtr shared_ptr(void) const
   {
     assert( ptr_.get()!=NULL );
     return ptr_;
@@ -95,10 +98,11 @@ public:
    *  \param other object to assigne from.
    *  \return const-reference to this object.
    */
-  typename boost::add_const<this_type>::type &operator=(const this_type &other)
+  template<typename U>
+  typename boost::add_const<this_type&>::type operator=(const SharedPtrNotNULL<U> &other)
   {
-    if(&other!=this)
-      ptr_=other.ptr_;
+    if( other.get()!=this->get() )
+      ptr_=other.shared_ptr();
     return *this;
   }
   /** \brief arrow operator.
@@ -169,7 +173,7 @@ private:
       throw ExceptionPointerIsNULL(SYSTEM_SAVE_LOCATION, "t");
   }
 
-  PtrT ptr_;
+  SharedPtr ptr_;
 }; // struct SharedPtrNotNULL
 
 } // namespace System
