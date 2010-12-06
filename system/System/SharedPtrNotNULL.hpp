@@ -31,12 +31,8 @@ class SharedPtrNotNULL: public boost::less_than_comparable< SharedPtrNotNULL<T> 
 public:
   /** \brief type used as boost::shared_ptr<>. */
   typedef boost::shared_ptr<T>             SharedPtr;
-  /** \brief type used as boost::shared_ptr<> - const version. */
-  typedef boost::shared_ptr<const T>       ConstSharedPtr;
   /** \brief type of this object. */
   typedef SharedPtrNotNULL<T>              this_type;
-  /** \brief type of this object - const. */
-  typedef SharedPtrNotNULL<const T>        const_this_type;
   /** \brief type of element held inside (for compatibility with boost::shared_ptr). */
   typedef typename SharedPtr::element_type element_type;
   /** \brief type of element held inside (for compatibility with boost::shared_ptr). */
