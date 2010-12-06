@@ -1,3 +1,7 @@
+-- v?.?.?--
+* fixed issue with convertion from const in SharedPtrNotNULL<>
+* fixed issue with comparison operators in SharedPtrNotNULL<> - now only operators available in boost::shared_ptr<> are available.
+
 -- v0.7.0 --
 * OneInstanceAtOnce - guard class that ensures that only one instance of a given object is present at a given time in system.
 * ignore<>() - helper that prevents warnings about unused variable (ex.: that is needed only in debug).
