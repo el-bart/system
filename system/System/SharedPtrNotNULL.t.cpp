@@ -488,4 +488,38 @@ void testObj::test<42>(void)
   SharedPtrNotNULL<const BaseTest> b(d);
 }
 
+// test presence of shared_ptr typedef
+template<>
+template<>
+void testObj::test<43>(void)
+{
+  ensure("invalid element's type declaration",
+         boost::mpl::equal<boost::shared_ptr<int>, PtrNN::SharedPtr>::type::value);
+}
+
+// test presentce of ConstSharedPtr typedef
+template<>
+template<>
+void testObj::test<44>(void)
+{
+  ensure("invalid element's type declaration",
+         boost::mpl::equal<boost::shared_ptr<const int>, PtrNN::ConstSharedPtr>::type::value);
+}
+
+// test const_this_type declaration
+template<>
+template<>
+void testObj::test<45>(void)
+{
+  ensure("invalid element's type declaration",
+         boost::mpl::equal<boost::shared_ptr<int>, PtrNN::SharedPtr>::type::value);
+}
+
+// 
+template<>
+template<>
+void testObj::test<46>(void)
+{
+}
+
 } // namespace tut
