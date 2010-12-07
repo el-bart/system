@@ -1,4 +1,4 @@
--- v?.?.?--
+-- v0.7.1 --
 * fixed issue with convertion from const in SharedPtrNotNULL<>
 * fixed issue with comparison operators in SharedPtrNotNULL<> - now only operators available in boost::shared_ptr<> are available.
 
