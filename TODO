@@ -1,8 +1,7 @@
 * add template-base FSM implementation.
 * consider using futex() in System.
-* implement System::OneInstance
 * create dynamic threads pool ("free lunch is over" -- Herb Sutter), adopting to work load.
 * thread-safe containters would be nice feature.
-* prepare backend for running separate thread for handling signals (see: http://www.linuxjournal.com/article/2121).
 * implement Math namespace.
-* implement T* -> const T* convertion for SharedPtrNotNULL<>.
+* consider migrating most usefull parts of code to BUtils; trying to add it to boost is also an option.
+* it is a good idea to add releases of this code to sourceforge or github.
