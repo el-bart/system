@@ -22,8 +22,16 @@ namespace Plugins
 class Builder
 {
 public:
+  /** \brief create dynamic objects builder.
+   *  \param makeSymbolsVisible true if exported symbols are to be visible globally, false otherwise.
+   *  \param lazyResolving      true if symbols are to be resolved lazy, false otherwise.
+   */
   explicit Builder(bool makeSymbolsVisible=false, bool lazyResolving=true);
 
+  /** \brief opens given shared object and returns dynamic object (with handle) to it.
+   *  \param so shared object path.
+   *  \return dynamic object with valid handle.
+   */
   DynamicObject open(const boost::filesystem::path &so) const;
 
 private:

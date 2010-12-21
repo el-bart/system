@@ -50,4 +50,13 @@ void testObj::test<2>(void)
   }
 }
 
+// test non-default flags settings
+template<>
+template<>
+void testObj::test<3>(void)
+{
+  Builder b(true, false);
+  DynamicObject h=b.open("testdata/sharedobj.so");
+}
+
 } // namespace tut
