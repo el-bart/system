@@ -20,8 +20,9 @@ class ExceptionCannotReadSymbol: public Exception
 {
 public:
   /** \brief create execption with given message.
-   *  \param where place where exception has been raisen.
-   *  \param name  name of the non-existing symbol.
+   *  \param where  place where exception has been raisen.
+   *  \param name   name of the non-existing symbol.
+   *  \param reason details on error.
    */
   ExceptionCannotReadSymbol(const Location &where, const std::string &name, const std::string &reason):
     Exception( where, cc("given symbol name is not valid: '", name, "'; error was: ", reason) )
