@@ -25,7 +25,7 @@ Builder::PtrNN Builder::open(const boost::filesystem::path &so) const
   const char *err=dlerror();                        // read error message
   if(err!=NULL)                                     // check for error
     throw ExceptionCannotOpenSharedObject(SYSTEM_SAVE_LOCATION, so, err);
-  return PtrNN( new Handle(h) );                    // return optained handle
+  return PtrNN( new DynamicObject(h) );             // return optained handle
 }
 
 } // namespace Plugins

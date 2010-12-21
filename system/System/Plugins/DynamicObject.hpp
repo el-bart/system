@@ -1,9 +1,9 @@
 /*
- * Handle.hpp
+ * DynamicObject.hpp
  *
  */
-#ifndef INCLUDE_SYSTEM_PLUGINS_HANDLE_HPP_FILE
-#define INCLUDE_SYSTEM_PLUGINS_HANDLE_HPP_FILE
+#ifndef INCLUDE_SYSTEM_PLUGINS_DYNAMICOBJECT_HPP_FILE
+#define INCLUDE_SYSTEM_PLUGINS_DYNAMICOBJECT_HPP_FILE
 
 /* public header */
 
@@ -21,14 +21,14 @@ namespace Plugins
 
 /** \brief helper object owning handle returned by dlopen().
  */
-class Handle: private boost::noncopyable
+class DynamicObject: private boost::noncopyable
 {
 public:
   /** \brief create proxy-object.
    *  \param h handle to take (cannot be NULL).
    *  \note object takes ownership of 'h'.
    */
-  explicit Handle(void *h):
+  explicit DynamicObject(void *h):
     h_(h)
   {
     if(h_==NULL)
@@ -36,7 +36,7 @@ public:
   }
   /** \brief deallocate handle.
    */
-  ~Handle(void)
+  ~DynamicObject(void)
   {
     dlclose( get() );
   }
@@ -73,7 +73,7 @@ private:
   }
 
   void *h_;
-}; // class Handle
+}; // class DynamicObject
 
 } // namespace Plugins
 } // namespace System

@@ -1,11 +1,11 @@
 /*
- * Handle.t.cpp
+ * DynamicObject.t.cpp
  *
  */
 #include <tut/tut.hpp>
 #include <dlfcn.h>
 
-#include "System/Plugins/Handle.hpp"
+#include "System/Plugins/DynamicObject.hpp"
 
 using namespace System::Plugins;
 
@@ -27,13 +27,13 @@ struct TestClass
     return h;
   }
 
-  Handle h_;
+  DynamicObject h_;
 };
 
 typedef tut::test_group<TestClass> factory;
 typedef factory::object            testObj;
 
-factory tf("System/Plugins/Handle");
+factory tf("System/Plugins/DynamicObject");
 } // unnamed namespace
 
 
@@ -47,7 +47,7 @@ void testObj::test<1>(void)
 {
   try
   {
-    Handle h(NULL);
+    DynamicObject h(NULL);
     fail("c-tor didn't failed for NULL handle");
   }
   catch(const System::ExceptionPointerIsNULL &)

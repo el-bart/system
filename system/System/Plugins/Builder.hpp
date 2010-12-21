@@ -10,7 +10,7 @@
 #include <boost/filesystem.hpp>
 
 #include "System/SharedPtrNotNULL.hpp"
-#include "System/Plugins/Handle.hpp"
+#include "System/Plugins/DynamicObject.hpp"
 #include "System/Plugins/ExceptionCannotOpenSharedObject.hpp"
 
 namespace System
@@ -23,8 +23,8 @@ namespace Plugins
 class Builder
 {
 public:
-  /** \brief non-NULL pointer to Handle. */
-  typedef SharedPtrNotNULL<Handle> PtrNN;
+  /** \brief non-NULL pointer to dynmic object. */
+  typedef SharedPtrNotNULL<DynamicObject> PtrNN;
 
   explicit Builder(bool makeSymbolsVisible=false, bool lazyResolving=true);
 
