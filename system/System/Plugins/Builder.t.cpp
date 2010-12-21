@@ -31,7 +31,7 @@ template<>
 template<>
 void testObj::test<1>(void)
 {
-  Builder::PtrNN h=b_.open("testdata/sahredobj.so");
+  Builder::PtrNN h=b_.open("testdata/sharedobj.so");
   ensure("NULL pointer", h.get()!=NULL );
 }
 
