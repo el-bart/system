@@ -31,8 +31,7 @@ template<>
 template<>
 void testObj::test<1>(void)
 {
-  Builder::PtrNN h=b_.open("testdata/sharedobj.so");
-  ensure("NULL pointer", h.get()!=NULL );
+  DynamicObject h=b_.open("testdata/sharedobj.so");
 }
 
 // test opening non-existing object

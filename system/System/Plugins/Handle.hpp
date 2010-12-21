@@ -2,14 +2,15 @@
  * Handle.hpp
  *
  */
-#ifndef INCLUDE_SYSTEM_PLUGINS_DYNAMICOBJECT_HPP_FILE
-#define INCLUDE_SYSTEM_PLUGINS_DYNAMICOBJECT_HPP_FILE
+#ifndef INCLUDE_SYSTEM_PLUGINS_HANDLE_HPP_FILE
+#define INCLUDE_SYSTEM_PLUGINS_HANDLE_HPP_FILE
 
 /* public header */
 
 #include <boost/noncopyable.hpp>
 #include <cassert>
 
+#include "System/SharedPtrNotNULL.hpp"
 #include "System/ExceptionPointerIsNULL.hpp"
 
 namespace System
@@ -43,6 +44,10 @@ public:
 private:
   void *h_;
 }; // class Handle
+
+
+/** \brief non-NULL pointer to Handle structure. */
+typedef SharedPtrNotNULL<Handle> HandlePtrNN;
 
 } // namespace Plugins
 } // namespace System

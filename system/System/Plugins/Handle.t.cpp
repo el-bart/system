@@ -66,4 +66,12 @@ void testObj::test<3>(void)
   ensure("pointer is NULL", h.get()!=NULL );    // compile-check, in fact
 }
 
+// test pointer typedef presence (compile-test)
+template<>
+template<>
+void testObj::test<4>(void)
+{
+  HandlePtrNN h( new Handle( openShared() ) );
+}
+
 } // namespace tut

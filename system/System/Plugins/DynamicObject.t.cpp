@@ -14,7 +14,7 @@ namespace
 struct TestClass
 {
   TestClass(void):
-    h_( openShared() )
+    h_( HandlePtrNN( new Handle( openShared() ) ) )
   {
   }
 
@@ -40,26 +40,10 @@ factory tf("System/Plugins/DynamicObject");
 namespace tut
 {
 
-// test exception when NULL-pointer is passed
-template<>
-template<>
-void testObj::test<1>(void)
-{
-  try
-  {
-    DynamicObject h(NULL);
-    fail("c-tor didn't failed for NULL handle");
-  }
-  catch(const System::ExceptionPointerIsNULL &)
-  {
-    // this is expected
-  }
-}
-
 // try reading global variable
 template<>
 template<>
-void testObj::test<2>(void)
+void testObj::test<1>(void)
 {
   int *ptr=h_.getSymbol<int*>("g_int");
   ensure("NULL pointer", ptr!=NULL);
@@ -69,7 +53,7 @@ void testObj::test<2>(void)
 // try reading non-existing variable
 template<>
 template<>
-void testObj::test<3>(void)
+void testObj::test<2>(void)
 {
   try
   {
@@ -85,7 +69,7 @@ void testObj::test<3>(void)
 // try reading some function symbol
 template<>
 template<>
-void testObj::test<4>(void)
+void testObj::test<3>(void)
 {
   long (*f)(const char*)=h_.getSymbol<long(*)(const char*)>("testFunctionSymbol");
   ensure("NULL pointer", f!=NULL);
@@ -95,7 +79,7 @@ void testObj::test<4>(void)
 // reading non-exisitng function pointer
 template<>
 template<>
-void testObj::test<5>(void)
+void testObj::test<4>(void)
 {
   try
   {

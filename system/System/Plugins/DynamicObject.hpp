@@ -7,11 +7,10 @@
 
 /* public header */
 
-#include <boost/noncopyable.hpp>
 #include <dlfcn.h>
 #include <cassert>
 
-#include "System/ExceptionPointerIsNULL.hpp"
+#include "System/Plugins/Handle.hpp"
 #include "System/Plugins/ExceptionCannotReadSymbol.hpp"
 
 namespace System
@@ -21,24 +20,16 @@ namespace Plugins
 
 /** \brief helper object owning handle returned by dlopen().
  */
-class DynamicObject: private boost::noncopyable
+class DynamicObject
 {
 public:
   /** \brief create proxy-object.
    *  \param h handle to take (cannot be NULL).
    *  \note object takes ownership of 'h'.
    */
-  explicit DynamicObject(void *h):
+  explicit DynamicObject(HandlePtrNN h):
     h_(h)
   {
-    if(h_==NULL)
-      throw ExceptionPointerIsNULL(SYSTEM_SAVE_LOCATION, "h");
-  }
-  /** \brief deallocate handle.
-   */
-  ~DynamicObject(void)
-  {
-    dlclose( get() );
   }
 
   /** \brief gets given symbol from handle.
@@ -68,11 +59,12 @@ public:
 private:
   void *get(void)
   {
-    assert(h_!=NULL);
-    return h_;
+    assert(h_.get()!=NULL);
+    assert(h_->get()!=NULL);
+    return h_->get();
   }
 
-  void *h_;
+  HandlePtrNN h_;
 }; // class DynamicObject
 
 } // namespace Plugins

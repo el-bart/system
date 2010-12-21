@@ -18,14 +18,15 @@ Builder::Builder(const bool makeSymbolsVisible, const bool lazyResolving):
   flags_|=lazyResolving?RTLD_LAZY:RTLD_NOW;
 }
 
-Builder::PtrNN Builder::open(const boost::filesystem::path &so) const
+DynamicObject Builder::open(const boost::filesystem::path &so) const
 {
   dlerror();                                        // remove last error
   void *h=dlopen( so.string().c_str(), flags_ );    // open shared object
   const char *err=dlerror();                        // read error message
   if(err!=NULL)                                     // check for error
     throw ExceptionCannotOpenSharedObject(SYSTEM_SAVE_LOCATION, so, err);
-  return PtrNN( new DynamicObject(h) );             // return optained handle
+  HandlePtrNN handle( new Handle(h) );
+  return DynamicObject(handle);                     // return optained handle
 }
 
 } // namespace Plugins
