@@ -50,9 +50,6 @@ public:
    *  \warning since this is C++ interface to C calls types are NOT checked
    *           thus user must ensure that symbol with a given name really has
    *           supplied signature - otherwise undefined behavior may occure.
-   *
-   *  \note please be aware that void(*)(void) and extern "C" void(*)(void) are
-   *        NOT interchangabe, according to the standard!
    */
   template<typename T>
   T getSymbol(const std::string &name)
