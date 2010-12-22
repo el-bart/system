@@ -6,21 +6,14 @@
 #include <dlfcn.h>
 
 #include "System/Plugins/Handle.hpp"
+#include "System/Plugins/TestBase.t.hpp"
 
 using namespace System::Plugins;
 
 namespace
 {
-struct TestClass
+struct TestClass: public TestBase
 {
-  void *openShared(void)
-  {
-    dlerror();
-    void *h=dlopen("testdata/sharedobj.so", RTLD_LOCAL|RTLD_LAZY);
-    if(h==NULL)
-      tut::fail( dlerror() );
-    return h;
-  }
 };
 
 typedef tut::test_group<TestClass> factory;

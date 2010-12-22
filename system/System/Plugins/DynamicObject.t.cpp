@@ -3,31 +3,22 @@
  *
  */
 #include <tut/tut.hpp>
-#include <dlfcn.h>
 
 #include "System/Plugins/DynamicObject.hpp"
+#include "System/Plugins/TestBase.t.hpp"
 
 using namespace System::Plugins;
 
 namespace
 {
-struct TestClass
+struct TestClass: public TestBase
 {
   TestClass(void):
-    h_( HandlePtrNN( new Handle( openShared() ) ) )
+    dyn_(h_)
   {
   }
 
-  void *openShared(void)
-  {
-    dlerror();
-    void *h=dlopen("testdata/sharedobj.so", RTLD_LOCAL|RTLD_LAZY);
-    if(h==NULL)
-      tut::fail( dlerror() );
-    return h;
-  }
-
-  DynamicObject h_;
+  DynamicObject dyn_;
 };
 
 typedef tut::test_group<TestClass> factory;
@@ -45,7 +36,7 @@ template<>
 template<>
 void testObj::test<1>(void)
 {
-  int *ptr=h_.getSymbol<int*>("g_int");
+  int *ptr=dyn_.getSymbol<int*>("g_int");
   ensure("NULL pointer", ptr!=NULL);
   ensure_equals("invalid value", *ptr, 42);
 }
@@ -57,7 +48,7 @@ void testObj::test<2>(void)
 {
   try
   {
-    h_.getSymbol<int*>("non_existing_symbol");
+    dyn_.getSymbol<int*>("non_existing_symbol");
     fail("reading non-existing symbol didn't failed");
   }
   catch(const ExceptionCannotReadSymbol &)
@@ -71,7 +62,7 @@ template<>
 template<>
 void testObj::test<3>(void)
 {
-  long (*f)(const char*)=h_.getSymbol<long(*)(const char*)>("testFunctionSymbol");
+  long (*f)(const char*)=dyn_.getSymbol<long(*)(const char*)>("testFunctionSymbol");
   ensure("NULL pointer", f!=NULL);
   ensure_equals("invalid call", (*f)("alice has a cat"), 15);
 }
@@ -83,7 +74,7 @@ void testObj::test<4>(void)
 {
   try
   {
-    h_.getSymbol<int(*)(int)>("non_existing_symbol");
+    dyn_.getSymbol<int(*)(int)>("non_existing_symbol");
     fail("reading non-existing symbol didn't failed");
   }
   catch(const ExceptionCannotReadSymbol &)
