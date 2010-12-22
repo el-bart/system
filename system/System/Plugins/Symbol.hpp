@@ -8,6 +8,8 @@
 /* public header */
 
 #include <string>
+#include <boost/type_traits/remove_pointer.hpp>
+#include <cassert>
 
 #include "System/Plugins/Handle.hpp"
 
@@ -46,6 +48,7 @@ public:
   const std::string &name(void)
   {
     return name_;
+
   }
   /** \brief gets symbol itself.
    *  \return symbol.
@@ -59,9 +62,28 @@ public:
    *  \return symbol.
    *  \note symbol can be NULL.
    */
-  S get(void) const
+  const S get(void) const
   {
     return s_;
+  }
+
+  /** \brief gets symbol itself.
+   *  \return symbol.
+   *  \note symbol can be NULL.
+   */
+  typename boost::remove_pointer<S>::type &operator*(void)
+  {
+    assert(s_!=NULL);
+    return *s_;
+  }
+  /** \brief gets symbol itself - const version.
+   *  \return symbol.
+   *  \note symbol can be NULL.
+   */
+  const typename boost::remove_pointer<S>::type &operator*(void) const
+  {
+    assert(s_!=NULL);
+    return *s_;
   }
 
 private:

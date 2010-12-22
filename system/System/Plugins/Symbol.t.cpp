@@ -75,4 +75,26 @@ void testObj::test<4>(void)
   ensure_equals("invalid symbol", *s.get(), 42);
 }
 
+// test accessing object with * operator
+template<>
+template<>
+void testObj::test<5>(void)
+{
+  int x=42;
+  Symbol<int*> s(h_, "abc", &x);
+  ensure("NULL symbol", s.get()!=NULL );
+  ensure_equals("invalid name", *s, 42);
+}
+
+// test accessing object with * operator - const version
+template<>
+template<>
+void testObj::test<6>(void)
+{
+  int x=42;
+  const Symbol<int*> s(h_, "abc", &x);
+  ensure("NULL symbol", s.get()!=NULL );
+  ensure_equals("invalid symbol", *s, 42);
+}
+
 } // namespace tut

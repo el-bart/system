@@ -11,6 +11,7 @@
 #include <cassert>
 
 #include "System/Plugins/Handle.hpp"
+#include "System/Plugins/Symbol.hpp"
 #include "System/Plugins/ExceptionCannotReadSymbol.hpp"
 
 namespace System
@@ -42,18 +43,18 @@ public:
    *           thus user must ensure that symbol with a given name really has
    *           supplied signature - otherwise undefined behavior may occure.
    */
-  template<typename T>
-  T getSymbol(const std::string &name)
+  template<typename S>
+  Symbol<S> getSymbol(const std::string &name)
   {
     dlerror();  // clean previous error message
-    T t;
-    // NOTE: this is a hack, since in C99 casting from void* to function
+    S s;
+    // NOTE: this is a workarround, since in C99 casting from void* to function
     //       pointer is an undefined behavior.
-    *(void**)(&t)=dlsym( get(), name.c_str() );
+    *(void**)(&s)=dlsym( get(), name.c_str() );
     const char *err=dlerror();
     if(err!=NULL)
       throw ExceptionCannotReadSymbol(SYSTEM_SAVE_LOCATION, name, err);
-    return t;
+    return Symbol<S>(h_, name, s);
   }
 
 private:

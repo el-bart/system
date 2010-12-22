@@ -36,9 +36,9 @@ template<>
 template<>
 void testObj::test<1>(void)
 {
-  int *ptr=dyn_.getSymbol<int*>("g_int");
-  ensure("NULL pointer", ptr!=NULL);
-  ensure_equals("invalid value", *ptr, 42);
+  Symbol<int*> ptr=dyn_.getSymbol<int*>("g_int");
+  ensure("NULL pointer", ptr.get()!=NULL);
+  ensure_equals("invalid value", *ptr.get(), 42);
 }
 
 // try reading non-existing variable
@@ -62,9 +62,9 @@ template<>
 template<>
 void testObj::test<3>(void)
 {
-  long (*f)(const char*)=dyn_.getSymbol<long(*)(const char*)>("testFunctionSymbol");
-  ensure("NULL pointer", f!=NULL);
-  ensure_equals("invalid call", (*f)("alice has a cat"), 15);
+  Symbol<long(*)(const char*)> f=dyn_.getSymbol<long(*)(const char*)>("testFunctionSymbol");
+  ensure("NULL pointer", f.get()!=NULL);
+  ensure_equals("invalid call", (*f.get())("alice has a cat"), 15);
 }
 
 // reading non-exisitng function pointer
