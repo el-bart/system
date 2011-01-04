@@ -1,6 +1,7 @@
 -- v?? --
 * added Plugins namespace for handling plugins in external *.so files.
-* some typos fixed.
+* few typos fixed.
+* minor code/style fixes.
 
 -- v0.7.1 --
 * fixed issue with convertion from const in SharedPtrNotNULL<>.
