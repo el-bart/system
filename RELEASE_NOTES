@@ -1,4 +1,5 @@
 -- v?? --
+* updated AtExit's code so that unregistering dynamic objects (dlclose() call) that registered to AtExit is will be possible.
 * added Plugins namespace for handling plugins in external *.so files.
 * few typos fixed.
 * minor code/style fixes.
