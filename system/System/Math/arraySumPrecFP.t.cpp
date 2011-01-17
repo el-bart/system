@@ -67,5 +67,40 @@ void testObj::test<3>(void)
   ensure_range("invalid sum", res, 7.6, 0.01);
 }
 
+// summ of a big array
+template<>
+template<>
+void testObj::test<4>(void)
+{
+  std::vector<double> d;
+  for(int i=0; i<10; ++i)
+    d.push_back(1);
+  const double res=arraySumPrecFP<double>( d.begin(), d.end() );
+  ensure_range("invalid sum", res, 10, 0.01);
+}
+
+// summ of one element
+template<>
+template<>
+void testObj::test<5>(void)
+{
+  std::vector<double> d;
+  d.push_back(6);
+  const double res=arraySumPrecFP<double>( d.begin(), d.end() );
+  ensure_range("invalid sum", res, 6, 0.01);
+}
+
+// summ of two elements
+template<>
+template<>
+void testObj::test<6>(void)
+{
+  std::vector<double> d;
+  d.push_back(6);
+  d.push_back(3);
+  const double res=arraySumPrecFP<double>( d.begin(), d.end() );
+  ensure_range("invalid sum", res, 9, 0.01);
+}
+
 } // namespace tut
 

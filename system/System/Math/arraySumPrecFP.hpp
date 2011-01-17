@@ -13,6 +13,8 @@
 #include <cassert>
 
 #include "System/Math/arraySumFastFP.hpp"
+#include "System/Math/detail/treeSumFP.hpp"
+#include "System/Math/ExceptionInvalidRange.hpp"
 
 namespace System
 {
@@ -27,9 +29,15 @@ namespace Math
 template<typename TElem, typename TConstIter>
 TElem arraySumPrecFP(const TConstIter begin, const TConstIter end)
 {
+  if(begin==end)
+    throw ExceptionInvalidRange(SYSTEM_SAVE_LOCATION, "iterator range is empty");
+
   size_t count=0;
   for(TConstIter it=begin; it!=end; ++it)
     ++count;
+
+  if(count==1u)
+    return *begin;
 
   typedef std::vector<TElem> TmpCont;
   TmpCont tmp;
@@ -37,7 +45,7 @@ TElem arraySumPrecFP(const TConstIter begin, const TConstIter end)
   std::copy(begin, end, std::insert_iterator<TmpCont>(tmp, tmp.begin()) );
   assert( tmp.size()==count );
 
-  return arraySumFastFP<TElem>( tmp.begin(), tmp.end() );
+  return detail::treeSumFP<TElem>( tmp.begin(), tmp.end() );
 } // arraySumPrecFP()
 
 } // namespace Math
