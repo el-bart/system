@@ -32,7 +32,7 @@ TElem treeSumFP(const TIter begin, const TIter end)
         break;
       *it1+=*it2;
     }
-
+  // final result is in the last element
   return *begin;
 } // treeSumFP()
 
