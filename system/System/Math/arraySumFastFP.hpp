@@ -1,9 +1,9 @@
 /*
- * arraySumFP.hpp
+ * arraySumFastFP.hpp
  *
  */
-#ifndef INCLUDE_SYSTEM_MATH_ARRAYSUMFP_HPP_FILE
-#define INCLUDE_SYSTEM_MATH_ARRAYSUMFP_HPP_FILE
+#ifndef INCLUDE_SYSTEM_MATH_ARRAYSUMFASTFP_HPP_FILE
+#define INCLUDE_SYSTEM_MATH_ARRAYSUMFASTFP_HPP_FILE
 
 /* public header */
 
@@ -19,9 +19,10 @@ namespace Math
  *  \param end   const iterator to the end of the collection.
  *
  *  this call uses special algorithm for summing to minimize FP error.
+ *  it has O(N) computational complexity and does not require additional memory.
  */
 template<typename TElem, typename TConstIter>
-TElem arraySumFP(const TConstIter begin, const TConstIter end)
+TElem arraySumFastFP(const TConstIter begin, const TConstIter end)
 {
   if(begin==end)
     throw ExceptionInvalidRange(SYSTEM_SAVE_LOCATION, "iterator range is empty");
@@ -39,7 +40,7 @@ TElem arraySumFP(const TConstIter begin, const TConstIter end)
   }
 
   return sum;
-} // arraySumFP()
+} // arraySumFastFP()
 
 } // namespace Math
 } // namespace System

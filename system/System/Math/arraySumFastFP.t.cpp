@@ -1,12 +1,12 @@
 /*
- * arraySumFP.t.cpp
+ * arraySumFastFP.t.cpp
  *
  */
 #include <tut.h>
 #include <vector>
 #include <list>
 
-#include "System/Math/arraySumFP.hpp"
+#include "System/Math/arraySumFastFP.hpp"
 #include "System/Math/TestHelpers.t.hpp"
 
 using namespace System::Math;
@@ -20,7 +20,7 @@ struct TestClass
 
 typedef tut::test_group<TestClass> factory;
 typedef factory::object            testObj;
-factory tf("System/Math/arraySumFP");
+factory tf("System/Math/arraySumFastFP");
 }
 
 
@@ -33,7 +33,7 @@ template<>
 void testObj::test<1>(void)
 {
   const double tab[3]={1.1, 0.9, 42};
-  const double res=arraySumFP<double>(&tab[0], &tab[2]+1);
+  const double res=arraySumFastFP<double>(&tab[0], &tab[2]+1);
   ensure_range("invalid sum", res, 44, 0.01);
 }
 
@@ -45,7 +45,7 @@ void testObj::test<2>(void)
   std::vector<double> d;
   try
   {
-    arraySumFP<double>( d.begin(), d.end() );
+    arraySumFastFP<double>( d.begin(), d.end() );
     fail("call didn't throw on empty range");
   }
   catch(const ExceptionInvalidRange &)
@@ -63,7 +63,7 @@ void testObj::test<3>(void)
   l.push_back(4.2);
   l.push_back(1.2);
   l.push_back(2.2);
-  const double res=arraySumFP<double>( l.begin(), l.end() );
+  const double res=arraySumFastFP<double>( l.begin(), l.end() );
   ensure_range("invalid sum", res, 7.6, 0.01);
 }
 
