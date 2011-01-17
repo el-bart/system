@@ -21,7 +21,7 @@ class ExceptionInvalidRange: public Exception
 public:
   /** \brief create execption with given message.
    *  \param where place where exception has been raisen.
-   *  \param name  name of variable that has been detected NULL.
+   *  \param what  name of variable that has been detected NULL.
    */
   ExceptionInvalidRange(const Location &where, const std::string &what):
     Exception( where, cc("inalivd range: ", what) )

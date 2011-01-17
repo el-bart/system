@@ -23,7 +23,7 @@ class Exception: public System::Exception
 public:
   /** \brief create execption with given message.
    *  \param where place where exception has been raisen.
-   *  \param name  name of variable that has been detected NULL.
+   *  \param what  name of variable that has been detected NULL.
    */
   Exception(const Location &where, const std::string &what):
     System::Exception( where, cc("math error: ", what) )
