@@ -1,4 +1,5 @@
 -- v?? --
+* average and standard deviation computation algorithm has been introduced.
 * implemented algorithm for comaprison of floating points with a given precision.
 * added two algorithms for addition of floating points with minimal loss of precission.
 * new System::Math namespace is present.

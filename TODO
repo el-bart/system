@@ -2,6 +2,5 @@
 * consider using futex() in System.
 * create dynamic threads pool ("free lunch is over" -- Herb Sutter), adopting to work load.
 * thread-safe containters would be nice feature.
-* implement Math namespace.
 * consider migrating most usefull parts of code to BUtils; trying to add it to boost is also an option.
 * it is a good idea to add releases of this code to sourceforge or github.
