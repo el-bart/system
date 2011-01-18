@@ -1,4 +1,10 @@
 -- v?? --
+
+-- v0.8.0 --
+* average and standard deviation computation algorithm has been introduced.
+* implemented algorithm for comaprison of floating points with a given precision.
+* added two algorithms for addition of floating points with minimal loss of precission.
+* new System::Math namespace is present.
 * added DivingStack<> template container.
 * moved some library internals to System::detail namespace.
 * updated AtExit's code so that unregistering dynamic objects (dlclose() call) that registered to AtExit is will be possible.
