@@ -15,13 +15,12 @@
 #include <fcntl.h>
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/noncopyable.hpp>
 #include <cassert>
 
 #include "System/AutoDescriptor.hpp"
 #include "System/Exception.hpp"
-
-// TODO: port it to use boost::fs::path
 
 namespace System
 {
@@ -36,14 +35,14 @@ public:
    *  \param flags    flags to be passed to open() system call.
    *  \param mode     mode to open file.
    */
-  DiskFile(const std::string &fileName,
-           int    flags=O_RDWR|O_CREAT|O_LARGEFILE|O_CLOEXEC,
-           mode_t mode =0644);
+  DiskFile(const boost::filesystem::path &fileName,
+           int                            flags=O_RDWR|O_CREAT|O_LARGEFILE|O_CLOEXEC,
+           mode_t                         mode =0644);
 
   /** \brief returns file name.
    *  \return file name.
    */
-  inline const std::string &getName(void) const
+  inline const boost::filesystem::path &getName(void) const
   {
     return fileName_;
   }
@@ -72,7 +71,7 @@ protected:
    *
    *  \param p pair <string,descriptor> to be passed for constructor.
    */
-  DiskFile( std::pair<std::string, boost::shared_ptr<AutoDescriptor> > p );
+  DiskFile( std::pair<boost::filesystem::path, boost::shared_ptr<AutoDescriptor> > p );
 
   /** \brief throws error message for given method, making error
    *         information from errno variable.
@@ -81,8 +80,8 @@ protected:
                                const char *action);
 
 private:
-  const std::string fileName_;
-  AutoDescriptor    fd_;
+  const boost::filesystem::path fileName_;
+  AutoDescriptor                fd_;
 }; // class DiskFile
 
 } // namespace System
