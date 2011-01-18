@@ -1,3 +1,5 @@
+-- v?? --
+
 -- v0.8.0 --
 * average and standard deviation computation algorithm has been introduced.
 * implemented algorithm for comaprison of floating points with a given precision.
