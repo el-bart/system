@@ -21,6 +21,7 @@
 
 #include "System/AutoDescriptor.hpp"
 #include "System/Exception.hpp"
+#include "System/ExceptionSyscallFailed.hpp"
 
 namespace System
 {
@@ -30,6 +31,18 @@ namespace System
 class DiskFile: private boost::noncopyable
 {
 public:
+  struct ExceptionCannotOpenFile: public ExceptionSyscallFailed
+  {
+    /** \brief create execption with given message.
+     *  \param where place where exception has been raisen.
+     *  \param path  file that couldn't be opened.
+     */
+    ExceptionCannotOpenFile(const Location &where, const boost::filesystem::path &path):
+      ExceptionSyscallFailed(where, "open", cc("unable to open file '", path, "'") )
+    {
+    }
+  }; // struct ExceptionCannotOpenFile
+
   /** \brief opens/creates file on disk.
    *  \param fileName name of disk file to be opened.
    *  \param flags    flags to be passed to open() system call.
@@ -72,12 +85,6 @@ protected:
    *  \param p pair <string,descriptor> to be passed for constructor.
    */
   DiskFile( std::pair<boost::filesystem::path, boost::shared_ptr<AutoDescriptor> > p );
-
-  /** \brief throws error message for given method, making error
-   *         information from errno variable.
-   */
-  void throwFileErrorException(const char *methodName,
-                               const char *action);
 
 private:
   const boost::filesystem::path fileName_;
