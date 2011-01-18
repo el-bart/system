@@ -31,6 +31,8 @@ namespace System
 class DiskFile: private boost::noncopyable
 {
 public:
+  /** \brief exception thrown when open() fails to opena file.
+   */
   struct ExceptionCannotOpenFile: public ExceptionSyscallFailed
   {
     /** \brief create execption with given message.
