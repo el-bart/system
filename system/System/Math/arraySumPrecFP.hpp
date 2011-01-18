@@ -7,8 +7,6 @@
 
 /* public header */
 
-#include <algorithm>
-#include <iterator>
 #include <vector>
 #include <cassert>
 
@@ -39,10 +37,7 @@ TElem arraySumPrecFP(const TConstIter begin, const TConstIter end)
   if(count==1u)
     return *begin;
 
-  typedef std::vector<TElem> TmpCont;
-  TmpCont tmp;
-  tmp.reserve(count);
-  std::copy(begin, end, std::insert_iterator<TmpCont>(tmp, tmp.begin()) );
+  std::vector<TElem> tmp(begin, end);
   assert( tmp.size()==count );
 
   return detail::treeSumFP<TElem>( tmp.begin(), tmp.end() );
