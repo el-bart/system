@@ -1,8 +1,9 @@
-# basic directories used in project
-include build_process/makefiles/common/dirs.mk
-
 # basic configuration for project
-include $(BUILD_CONFIG_BASE_DIR)/config.mk
+include build_config/config.mk
+
+# basic files and directories used in project
+include build_process/makefiles/common/dirs.mk
+include build_process/makefiles/common/files.mk
 
 # check basic constraints
 include $(MAKEFILES_COMMON_BASE_DIR)/main_constraints.mk
@@ -17,6 +18,31 @@ include $(MAKEFILES_COMMON_BASE_DIR)/rules.mk
 
 # define main macros used within this Makefile
 include $(MAKEFILES_COMMON_BASE_DIR)/main_macros.mk
+
+
+# if cleaning is requested, build make it in the first place, before
+# running anything else. this is required not to removed newly-generated
+# dependencies from build's gen.
+ifneq (, $(filter clean, $(MAKECMDGOALS)))
+TMP:=$(shell echo "CLEAN `basename $(GEN_WORK_ROOT)`" >&2)
+TMP:=$(shell $(MAKE) $(MFLAGS) clean.implementation)
+TMP:=
+endif
+
+TMP:=0
+# compute and include component dependencies only if there are non-'clean*'
+# targets provided as well in cmd-line...
+ifneq (, $(filter-out clean, $(MAKECMDGOALS)))
+ifneq (, $(filter-out clean.implementation, $(MAKECMDGOALS)))
+TMP:=1
+endif
+endif
+# ... or there are NO targets at all, i.e. default target should be made
+ifeq (,$(MAKECMDGOALS))
+TMP:=1
+endif
+# make components dependencies computations if needed
+ifeq ($(TMP),1)
 
 # make all dependencies for all components in gen
 TMP:=$(shell mkdir -p "$(GEN_COMPONENTS_DEPS_DIR)" && \
@@ -37,9 +63,13 @@ include $(MAKEFILES_COMMON_BASE_DIR)/pre_build.mk
 # include all generated component-dependencies
 include $(wildcard $(GEN_COMPONENTS_DEPS_DIR)/[^_]*.mk)
 
+endif # if there are other, non-clean targets
+
 
 # clean specific profile
 .PHONY: clean
 clean:
-	rm -rfv $(GEN_BASE_DIR)/$(PROFILE)_$(TC)_$(MEM_CHECK)
-
+	@true	# this little trick suppresses 'nothing to be done for clean' message
+.PHONY: clean.implementation
+clean.implementation:
+	rm -rf "$(GEN_WORK_ROOT)"
