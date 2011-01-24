@@ -1,4 +1,3 @@
 bzr_team.conf
 gen
-application.xml-*
-sqlite3.db
+*.orig
