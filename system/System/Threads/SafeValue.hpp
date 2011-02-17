@@ -27,18 +27,30 @@ private:
   typedef MultiLock<boost::mutex, Lock>    BMLock;
 
 public:
+  /** \brief call default c-tor.
+   */
   SafeValue(void)
   {
   }
+  /** \brief create from a value.
+   *  \param t value to be copyied
+   */
   explicit SafeValue(const T &t):
     t_(t)
   {
   }
+  /** \brief copy c-tor.
+   *  \param other element to copy from.
+   */
   SafeValue(const SafeValue &other):
     t_( other.get() )
   {
   }
 
+  /** \brief assignment operator.
+   *  \param other object to assign from.
+   *  \return const-reference to this.
+   */
   const SafeValue &operator=(const SafeValue &other)
   {
     if(&other==this)
@@ -48,12 +60,17 @@ public:
     return *this;
   }
 
+  /** \brief get object's value.
+   */
   T get(void) const
   {
     Lock lock(mutex_);
     return t_;
   }
 
+  /** \brief swap two object's contents.
+   *  \param other object ot swap content with.
+   */
   void swap(SafeValue &other)
   {
     const BMLock lock(mutex_, other.mutex_);
