@@ -1,4 +1,8 @@
 -- v?? --
+* Threads::SafeValue - wrapper making basic types thread-safe, has been implemented.
+* Threads::MultiLock class for locking multiple mutexis in a predefined order implemented.
+* Threads::Thread thread wrapper added.
+* Threads::Sync added for easy synchronizing master-slave threads.
 * SharedPtrNotNULL const-fixes.
 * support for intel compiler updated.
 * build process v1.7.1 introduced.
