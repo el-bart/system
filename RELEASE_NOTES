@@ -1,4 +1,6 @@
 -- v?? --
+* Threads::Thread thread wrapper added.
+* Threads::Sync added for easy synchronizing master-slave threads.
 * SharedPtrNotNULL const-fixes.
 * support for intel compiler updated.
 * build process v1.7.1 introduced.
