@@ -1,4 +1,5 @@
 -- v?? --
+* Threads::SafeValue - wrapper making basic types thread-safe, has been implemented.
 * Threads::MultiLock class for locking multiple mutexis in a predefined order implemented.
 * Threads::Thread thread wrapper added.
 * Threads::Sync added for easy synchronizing master-slave threads.
