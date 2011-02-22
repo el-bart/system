@@ -1,4 +1,5 @@
 -- v?? --
+* added missing library to linkage.
 
 -- v1.0.0 --
 * Threads::SafeValue - wrapper making basic types thread-safe, has been implemented.
