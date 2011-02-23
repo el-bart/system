@@ -1,5 +1,5 @@
 -- v?? --
-* SignalMasker and SignalUnmasker have been implemented to perform easy signal handling in thread environment.
+* SignalMasker and SignalUnmasker have been implemented; it's helpfull in implementing thread-safe signal handling.
 * Thread::ID is now available in user's API.
 * added missing library to linkage.
 
