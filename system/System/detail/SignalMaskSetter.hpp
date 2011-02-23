@@ -18,15 +18,15 @@ namespace System
 namespace detail
 {
 
-/** \brief class masking all signals for curren thread.
+/** \brief class masking required signals for current thread.
  */
 class SignalMaskSetter: private boost::noncopyable
 {
 public:
-  /** \brief set mask to block all signals for this thread.
+  /** \brief set mask to block given signals, for this thread.
    *  \param signals signals mask to set.
    */
-  explicit SignalMaskSetter(sigset_t &signals);
+  explicit SignalMaskSetter(sigset_t signals);
   /** \brief set mask back to previous value.
    */
   ~SignalMaskSetter(void);

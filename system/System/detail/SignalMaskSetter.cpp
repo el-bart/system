@@ -9,7 +9,7 @@ namespace System
 namespace detail
 {
 
-SignalMaskSetter::SignalMaskSetter(sigset_t &signals)
+SignalMaskSetter::SignalMaskSetter(sigset_t signals)
 {
   if( pthread_sigmask(SIG_SETMASK, &signals, &prev_)!=0 )
     throw ExceptionCannotSetSignalMask(SYSTEM_SAVE_LOCATION, "pthread_sigmask(): failed to mask all signals");
