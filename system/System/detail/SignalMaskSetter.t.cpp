@@ -1,13 +1,9 @@
 /*
- * SignalMakser.t.cpp
+ * SignalMaskSetter.t.cpp
  *
  */
 #include <tut.h>
-#include <sys/types.h>
 #include <signal.h>
-#include <unistd.h>
-#include <cstring>
-#include <cassert>
 #include <boost/thread.hpp>
 
 #include "System/detail/SignalMaskSetter.hpp"
