@@ -5,3 +5,4 @@
 * consider migrating most usefull parts of code to BUtils; trying to add it to boost is also an option.
 * it is a good idea to add releases of this code to sourceforge or github.
 * add some handle for logging mechanism.
+* implement signal handling thread with input queue and asynchronous processing.
