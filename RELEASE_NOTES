@@ -1,4 +1,8 @@
 -- v?? --
+* NoInstance base class, blocking creation of instances of derived objects.
+* SignalMasker and SignalUnmasker have been implemented; it's helpfull in implementing thread-safe signal handling.
+* Thread::ID is now available in user's API.
+* added missing library to linkage.
 
 -- v1.0.0 --
 * Threads::SafeValue - wrapper making basic types thread-safe, has been implemented.
