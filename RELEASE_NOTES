@@ -1,5 +1,5 @@
 -- v?? --
-* build_process v2.0.0 introduced.
+* build_process v2.0.1 introduced.
 * NoInstance base class, blocking creation of instances of derived objects.
 * SignalMasker and SignalUnmasker have been implemented; it's helpfull in implementing thread-safe signal handling.
 * Thread::ID is now available in user's API.
