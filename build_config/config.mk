@@ -10,7 +10,7 @@ export MODE:=default
 export PROFILE:=test
 
 # default tool chain
-export TC:=local
+export TC:=gcc
 
 # enable ccache, but not for intel
 ifneq ($(TC),intel)
