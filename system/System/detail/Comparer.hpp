@@ -31,9 +31,16 @@ struct Comparer
   }
 };
 
+/** \brief specialization for const char*.
+ */
 template<>
 struct Comparer<const char*>
 {
+  /** \brief perform less-than comparison.
+   *  \param left  left value to compare.
+   *  \param right right value to compare.
+   *  \return true, if left is less than right, false otherwise.
+   */
   static bool lessThan(const char *left, const char *right)
   {
     if(left==NULL)
@@ -46,12 +53,19 @@ struct Comparer<const char*>
   }
 };
 
+/** \brief specialization for char*.
+ */
 template<>
 struct Comparer<char*>
 {
-  static bool lessThan(const char *v1, const char *v2)
+  /** \brief perform less-than comparison.
+   *  \param left  left value to compare.
+   *  \param right right value to compare.
+   *  \return true, if left is less than right, false otherwise.
+   */
+  static bool lessThan(const char *left, const char *right)
   {
-    return Comparer<const char*>::lessThan(v1, v2);
+    return Comparer<const char*>::lessThan(left, right);
   }
 };
 
