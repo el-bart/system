@@ -44,7 +44,7 @@ public:
   typedef typename T::StringType value_type;
 
   /** \brief create object from C++ string.
-   *  \param str string to be copyied.
+   *  \param str string to be copied.
    */
   explicit UniqueTypeString(const value_type &str):
     str_(str)
