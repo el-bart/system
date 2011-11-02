@@ -20,8 +20,8 @@ include $(MAKEFILES_COMMON_BASE_DIR)/rules.mk
 include $(MAKEFILES_COMMON_BASE_DIR)/main_macros.mk
 
 
-# if cleaning is requested, build make it in the first place, before
-# running anything else. this is required not to removed newly-generated
+# if cleaning is requested, make it in the first place, before
+# running anything else. this is required not to remove newly-generated
 # dependencies from build's gen.
 ifneq (, $(filter clean, $(MAKECMDGOALS)))
 TMP:=$(shell echo "CLEAN `basename $(GEN_WORK_ROOT)`" >&2)
