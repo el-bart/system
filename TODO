@@ -6,3 +6,4 @@
 * add some handle for logging mechanism.
 * implement signal handling thread with input queue and asynchronous processing.
 * prepare for C++11 portage (auto_ptr->unique_ptr).
+* implement non-member swap() functions.
