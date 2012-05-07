@@ -578,4 +578,18 @@ void testObj::test<48>(void)
   d!=a;
 }
 
+// test non-member swap
+template<>
+template<>
+void testObj::test<49>(void)
+{
+  PtrNN tmp(new int);
+  int *p1=nn_.get();
+  int *p2=tmp.get();
+  assert(p1!=p2);
+  swap(tmp, nn_);
+  ensure("invalid tmp pointer's value", tmp.get()==p1);
+  ensure("invalid nn_ pointer's value", nn_.get()==p2);
+}
+
 } // namespace tut

@@ -26,6 +26,11 @@ struct BlockCopyType
     if(g_blockCopy)
       throw std::runtime_error("generic std::swap() has been called (2)");
   }
+
+  void swap(BlockCopyType&)
+  {
+    // ok...
+  }
 };
 
 namespace detail
@@ -212,7 +217,7 @@ void testObj::test<12>(void)
   BlockCopy a( (BlockCopyType()) );
   BlockCopy b( (BlockCopyType()) );
   g_blockCopy=true;
-  std::swap(a, b);
+  swap(a, b);
 }
 
 } // namespace tut

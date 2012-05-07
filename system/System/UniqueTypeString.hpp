@@ -64,7 +64,7 @@ public:
    */
   void swap(UniqueTypeString<T> &other)
   {
-    std::swap(str_, other.str_);
+    str_.swap(other.str_);
   }
 
   /** \brief less-than comparison operator.
@@ -83,8 +83,6 @@ private:
 } // namespace System
 
 
-namespace std
-{
 /** \brief swaps two elements of a System::UniqueTypeString<T> type.
  *  \param o1 object to swap.
  *  \param o2 object to swap with.
@@ -94,6 +92,5 @@ void swap(::System::UniqueTypeString<T> &o1, ::System::UniqueTypeString<T> &o2)
 {
   o1.swap(o2);
 } // swap()
-} // namespace std
 
 #endif

@@ -135,6 +135,18 @@ private:
   pointer t_;
 }; // class ScopedPtrCustom
 
+
+
+/** \brief swaps content of the two objects.
+ *  \param p1 pointer to be swapped.
+ *  \param p2 pointer to be swapped.
+ */
+template<typename T, void(*deallocator)(T *t)>
+void swap(ScopedPtrCustom<T, deallocator> &p1, ScopedPtrCustom<T, deallocator> &p2)
+{
+  p1.swap(p2);
+}
+
 } // namespace System
 
 #endif

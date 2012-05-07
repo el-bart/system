@@ -263,6 +263,25 @@ bool operator!=(const SharedPtrNotNULL<T> &left, const boost::shared_ptr<U> &rig
   return left.get()!=right.get();
 }
 
+
+//
+// NOTE: other, non-member functions goes here
+//
+
+/** \brief swaps contents of the two pointers.
+ *
+ *  using Koening's rule this function's in use when calling swap(p1, p2) anywhere
+ *  in the code and/or standard library.
+ *
+ *  \param p1 pointer to be swapped.
+ *  \param p2 pointer to be swapped.
+ */
+template<typename T>
+void swap(SharedPtrNotNULL<T> &p1, SharedPtrNotNULL<T> &p2)
+{
+  p1.swap(p2);
+}
+
 } // namespace System
 
 #endif

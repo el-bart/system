@@ -261,4 +261,15 @@ void testObj::test<22>(void)
   ensure("invalid poitner saved", ptrA_.get()==&tab_[1] );
 }
 
+// test non-member swapping
+template<>
+template<>
+void testObj::test<23>(void)
+{
+  swap(ptrA_, ptrB_);
+  ensure("pointer A has invalid value", ptrA_.get()==&tab_[1] );
+  ensure("pointer B has invalid value", ptrB_.get()==&tab_[0] );
+  ensure_equals("deallocator has been called", g_deallocationsCount, 0u);
+}
+
 } // namespace tut

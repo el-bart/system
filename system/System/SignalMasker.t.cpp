@@ -3,6 +3,8 @@
  *
  */
 #include <tut.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include <signal.h>
 
 #include "System/SignalMasker.hpp"

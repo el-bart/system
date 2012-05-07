@@ -79,7 +79,7 @@ void testObj::test<5>(void)
   ensure_equals("invalid str 2 content", str.get(),  string("abc") );
 }
 
-// test content swapping swap call
+// test content swapping non-member swap
 template<>
 template<>
 void testObj::test<6>(void)

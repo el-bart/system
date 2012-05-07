@@ -92,8 +92,6 @@ private:
 } // namespace System
 
 
-namespace std
-{
 /** \brief common call for swapping content of two elements of EditableCString type.
  *  \param str1 first elemtns of the operation.
  *  \param str2 second element of the operation.
@@ -102,6 +100,5 @@ inline void swap(System::EditableCString &str1, System::EditableCString &str2)
 {
   str1.swap(str2);
 } // swap()
-} // namespace std
 
 #endif
