@@ -1,2 +1,1 @@
-system
-======
+doc/readme.txt
