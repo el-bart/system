@@ -1,0 +1,9 @@
+* add template-base FSM implementation.
+* create dynamic threads pool ("free lunch is over" -- Herb Sutter), adopting to work load.
+* thread-safe containters would be nice feature.
+* consider migrating most usefull parts of code to BUtils; trying to add it to boost is also an option.
+* it is a good idea to add releases of this code to sourceforge or github.
+* add some handle for logging mechanism.
+* implement signal handling thread with input queue and asynchronous processing.
+* prepare for C++11 portage (auto_ptr->unique_ptr).
+* implement non-member swap() functions.
