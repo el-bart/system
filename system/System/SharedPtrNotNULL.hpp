@@ -24,17 +24,17 @@ class SharedPtrNotNULL
 {
 public:
   /** \brief type used as boost::shared_ptr<>. */
-  typedef boost::shared_ptr<T>             SharedPtr;
+  typedef boost::shared_ptr<T> SharedPtr;
   /** \brief type of this object. */
-  typedef SharedPtrNotNULL<T>              this_type;
+  typedef SharedPtrNotNULL<T>  this_type;
   /** \brief type of element held inside (for compatibility with boost::shared_ptr). */
-  typedef typename SharedPtr::element_type element_type;
+  typedef T                    element_type;
   /** \brief type of element held inside (for compatibility with boost::shared_ptr). */
-  typedef typename SharedPtr::value_type   value_type;
+  typedef T                    value_type;
   /** \brief type of pointer to element held inside (for compatibility with boost::shared_ptr). */
-  typedef typename SharedPtr::pointer      pointer;
+  typedef T*                   pointer;
   /** \brief type of reference to element held inside (for compatibility with boost::shared_ptr). */
-  typedef typename SharedPtr::reference    reference;
+  typedef T&                   reference;
 
   /** \brief create class from raw-pointer.
    *  \param t pointer to take ownership of.
